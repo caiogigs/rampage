@@ -1,8 +1,20 @@
 package br.com.pi.rampage.model;
 
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+
+@Entity
+@Table(name = "users")
 public class User {
 
+
     //Atributos do Usuario
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int codigo;
     private String nome;
     private String cpf;
     private String email;
@@ -15,15 +27,24 @@ public class User {
 
     }
 
-    public User(String nome,String cpf,String email,String senha,String grupo){
+    public User(String nome, String cpf, String email, String senha, String grupo, boolean status) {
         this.nome = nome;
         this.cpf = cpf;
         this.email = email;
         this.senha = senha;
         this.grupo = grupo;
+        this.status = status;
     }
 
     //Metodos Acessores 
+    public int getCodigo() {
+        return codigo;
+    }
+
+    public void setCodigo(int codigo) {
+        this.codigo = codigo;
+    }
+
     public String getNome() {
         return nome;
     }
