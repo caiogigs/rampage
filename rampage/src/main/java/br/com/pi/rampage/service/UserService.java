@@ -10,9 +10,12 @@ import br.com.pi.rampage.model.User;
 import br.com.pi.rampage.repository.UserRepository;
 //import jakarta.servlet.http.HttpSession;
 
+
+
 @Service
 public class UserService {
     
+    private String userEmail;
     
     @Autowired
     private UserRepository action;
@@ -46,6 +49,10 @@ public class UserService {
     }
 
     public LoginStatus login(String email, String password) {
+
+        // Salvando o login para uso de validação
+        userEmail = email;
+
         Optional<User> userOptional = action.findByEmail(email);
         if (userOptional.isPresent()) {
             User user = userOptional.get();
@@ -62,4 +69,17 @@ public class UserService {
         }
         return LoginStatus.FAILURE;
     }
+
+    // Pegando todos os usuários
+    public Iterable<User> getAllUsers() {
+        // Usa o repositório para buscar todos os usuários
+        return action.findAll();  
+    }
+
+    // Verifica se é ADM
+    public boolean isAdmin() {  
+        Optional<User> loggedUser = action.findByEmail(userEmail);
+        return loggedUser.isPresent() && "ADMINISTRADOR".equals(loggedUser.get().getGrupo().toUpperCase());
+    }
+    
 }

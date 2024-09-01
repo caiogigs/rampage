@@ -37,8 +37,12 @@ public class Terminal {
             listProducts();
                 break;
             case "2":
-            listUsers();
-                break;
+            if (userService.isAdmin()) {
+                listUsers();
+            } else {
+                System.out.println("Acesso negado. Apenas Administradores podem listar usuários.");
+            }
+            break;
             default:
                 break;
         }
@@ -53,6 +57,12 @@ public class Terminal {
         String response;
         System.out.println("                              Listar Usuário                                         "); 
         System.out.println("");
+
+        Iterable<User> users = userService.getAllUsers();  // Busca todos os usuários
+        for (User user : users) {
+            System.out.println("ID: " + user.getCodigo() + ", Nome: " + user.getNome() + ", Email: " + user.getEmail() + ", Grupo: " + user.getGrupo());
+        }
+
         System.out.println("");
         System.out.println("");
         System.out.println("");
