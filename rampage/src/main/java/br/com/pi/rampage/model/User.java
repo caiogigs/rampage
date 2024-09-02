@@ -94,5 +94,14 @@ public class User {
     }
     
     
-
+    @Override
+    public String toString() {
+        String whichStatus = isStatus() ? "Ativo" : "Inativo";
+        return String.format("Id: "+codigo+"\n"
+        +"Nome: "+nome+"\n"
+        +"E-mail: "+email+"\n"
+        +"Status: "+whichStatus+"\n"
+        +"Grupo: "+grupo);
+    }
+    
 }

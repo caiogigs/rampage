@@ -1,5 +1,6 @@
 package br.com.pi.rampage.service;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,8 +15,6 @@ import br.com.pi.rampage.repository.UserRepository;
 
 @Service
 public class UserService {
-    
-    private String userEmail;
     
     @Autowired
     private UserRepository action;
@@ -33,10 +32,6 @@ public class UserService {
         CLIENT_ACCESS_DENIED;
     }
 
-    //public void createUserSession(String email){
-    //    Optional<User> loggedInUser = action.findByEmail(email);
-    //    httpSession.setAttribute(loggedInUser.get().getNome(), loggedInUser.get().getGrupo());
-  //  }
 
     public String registerUser(User newUser) {
         Optional<User> existingUser = action.findByEmail(newUser.getEmail());
@@ -48,11 +43,12 @@ public class UserService {
         }
     }
 
+    public void updateUser(User user){
+        action.save(user);
+
+    }
+
     public LoginStatus login(String email, String password) {
-
-        // Salvando o login para uso de validação
-        userEmail = email;
-
         Optional<User> userOptional = action.findByEmail(email);
         if (userOptional.isPresent()) {
             User user = userOptional.get();
@@ -62,6 +58,7 @@ public class UserService {
                     if ("cliente".equals(group)) {
                         return LoginStatus.CLIENT_ACCESS_DENIED;
                     }
+                    UserSession.setUserSession(user.getEmail(), user.getGrupo());
                     return LoginStatus.SUCCESS;
                 }
                 return LoginStatus.USER_INACTIVE;
@@ -69,17 +66,44 @@ public class UserService {
         }
         return LoginStatus.FAILURE;
     }
+   
 
-    // Pegando todos os usuários
-    public Iterable<User> getAllUsers() {
-        // Usa o repositório para buscar todos os usuários
-        return action.findAll();  
+    public String userTable(List<User> users){
+        StringBuilder table = new StringBuilder(); 
+        users = action.findAll();
+        table.append(String.format("%-10s|%-20s|%-50s|%-15s|%-15s","codigo", "nome", "email", "status", "grupo"));
+        table.append("\n");
+        table.append("-".repeat(10)+"+"+"-".repeat(20)+"+"+"-".repeat(50)+"+"+"-".repeat(15)+"+"+"-".repeat(15));
+        table.append("\n");
+
+        for(User user : users){
+            String status = user.isStatus() ? "Ativo" : "Inativo";
+            table.append(String.format("%-10s|%-20s|%-50s|%-15s|%-15s",
+                user.getCodigo(),
+                user.getNome(),
+                user.getEmail(),
+                status,
+                user.getGrupo()));
+            table.append("\n");    
+        }
+        return table.toString();
     }
 
+
+    public User selectUserById(int id){
+        Optional<User> user =action.findByCodigo(id);
+        if(user.isPresent()){
+            return user.get();
+        }else{
+            return null;
+        }
+    }
+
+
     // Verifica se é ADM
-    public boolean isAdmin() {  
-        Optional<User> loggedUser = action.findByEmail(userEmail);
-        return loggedUser.isPresent() && "ADMINISTRADOR".equals(loggedUser.get().getGrupo().toUpperCase());
+    public boolean isAdmin() {
+        String userGroup = UserSession.getUserGroup(); // Obtém o grupo do usuário diretamente da sessão
+        return "ADMINISTRADOR".equalsIgnoreCase(userGroup);
     }
     
 }

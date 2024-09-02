@@ -19,12 +19,7 @@ public class RampageApplication implements CommandLineRunner{
 
 	@Override
     public void run(String... args) throws Exception {
-		while (true) {
-			if(terminal.enter()){
-				break;
-			}	
-		}
-		terminal.homeBackOffice();
+		terminal.start();
     }
 
 }

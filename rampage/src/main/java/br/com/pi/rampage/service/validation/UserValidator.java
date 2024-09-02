@@ -66,9 +66,9 @@ public class UserValidator {
         while (true) {
             System.out.print("Grupo (Administrador/Estoquista) => ");
             group = scan.nextLine().trim();
-            if(group.equals("Administrador")){
+            if("Administrador".equalsIgnoreCase(group)){
                 return "Administrador";
-            }else if(group.equals("Estoquista")){
+            }else if("Estoquista".equalsIgnoreCase(group)){
                 return "Estoquista";
             }else{
                 System.out.println("Grupo inválido. Tente novamente.");
@@ -77,10 +77,10 @@ public class UserValidator {
     }
 
 
-    public String passAble() {
+    public String passAble(String msg) {
         String password1, password2;
         while (true) {
-            System.out.print("Senha => ");
+            System.out.print(msg);
             password1 = scan.nextLine().trim(); 
             if (!password1.isEmpty()) {
                 break;
@@ -101,6 +101,18 @@ public class UserValidator {
         }
         return passwordEncoder.encode(password1); 
     }
+
+    public boolean isNumeric(String str) {
+        try {
+            Integer.parseInt(str);
+            return true;
+        } catch (NumberFormatException e) {
+            return false;
+        }
+    }
+
+
+
 
 
     // Metodos complementares  para validação do cpf
