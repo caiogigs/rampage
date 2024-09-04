@@ -12,6 +12,8 @@ import br.com.pi.rampage.service.UserService.LoginStatus;
 import br.com.pi.rampage.service.UserSession;
 import br.com.pi.rampage.service.validation.UserValidator;
 
+
+//Classe responsavel em interagir diretamente com o Usuario
 @Component
 public class Terminal {
     
@@ -21,12 +23,12 @@ public class Terminal {
     @Autowired
     private UserService userService;
 
-
+//Tela principal do BackOffice
     public void homeBackOffice(){
         String response;
         System.out.println("                                                             Tela principal de backoffice                                         ");  
         System.out.println("(1) Listar Produto");  
-        System.out.println("(2) Listar Usuário");
+        System.out.println("(2) Listar Usuários");
         System.out.println("(0) Loggout");
         System.out.println("");
         System.out.println("");
@@ -36,18 +38,22 @@ public class Terminal {
             response = scan.nextLine().trim();
             switch (response) {
                 case "1":
+                    readUserInput("(1) Listar Produto");
                     listProducts();
                     break;
                 case "2":
                 if (userService.isAdmin()) {
+                    readUserInput("(2) Listar usuarios");
                     listUsers();
                 } else {
+                    readUserInput("(2) Listar usuarios");
                     System.out.println("Acesso negado. Apenas Administradores podem listar usuários.");
                     homeBackOffice();
                     break;
                 }
                 case "0":
                     UserSession.clearSession();
+                    readUserInput("(0) Loggout");
                     System.out.println("Saindo....");
                     start();;
                     break;
@@ -60,21 +66,25 @@ public class Terminal {
 
     }
 
+    //Método para listar produtos
     public void listProducts(){
         System.out.println("Não ha produtos para listas");        
     }
 
+    //Tela com lista de usuários e opções
     public void listUsers() {
         String response;
-        System.out.println("                                              Listar Usuário"); 
+        System.out.println("                                              Listar Usuários"); 
         System.out.println(userService.userTable(null));
         System.out.print("Entre com o id para editar/ativar/inativar, 0 para voltar e i para incluir =>");  
         response = scan.nextLine().trim(); 
         switch (response) {
             case "i":
+                readUserInput("(i) Listar produto");
                 includeUser();
                 break;
             case "0":
+                readUserInput("(0) Voltar");
                 homeBackOffice();
                 break;    
             default:
@@ -82,6 +92,7 @@ public class Terminal {
                     int userId = Integer.parseInt(response);
                     User user = userService.selectUserById(userId);
                     if (user != null) {
+                        readUserInput("ID:"+response);
                         editUser(user);
                     } else {
                         System.out.println("ID inválido. Usuário não encontrado.");
@@ -95,6 +106,7 @@ public class Terminal {
         }
     }
 
+    //Tela de edição do usuário
     public void editUser(User user){
         System.out.println("\n");
         System.out.println("                                                     Opção de edição de usuário");
@@ -104,21 +116,25 @@ public class Terminal {
             + "1) Alterar usuário\n"
             + "2) Alterar senha\n"
             + "3) Ativar/Desativar\n"
-            + "4) Voltar Listar Usuário\n"
+            + "4) Voltar listar usuários\n"
             +"Entre com a opção (1,2,3,4) =>");
         while (true){
             String response = scan.nextLine().trim();
             switch (response) {
                 case "1":
+                    readUserInput("(1) Alterar usuário");
                     updateUser(user);
                     break;
                 case "2":
+                    readUserInput("(2) Alterar senha");
                     updatePassword(user);
                     break;
                 case "3":
+                    readUserInput("(3) Ativar/Desativar");
                     activateUser(user);
                     break;    
                 case "4":
+                    readUserInput("(4) Voltar listar usúarios");
                     listUsers();
                     break;        
                 default:
@@ -128,7 +144,7 @@ public class Terminal {
        
     }
 
-
+    //Tela para atualizar a senha do usuario
     public void updatePassword(User user){
         System.out.println("                                                              Alterar senha");
         System.out.println(user);
@@ -142,14 +158,16 @@ public class Terminal {
                 case "y":
                 try{
                     userService.updateUser(user);
-                    System.out.println("senha alterada com sucesso!");
+                    readUserInput("(Y) Salvar");
+                    System.out.println("Senha alterada com sucesso!");
                     listUsers();
                     break;    
                 }catch (IllegalArgumentException e) {
                     System.out.println("Erro ao senha do usuário: " + e.getMessage());
                 }
                     break;
-                case "n":    
+                case "n":
+                    readUserInput("(N) Cancelar");    
                     System.out.println("Operação cancelada.");
                     listUsers();
                     break;
@@ -162,6 +180,7 @@ public class Terminal {
     }
 
 
+    //Tela para atualizar informações do usuário
     public void updateUser(User user){
         System.out.println("                                                             Alterar usuário");
         System.out.println(user);
@@ -177,6 +196,7 @@ public class Terminal {
                 case "y":
                 try {
                     userService.updateUser(user);
+                    readUserInput("(Y) Salvar");
                     System.out.println("Usuario alterado com sucesso!");
                     listUsers();
                     break;
@@ -185,6 +205,7 @@ public class Terminal {
                 }
                     break;
                 case "n":
+                    readUserInput("(N) Cancelar");
                     System.out.println("Operação cancelada.");
                     listUsers();
                     break;
@@ -196,6 +217,7 @@ public class Terminal {
 
     }
 
+    //Tela de login
     public boolean enter(){
         String email, password;
         LoginStatus loginStatus;
@@ -226,7 +248,7 @@ public class Terminal {
         }
     }
     
-
+    //Tela inicial do sistema
     public void start() {
         while (true) {
             System.out.println("\n");
@@ -238,11 +260,13 @@ public class Terminal {
             String response = scan.nextLine().trim();
             switch (response) {
                 case "1":
+                    readUserInput("(1) Fazer Login");
                     if (enter()) {
                         homeBackOffice(); 
                     }
                     break;
                 case "2":
+                    readUserInput("(2) Sair.");
                     System.out.println("Encerrando o sistema...");
                     System.exit(0); 
                     break;
@@ -253,6 +277,7 @@ public class Terminal {
         }
     }
 
+    //Tela para ativar/desativar usuarios
     public void activateUser(User user){
         System.out.println("                                        Ativar/Desativar usuário");
         System.out.println(user);
@@ -268,6 +293,7 @@ public class Terminal {
             String response = scan.nextLine().trim().toLowerCase();;
             switch (response) {
                 case "y":
+                    readUserInput("(Y) Salvar");
                     try {
                         if(user.isStatus()){
                             user.setStatus(false);
@@ -285,6 +311,7 @@ public class Terminal {
                     }
                     break;
                 case "n":
+                    readUserInput("(N) Cancelar");
                     System.out.println("Operação cancelada.");
                     listUsers();
                     break;
@@ -296,6 +323,7 @@ public class Terminal {
 
     }
 
+    //Tela para cadastrar novo usuário
     public void includeUser(){
         String name, cpf, email, grupo, password, response;
         System.out.println("                                    Incluir usuário                                        ");
@@ -311,6 +339,7 @@ public class Terminal {
             response = scan.nextLine().trim().toLowerCase();;
             switch (response) {
                 case "y":
+                readUserInput("(Y) Salvar");
                 try {
                     String result = userService.registerUser(newUser);
                     System.out.println(result);
@@ -321,6 +350,7 @@ public class Terminal {
                 }
                     break;    
                 case "n":
+                    readUserInput("(N) Cancelar");
                     System.out.println("Operação cancelada.");
                     listUsers();
                     break;
@@ -332,8 +362,14 @@ public class Terminal {
         
     }
 
+    //Metodo para criação de linhas
     public String generateLineSeparator(int length) {
         return "-".repeat(Math.max(0, length));
+    }
+
+    //Método que imprime as opções do usuário
+    public void readUserInput(String option){
+        System.out.println("Você escolheu a opção: "+option);    
     }
 
 

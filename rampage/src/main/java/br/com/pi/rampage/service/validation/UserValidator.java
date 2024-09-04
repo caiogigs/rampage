@@ -8,14 +8,19 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
+/*Classe Responsavel em validar os inputs do usuário*/
+
+/* Annotation Component usada para marcar uma classe como um componente 
+gerenciado pelo Spring*/
 @Component
 public class UserValidator {
     Scanner scan = new Scanner(System.in);
     
-    @Autowired
+    @Autowired//Injeção Automatica de Dependâncias 
     private PasswordEncoder passwordEncoder;
 
 
+    //Método de validação do nome informado pelo usuário 
     public String nameValidate(){
         String name;
         while (true) {
@@ -29,6 +34,7 @@ public class UserValidator {
         }
     }
 
+    //Método para validar o CPF informado pelo usuário 
     public String cpfValidator(){
         String cpf;
         while (true) {
@@ -44,6 +50,7 @@ public class UserValidator {
         }
     }
 
+    //Método para validar o email informado pelo usuário
     public String emailValidator(){
         String email;
         String regexEmail = "^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$";
@@ -61,6 +68,7 @@ public class UserValidator {
         }
     }
 
+    //Método para validar o grupo email informado pelo usuário
     public String validateGroup(){
         String group;
         while (true) {
@@ -76,7 +84,7 @@ public class UserValidator {
         }
     }
 
-
+    //Método para validar as senhas informadas pelo usuário
     public String passAble(String msg) {
         String password1, password2;
         while (true) {
@@ -102,6 +110,9 @@ public class UserValidator {
         return passwordEncoder.encode(password1); 
     }
 
+    /*Método para validar o input do usuário na tela Listar Usúarios é numerico
+    Auxilia na compreensão se o usuário deseja informar o ID de um usuário existente
+    para realizar alterações*/
     public boolean isNumeric(String str) {
         try {
             Integer.parseInt(str);
@@ -115,7 +126,9 @@ public class UserValidator {
 
 
 
-    // Metodos complementares  para validação do cpf
+    //Metodos complementares  para validação do cpf
+
+    
     private boolean validCpf(String cpf) {
         if (cpf.length() != 11) { //<= Verifica se o CPF tem 11 dígitos
             return false;
@@ -147,7 +160,7 @@ public class UserValidator {
         return secondDigit == (cpf.charAt(10) - '0');
     }
 
-    // Formata o CPF para o formato padrão (xxx.xxx.xxx-xx)
+    //Método para Formatar o CPF para o formato padrão (xxx.xxx.xxx-xx)
     private String formatCpf(String cpf) {
         return String.format("%s.%s.%s-%s",
                 cpf.substring(0, 3),

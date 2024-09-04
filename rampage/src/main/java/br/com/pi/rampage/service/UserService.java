@@ -9,22 +9,24 @@ import org.springframework.stereotype.Service;
 
 import br.com.pi.rampage.model.User;
 import br.com.pi.rampage.repository.UserRepository;
-//import jakarta.servlet.http.HttpSession;
 
 
 
+/*Classe Service encapsulamento da Lógica de Negócios
+Se conecata com a classe UserRepository, UserValidation e
+Terminal para auxiliar as Operações de CRUD relacionadas a classe User e tabela Users 
+*/
 @Service
 public class UserService {
     
-    @Autowired
+    @Autowired//Injeção Automatica de Dependâncias 
     private UserRepository action;
 
-    @Autowired
+    @Autowired//Injeção Automatica de Dependâncias 
     private PasswordEncoder passwordEncoder;
 
-  //  @Autowired
-  //  private HttpSession httpSession; 
 
+    //Variaveis enum definem o status do login
     public enum LoginStatus {
         SUCCESS,
         FAILURE,
@@ -32,7 +34,7 @@ public class UserService {
         CLIENT_ACCESS_DENIED;
     }
 
-
+    //Método de cadastro de novos usuários
     public String registerUser(User newUser) {
         Optional<User> existingUser = action.findByEmail(newUser.getEmail());
         if (existingUser.isPresent()) {
@@ -43,11 +45,12 @@ public class UserService {
         }
     }
 
+    //Método atualização de dados dos usuários 
     public void updateUser(User user){
         action.save(user);
-
     }
 
+    //Método de login
     public LoginStatus login(String email, String password) {
         Optional<User> userOptional = action.findByEmail(email);
         if (userOptional.isPresent()) {
@@ -68,6 +71,7 @@ public class UserService {
     }
    
 
+    //Método cria a tabela para listagem dos usuários
     public String userTable(List<User> users){
         StringBuilder table = new StringBuilder(); 
         users = action.findAll();
@@ -89,7 +93,7 @@ public class UserService {
         return table.toString();
     }
 
-
+    //Método de busca de usúario pelo ID
     public User selectUserById(int id){
         Optional<User> user =action.findByCodigo(id);
         if(user.isPresent()){
@@ -100,9 +104,9 @@ public class UserService {
     }
 
 
-    // Verifica se é ADM
+    //Método que verifica se o grupo do usuário é Administrador
     public boolean isAdmin() {
-        String userGroup = UserSession.getUserGroup(); // Obtém o grupo do usuário diretamente da sessão
+        String userGroup = UserSession.getUserGroup(); //Obtém o grupo do usuário diretamente da sessão
         return "ADMINISTRADOR".equalsIgnoreCase(userGroup);
     }
     

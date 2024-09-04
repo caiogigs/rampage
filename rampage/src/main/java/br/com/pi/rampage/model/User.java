@@ -6,13 +6,18 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
-@Entity
-@Table(name = "users")
+/*Classe user Reponsavel por reprensetar os dados do usuário
+ * e mapeamento para Banco de Dados:
+ */
+
+
+@Entity //Annotation usada pelo Spring para criar a tabela users no banco de dados
+@Table(name = "users")//Annotation que define o nome da Tabela
 public class User {
 
 
-    //Atributos do Usuario
-    @Id
+    //Atributos do Usuário
+    @Id//Annotation para gerar o atributo identificador no banco de dados 
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int codigo;
     private String nome;
@@ -94,7 +99,7 @@ public class User {
     }
     
     
-    @Override
+    @Override//Transforma a instancia de usuário em uma String com todos seus atributos 
     public String toString() {
         String whichStatus = isStatus() ? "Ativo" : "Inativo";
         return String.format("Id: "+codigo+"\n"

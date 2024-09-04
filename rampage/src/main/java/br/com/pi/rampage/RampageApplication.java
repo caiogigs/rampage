@@ -7,6 +7,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 import br.com.pi.rampage.view.Terminal;
 
+//Classe main do projeto
 @SpringBootApplication
 public class RampageApplication implements CommandLineRunner{
 
