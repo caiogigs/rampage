@@ -4,8 +4,6 @@ import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 /*Classe Responsavel em validar os inputs do usuário*/
@@ -15,10 +13,6 @@ gerenciado pelo Spring*/
 @Component
 public class UserValidator {
     Scanner scan = new Scanner(System.in);
-    
-    @Autowired//Injeção Automatica de Dependâncias 
-    private PasswordEncoder passwordEncoder;
-
 
     //Método de validação do nome informado pelo usuário 
     public String nameValidate(){
@@ -84,30 +78,17 @@ public class UserValidator {
         }
     }
 
-    //Método para validar as senhas informadas pelo usuário
-    public String passAble(String msg) {
-        String password1, password2;
-        while (true) {
-            System.out.print(msg);
-            password1 = scan.nextLine().trim(); 
-            if (!password1.isEmpty()) {
-                break;
-            } else {
-                System.out.println("Senha não pode ficar em branco. Tente novamente.");
-            }
+    public boolean corretPass(String pass) {
+        System.out.print("Repetir senha => ");
+        String pass2 = scan.nextLine().trim();
+        if (pass2.isEmpty()) {
+            System.out.println("Senha não pode ficar em branco. Tente novamente.");
+            return false;    
+        } else if (pass2.equals(pass)) {
+            return true;
         }
-        while (true) {
-            System.out.print("Repetir senha => ");
-            password2 = scan.nextLine().trim(); 
-            if (!password2.isEmpty() && password2.equals(password1)) {
-                break;
-            } else if (password2.isEmpty()) {
-                System.out.println("Senha não pode ficar em branco. Tente novamente.");
-            } else {
-                System.out.println("As senhas não conferem. Tente novamente.");
-            }
-        }
-        return passwordEncoder.encode(password1); 
+ 
+        return false;
     }
 
     /*Método para validar o input do usuário na tela Listar Usúarios é numerico
@@ -122,13 +103,7 @@ public class UserValidator {
         }
     }
 
-
-
-
-
     //Metodos complementares  para validação do cpf
-
-    
     private boolean validCpf(String cpf) {
         if (cpf.length() != 11) { //<= Verifica se o CPF tem 11 dígitos
             return false;
