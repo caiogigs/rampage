@@ -85,7 +85,7 @@ public class Terminal {
         response = scan.nextLine().trim(); 
         switch (response) {
             case "i":
-                readUserInput("(i) Incluir novo usuário");
+                readUserInput("(i) Listar produto");
                 includeUser();
                 break;
             case "0":
@@ -100,7 +100,7 @@ public class Terminal {
                         readUserInput("ID:"+response);
                         editUser(user);
                     } else {
-                        printSlowly("ID inválido. Usuário não encontrado.", 50);
+                        System.out.println("ID inválido. Usuário não encontrado.");
                         listUsers(); 
                     }
                 } else {
@@ -177,7 +177,7 @@ public class Terminal {
                             listUsers();   
                             break; 
                         }catch(IllegalArgumentException e) {
-                            printSlowly("Erro ao altarar senha do usuário: " + e.getMessage(), 30);
+                            System.out.println("Erro ao altarar senha do usuário: " + e.getMessage());
                         }
                         
                     case "n":
@@ -218,7 +218,7 @@ public class Terminal {
                     listUsers();
                     break;
                 } catch (IllegalArgumentException e) {
-                    printSlowly("Erro ao alterar usuário: " + e.getMessage(), 30);
+                    System.out.println("Erro ao alterar usuário: " + e.getMessage());
                 }
                     break;
                 case "n":
@@ -255,8 +255,8 @@ public class Terminal {
                 case USER_INACTIVE:
                     printSlowly("Login falhou. Usuário inativo.", 100);
                     break;
-                case ACCESS_DENIED:
-                    printSlowly("Acesso Negado. a conta informada não têm permissão para acessar esta área.", 100);
+                case CLIENT_ACCESS_DENIED:
+                    printSlowly("Acesso Negado. Clientes não têm permissão para acessar esta área.", 100);
                     break;
                 default:
                     printSlowly("Login falhou. Email ou senha incorretos.", 100);
@@ -264,7 +264,7 @@ public class Terminal {
             }
             
             while (true) {
-                printSlowly("Deseja tentar efetuar login novamente? (Y/N): ", 30);
+                System.out.print("Deseja tentar efetuar login novamente? (Y/N): ");
                 String tryAgain = scan.nextLine().trim().toLowerCase();
                 switch (tryAgain) {
                     case "y":
@@ -382,7 +382,7 @@ public class Terminal {
                     listUsers();
                     break;
                 } catch (IllegalArgumentException e) {
-                    printSlowly("Erro ao registrar usuário: " + e.getMessage(), 30);
+                    System.out.println("Erro ao registrar usuário: " + e.getMessage());
                 }
                     break;    
                 case "n":
@@ -417,7 +417,6 @@ public class Terminal {
         printSlowly("Você escolheu a opção: "+option, 100);   
     }
 
-    //Cadastro da primeira senha
     public String firtPassword() {
         System.out.print("Senha => ");
         String pass = scan.nextLine().trim();

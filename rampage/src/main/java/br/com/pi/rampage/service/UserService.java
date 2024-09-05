@@ -31,7 +31,7 @@ public class UserService {
         SUCCESS,
         FAILURE,
         USER_INACTIVE,
-        ACCESS_DENIED;
+        CLIENT_ACCESS_DENIED;
     }
 
     //Método de cadastro de novos usuários
@@ -58,8 +58,8 @@ public class UserService {
             if (passwordEncoder.matches(password, user.getSenha())) {
                 if (user.isStatus()) {
                     String group = user.getGrupo(); 
-                    if (!"administrador".equalsIgnoreCase(group) && !"estoquista".equalsIgnoreCase(group)) {
-                        return LoginStatus.ACCESS_DENIED;
+                    if ("cliente".equalsIgnoreCase(group)) {
+                        return LoginStatus.CLIENT_ACCESS_DENIED;
                     }
                     UserSession.setUserSession(user.getEmail(), user.getGrupo());
                     return LoginStatus.SUCCESS;
