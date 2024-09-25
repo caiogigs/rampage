@@ -47,6 +47,7 @@ public class SecurityConfig {
             .requestMatchers(HttpMethod.PUT,"/diminuir_quantidade_produto").permitAll()
             .requestMatchers(HttpMethod.GET,"/auth/nomeContem").permitAll()
             .requestMatchers(HttpMethod.POST,"/auth/mudarStatus").permitAll()
+            .requestMatchers(HttpMethod.POST, "/rampage/imagen/upload").permitAll()
             
             .anyRequest().authenticated()
             )

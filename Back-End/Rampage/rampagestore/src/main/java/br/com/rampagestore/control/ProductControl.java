@@ -3,11 +3,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import br.com.rampagestore.model.ProductObj;
 import br.com.rampagestore.repository.ProductRepository;
@@ -27,8 +29,9 @@ public class ProductControl {
     //EndPoint atualizado de cadastro de Produto
     @CrossOrigin(origins = "*", allowedHeaders = "*")
     @PostMapping("/cadastrar_novo_produto")
-    public ResponseEntity<?> signNewProduct(@RequestBody ProductObj obj){
-        return productService.registerNewProduct(obj);
+    public ResponseEntity<?> signNewProduct(@ModelAttribute ProductObj productObj, @RequestParam("mainImage") 
+    MultipartFile mainImage, @RequestParam("images") MultipartFile[] images){
+        return productService.registerNewProduct(productObj, mainImage, images);
     }
 
     //EndPoint atualizado de atualizar Produto
