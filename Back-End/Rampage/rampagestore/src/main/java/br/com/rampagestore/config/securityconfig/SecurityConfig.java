@@ -36,7 +36,7 @@ public class SecurityConfig {
             .requestMatchers(HttpMethod.OPTIONS,"/**").permitAll()
             .requestMatchers(HttpMethod.POST,"/auth/login").permitAll()
             .requestMatchers(HttpMethod.POST,"/auth/register").permitAll()
-            .requestMatchers(HttpMethod.POST,"/cadastrar_novo_produto").permitAll()
+            .requestMatchers(HttpMethod.POST,"/resgister_Product").permitAll()
             .requestMatchers(HttpMethod.PUT,"/atualizar_produto").permitAll()
             .requestMatchers(HttpMethod.GET,"/auth/listarUsuarios").permitAll()
             .requestMatchers(HttpMethod.GET,"/listarProduto").permitAll()
@@ -48,6 +48,9 @@ public class SecurityConfig {
             .requestMatchers(HttpMethod.GET,"/auth/nomeContem").permitAll()
             .requestMatchers(HttpMethod.POST,"/auth/mudarStatus").permitAll()
             .requestMatchers(HttpMethod.POST, "/rampage/imagen/upload").permitAll()
+            .requestMatchers(HttpMethod.POST,"/testUpload").permitAll()
+            .requestMatchers(HttpMethod.GET,"/selecionar_produto").permitAll()
+            .requestMatchers(HttpMethod.GET,"/todos_produtos").permitAll()
             
             .anyRequest().authenticated()
             )

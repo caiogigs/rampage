@@ -59,6 +59,10 @@ public class ProductObj {
         return productName;
     }
 
+    public void setId(long id){
+        this.id = id;
+    }
+
     public void setProductName(String productName) {
         this.productName = productName;
     }

@@ -1,4 +1,6 @@
 package br.com.rampagestore.control;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -8,6 +10,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -26,30 +29,40 @@ public class ProductControl {
     @Autowired
     private ProductService productService;
 
-    //EndPoint atualizado de cadastro de Produto
-    @CrossOrigin(origins = "*", allowedHeaders = "*")
-    @PostMapping("/cadastrar_novo_produto")
-    public ResponseEntity<?> signNewProduct(@ModelAttribute ProductObj productObj, @RequestParam("mainImage") 
-    MultipartFile mainImage, @RequestParam("images") MultipartFile[] images){
-        return productService.registerNewProduct(productObj, mainImage, images);
+    //EndPoint para mostrar todos os produtos ladingPage
+    @GetMapping("/todos_produtos")
+    public ResponseEntity<?> selectForLandingPage(){
+        return productService.selectAllProductsAndImgs();     
+    }
+
+
+    //EndPoint do visualisar do BackOffice
+    @GetMapping("/selecionar_produto")
+    public ResponseEntity<?> selectProductForModal(@RequestBody ProductObj obj){
+        return productService.selectProduct(obj.getId());
+    }
+
+    @PostMapping("/resgister_Product")
+    public ResponseEntity<?> testUpload(@ModelAttribute ProductObj productObj, @RequestPart("img") List<MultipartFile>img) {        
+        return productService.registerNewProduct(productObj, img);
     }
 
     //EndPoint atualizado de atualizar Produto
-    @CrossOrigin(origins = "*", allowedHeaders = "*")
     @PutMapping("/atualizar_produto")
-    public ResponseEntity<?> updateExistProduct(@RequestBody ProductObj obj){
-        return productService.updateProduct(obj);
+    public ResponseEntity<?> updateExistProduct(@ModelAttribute ProductObj obj, @RequestPart("img") List<MultipartFile>img){
+        System.out.println("CONTROLE");
+        obj.setId(Long.valueOf(obj.getId()));
+        System.out.println(obj.getId());
+        return productService.updateProduct(obj, img);
     }
 
     //EndPoint para listar todos os Produtos
-    @CrossOrigin(origins = "*", allowedHeaders = "*")
     @GetMapping("/listarProduto")
     public ResponseEntity<?> catalogProducts(){
         return productService.listingProducts();
     }
 
     //EndPoint para listar todos os Ordenando os mais recentes Produtos
-    @CrossOrigin(origins = "*", allowedHeaders = "*")
     @GetMapping("/listar_produto_recente")
     public ResponseEntity<?> recentProducts(){
         return productService.listingRecentsProducts();
@@ -57,7 +70,6 @@ public class ProductControl {
 
 
     //EndPoint para pesquisar produtos pela palavra chave
-    @CrossOrigin(origins = "*", allowedHeaders = "*")
     @GetMapping("/produtos_contem_palavra")
     public Iterable<ProductObj> productContain(@RequestParam String term){
         return productAction.findByProductNameContainingIgnoreCase(term); 
@@ -65,21 +77,18 @@ public class ProductControl {
 
 
     //EndPoint para alterar o status do produto
-    @CrossOrigin(origins = "*", allowedHeaders = "*")
     @PutMapping("/mudar_status_produto")
     public ResponseEntity<?> changeProductStatus(@RequestBody ProductObj obj){
         return productService.changeStatus(obj);
     }
 
     //EndPoint para aumentar quantidade de produtos 
-    @CrossOrigin(origins = "*", allowedHeaders = "*")
     @PutMapping("/aumentar_quantidade_produto")
     public ResponseEntity<?> upProductAmount(@RequestBody ProductObj obj, @RequestParam int increment){
         return productService.upAmount(obj, increment);
     }
 
     //EndPoint para diminuir a quantidade de produtos
-    @CrossOrigin(origins = "*", allowedHeaders = "*")
     @PutMapping("/diminuir_quantidade_produto")
     public ResponseEntity<?> decreaseProductAmount(@RequestBody ProductObj obj, @RequestParam int decrement){
         return productService.downAmount(obj, decrement);

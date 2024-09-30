@@ -2,8 +2,9 @@ package br.com.rampagestore.service;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -14,6 +15,7 @@ import org.springframework.web.multipart.MultipartFile;
 import br.com.rampagestore.model.ImageModel;
 import br.com.rampagestore.model.ModelMessage;
 import br.com.rampagestore.model.ProductObj;
+import br.com.rampagestore.model.ProductResponse;
 import br.com.rampagestore.repository.ImageRepository;
 import br.com.rampagestore.repository.ProductRepository;
 
@@ -33,6 +35,31 @@ public class ProductService {
     @Autowired
     private ImageService imageService;
 
+    public ResponseEntity<?> selectAllProductsAndImgs(){
+        List<ProductObj> productObjs = productAction.findAll();
+        List<ProductResponse> productResponses = new ArrayList<>(); 
+        for(ProductObj product : productObjs){
+            Optional<ImageModel> imageModelOptional = imageRepository.findByIdProdutoAndMainImageTrue(product.getId());
+            ProductResponse productResponse = new ProductResponse(product, imageModelOptional.get().getDirection());
+            productResponses.add(productResponse);
+        }
+        return new ResponseEntity<>(productResponses, HttpStatus.OK);
+    }
+
+    //Método de selecionar protudos usado no modal (visualizar do Back-office)
+    public ResponseEntity<?> selectProduct(Long id) {
+        Optional<ProductObj> productObjOptional = productAction.findById(id);
+        Optional<ImageModel> imageModelOptional = imageRepository.findByIdProdutoAndMainImageTrue(id);
+        if (productObjOptional.isPresent() && imageModelOptional.isPresent()) {
+            ProductObj productObj = productObjOptional.get();
+            String imageDirection = imageModelOptional.get().getDirection();
+            return new ResponseEntity<>(new ProductResponse(productObj, imageDirection), HttpStatus.OK);
+        } else {
+            message.setMessage("Produto ou imagem principal não encontrada para o ID: " + id);
+            return new ResponseEntity<>(message, HttpStatus.NOT_FOUND);
+        }
+    }
+
     // Método para listar todos os produtos
     public ResponseEntity<?> listingProducts() {
         List<ProductObj> prod = productAction.findAll();
@@ -46,7 +73,7 @@ public class ProductService {
     }
 
     // Método para cadastrar Produtos
-    public ResponseEntity<?> registerNewProduct(ProductObj obj, MultipartFile mainImage, MultipartFile[] images) {
+    public ResponseEntity<?> registerNewProduct(ProductObj obj, List<MultipartFile> images) {
         ProductObj existingProduct = productAction.findByProductName(obj.getProductName());
 
         if (existingProduct != null) {
@@ -55,65 +82,89 @@ public class ProductService {
                     "Verifique a Lista de Produtos e/ou as informações fornecidas e tente novamente.");
             return new ResponseEntity<>(message, HttpStatus.BAD_REQUEST);
         } else {
-            ProductObj productObj = new ProductObj(obj.getProductName(), obj.getProductDetai(),
-            obj.getProductPrice(), obj.getAvaliation(), true, obj.getAmount());
-            
-            productAction.save(productObj);
-            Long productId = productObj.getId();
+            if (!images.isEmpty()) {
 
-            try {
-                saveImages(productId, mainImage, images);
-            } catch (IOException e) {
-                message.setMessage("Erro ao salvar imagens: " + e.getMessage());
-                return new ResponseEntity<>(message, HttpStatus.INTERNAL_SERVER_ERROR);
+                ProductObj productObj = new ProductObj(obj.getProductName(), obj.getProductDetai(),
+                        obj.getProductPrice(), obj.getAvaliation(), true, obj.getAmount());
+
+                productAction.save(productObj);
+                Long productId = productObj.getId();
+
+                try {
+                    saveImages(productId, images);
+                } catch (IOException e) {
+                    message.setMessage("Erro ao salvar imagens: " + e.getMessage());
+                    return new ResponseEntity<>(message, HttpStatus.INTERNAL_SERVER_ERROR);
+                }
+                message.setMessage("Produto: " + productObj.getProductName() + ", Cadastrado com sucesso! " +
+                        "Verifique a lista de produtos.");
+                return new ResponseEntity<>(message, HttpStatus.CREATED);
             }
-            message.setMessage("Produto: " + productObj.getProductName() + ", Cadastrado com sucesso! " +
-                    "Verifique a lista de produtos.");
-            return new ResponseEntity<>(message, HttpStatus.CREATED);
+            message.setMessage("Selecione imagens do produtor para realizar o cadastro");
+            return new ResponseEntity<>(message, HttpStatus.BAD_REQUEST);
+
         }
+
     }
 
-
-
-    public void saveImages(long productId, MultipartFile mainImage, MultipartFile[] images) throws IOException {
-        String directionMainImg = imageService.saveImage(mainImage);
-        ImageModel mainImageModel = new ImageModel(productId, mainImage.getOriginalFilename(), directionMainImg, true,
-        true);
-        System.out.println(mainImage.getOriginalFilename());
+    // Método para iterar e colocar as imagens no diretorio e banco de dados
+    public void saveImages(long productId, List<MultipartFile> images) throws IOException {
+        String directionMainImg = imageService.saveImage(images.get(0));
+        ImageModel mainImageModel = new ImageModel(productId, images.get(0).getOriginalFilename(), directionMainImg,
+                true, true);
         imageRepository.save(mainImageModel);
-        for (int i = 0; i <images.length; i++) {
-            String directionImgs = imageService.saveImage(images[i]);
-            System.out.println("AAAAAAAa");
-            ImageModel imageModel = new ImageModel(productId, images[i].getOriginalFilename(), directionImgs, true, true);
+        for (int i = 1; i < images.size(); i++) {
+            String directionImgs = imageService.saveImage(images.get(i));
+            ImageModel imageModel = new ImageModel(productId, images.get(i).getOriginalFilename(), directionImgs, false,
+                    true);
             imageRepository.save(imageModel);
         }
     }
 
     // Método para atualizar Produtos
-    public ResponseEntity<?> updateProduct(ProductObj obj) {
+    public ResponseEntity<?> updateProduct(ProductObj obj, List<MultipartFile> images) {
+        // Verifica se o produto existe pelo ID
         ProductObj existingProduct = productAction.findById(obj.getId());
         if (existingProduct != null) {
-            ProductObj productByName = productAction.findByProductName(obj.getProductName());
             // Verifica se existe outro produto com o mesmo nome e ID diferente
-            if (productByName != null && !Objects.equals(productByName.getId(), obj.getId())) {
+            ProductObj productByName = productAction.findByProductName(obj.getProductName());
+
+            // Se o produto com o mesmo nome for encontrado, mas com ID diferente, não
+            // permite a atualização
+            if (productByName != null && productByName.getId() != obj.getId()) {
                 message.setMessage("Já existe um produto cadastrado com este nome.");
                 return new ResponseEntity<>(message, HttpStatus.NOT_MODIFIED);
-            } else {
-                // Atualiza o produto
-                ProductObj updatedProduct = new ProductObj(
-                        existingProduct.getId(),
-                        obj.getProductName(),
-                        obj.getProductDetai(),
-                        obj.getProductPrice(),
-                        obj.getAvaliation(),
-                        true,
-                        obj.getAmount(),
-                        LocalDateTime.now());
-                message.setMessage("Produto atualizado De: " + existingProduct + ". Para: " + updatedProduct);
-                productAction.save(updatedProduct);
-                return new ResponseEntity<>(message, HttpStatus.OK);
             }
+
+            // Se não houver produto com o mesmo nome e ID diferente, atualiza o produto
+            ProductObj updatedProduct = new ProductObj(
+                    existingProduct.getId(),
+                    obj.getProductName(),
+                    obj.getProductDetai(),
+                    obj.getProductPrice(),
+                    obj.getAvaliation(),
+                    true,
+                    obj.getAmount(),
+                    LocalDateTime.now());
+
+            message.setMessage("Produto atualizado De: " + existingProduct + ". Para: " + updatedProduct);
+            productAction.save(updatedProduct);
+
+            // Se houver imagens, deleta as antigas e salva as novas
+            if (!images.isEmpty()) {
+                Long productId = obj.getId();
+                imageRepository.deleteByIdProduto(productId);
+                try {
+                    saveImages(productId, images);
+                } catch (IOException e) {
+                    message.setMessage("Erro ao salvar imagens: " + e.getMessage());
+                    return new ResponseEntity<>(message, HttpStatus.INTERNAL_SERVER_ERROR);
+                }
+            }
+
+            return new ResponseEntity<>(message, HttpStatus.OK);
         } else {
+            // Produto não encontrado, retorna uma mensagem apropriada
             message.setMessage(
                     "Tentativa de Atualização inválida. Produto: " + obj.getProductName() + ", não cadastrado.");
             return new ResponseEntity<>(message, HttpStatus.NOT_FOUND);

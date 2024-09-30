@@ -1,10 +1,8 @@
 package br.com.rampagestore.service;
 
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.UUID;
+import java.io.BufferedOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
 
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -12,17 +10,30 @@ import org.springframework.web.multipart.MultipartFile;
 @Service
 public class ImageService {
 
-    private String diretory = "E:/PIStrint2/Back-end/Rampage/rampagestore/images";
+    public String saveImage(MultipartFile image) {
+        if(!image.isEmpty()){
+            String imageName = image.getOriginalFilename();
+            try{
+                //Criando pasta de uplogad
+                String imagesFolder = "F:/PIStrint2/Back-end/Rampage/rampagestore/images";
+                File dir = new File(imagesFolder);
+                if(!dir.exists()){
+                    dir.mkdirs();
+                }
 
-    public String saveImage(MultipartFile file) throws IOException{
-        Path uploadPath = Paths.get(diretory);
-        if (!Files.exists(uploadPath)) {
-            Files.createDirectories(uploadPath);
+            //Criar arquivo no diretorio 
+            File serverFile = new  File(dir.getAbsolutePath() + File.separator + imageName);
+            BufferedOutputStream stream  = new BufferedOutputStream(new FileOutputStream(serverFile));
+            stream.write(image.getBytes());
+            stream.close();
+            return serverFile.getAbsolutePath();
+            }catch(Exception e){
+                System.out.println("Erro ao carregar arquivo: " +imageName+" =>"+e.getMessage());
+            }
+        }else{
+            System.out.println("Erro ao carregar arquivo. Arquivo enviado Vazaio");
         }
-        String uniqueFileName = UUID.randomUUID().toString() + "_" + file.getOriginalFilename();
-        Path filePath = uploadPath.resolve(uniqueFileName);
-        Files.copy(file.getInputStream(), filePath);
-        return filePath.toString();
+        return null;
     }
     
 }

@@ -20,6 +20,10 @@ public class ImageModel {
     private boolean mainImage;
     private boolean status;
     
+    public ImageModel() {
+    }
+
+
     public ImageModel(long idProduto, String originalName, String direction, boolean mainImage, boolean status) {
         this.idProduto = idProduto;
         this.originalName = originalName;
@@ -27,6 +31,8 @@ public class ImageModel {
         this.mainImage = mainImage;
         this.status = status;
     }
+
+    
     public long getId() {
         return id;
     }
