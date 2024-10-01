@@ -1,5 +1,6 @@
 package br.com.rampagestore.repository;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.jpa.repository.Modifying;
@@ -17,6 +18,8 @@ public interface ImageRepository extends CrudRepository<ImageModel, Long>{
     void deleteByIdProduto(long idProduto);
 
     Optional<ImageModel> findByIdProdutoAndMainImageTrue(long idProduto);
+
+    List<ImageModel> findByIdProdutoAndMainImageFalse(long idProduto);
 
 
 }

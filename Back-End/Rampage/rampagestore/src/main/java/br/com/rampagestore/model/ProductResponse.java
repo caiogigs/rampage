@@ -1,10 +1,12 @@
 package br.com.rampagestore.model;
 
+import java.util.List;
+
 public class ProductResponse {
     private ProductObj product;
-    private String imageDirection;
+    private List<String> imageDirection;
 
-    public ProductResponse(ProductObj product, String imageDirection) {
+    public ProductResponse(ProductObj product,  List<String> imageDirection) {
         this.product = product;
         this.imageDirection = imageDirection;
     }
@@ -14,7 +16,7 @@ public class ProductResponse {
         return product;
     }
 
-    public String getImageDirection() {
+    public List<String> getImageDirection() {
         return imageDirection;
     }
 }

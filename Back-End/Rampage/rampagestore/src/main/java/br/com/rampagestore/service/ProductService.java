@@ -9,6 +9,7 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -35,25 +36,48 @@ public class ProductService {
     @Autowired
     private ImageService imageService;
 
+    //Método usado para colocar produtos no landingPage
     public ResponseEntity<?> selectAllProductsAndImgs(){
         List<ProductObj> productObjs = productAction.findAll();
         List<ProductResponse> productResponses = new ArrayList<>(); 
         for(ProductObj product : productObjs){
             Optional<ImageModel> imageModelOptional = imageRepository.findByIdProdutoAndMainImageTrue(product.getId());
-            ProductResponse productResponse = new ProductResponse(product, imageModelOptional.get().getDirection());
+            List<String> imagesDirections = new ArrayList<>();
+            imagesDirections.add(imageModelOptional.get().getDirection());
+            ProductResponse productResponse = new ProductResponse(product, imagesDirections);
             productResponses.add(productResponse);
         }
         return new ResponseEntity<>(productResponses, HttpStatus.OK);
     }
 
-    //Método de selecionar protudos usado no modal (visualizar do Back-office)
+     //Método de selecionar produto usado na ladingPage quando cliente clicar no produto
+     public ResponseEntity<?> selectProductByUser(Long id) {
+        Optional<ProductObj> productObjOptional = productAction.findById(id);
+        Optional<ImageModel> mainImage = imageRepository.findByIdProdutoAndMainImageTrue(id);
+        if (productObjOptional.isPresent() && mainImage.isPresent()) {
+            ProductObj productObj = productObjOptional.get();
+            List<String> imagesDirections = new ArrayList<>();
+            imagesDirections.add(mainImage.get().getDirection());
+            List<ImageModel> productImages = imageRepository.findByIdProdutoAndMainImageFalse(id);
+            for(ImageModel image : productImages){
+                imagesDirections.add(image.getDirection());
+            }
+            return new ResponseEntity<>(new ProductResponse(productObj, imagesDirections), HttpStatus.OK);
+        } else {
+            message.setMessage("Produto ou imagem principal não encontrada para o ID: " + id);
+            return new ResponseEntity<>(message, HttpStatus.NOT_FOUND);
+        }
+    }    
+    
+    //Método de selecionar protudo usado no modal (visualizar do Back-office)
     public ResponseEntity<?> selectProduct(Long id) {
         Optional<ProductObj> productObjOptional = productAction.findById(id);
         Optional<ImageModel> imageModelOptional = imageRepository.findByIdProdutoAndMainImageTrue(id);
         if (productObjOptional.isPresent() && imageModelOptional.isPresent()) {
             ProductObj productObj = productObjOptional.get();
-            String imageDirection = imageModelOptional.get().getDirection();
-            return new ResponseEntity<>(new ProductResponse(productObj, imageDirection), HttpStatus.OK);
+            List<String> imagesDirections = new ArrayList<>();
+            imagesDirections.add(imageModelOptional.get().getDirection());
+            return new ResponseEntity<>(new ProductResponse(productObj, imagesDirections), HttpStatus.OK);
         } else {
             message.setMessage("Produto ou imagem principal não encontrada para o ID: " + id);
             return new ResponseEntity<>(message, HttpStatus.NOT_FOUND);
@@ -172,6 +196,7 @@ public class ProductService {
     }
 
     // Método para aumentar a quantidade de produtos
+    @PreAuthorize("hasAnyRole('ADMIN', 'STOKIST')")
     public ResponseEntity<?> upAmount(ProductObj productObj, int increment) {
         ProductObj productUp = productAction.findById(productObj.getId());
         productUp.setAmount(productObj.getAmount() + increment);

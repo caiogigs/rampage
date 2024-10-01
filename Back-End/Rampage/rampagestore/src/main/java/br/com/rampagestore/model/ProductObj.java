@@ -11,7 +11,7 @@ import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
 
 @Entity
-@Table(name = "products1")
+@Table(name = "products")
 public class ProductObj {
 
     //Atributos 

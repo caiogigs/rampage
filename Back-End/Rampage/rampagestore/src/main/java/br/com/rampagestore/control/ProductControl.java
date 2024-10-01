@@ -3,9 +3,11 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -29,25 +31,33 @@ public class ProductControl {
     @Autowired
     private ProductService productService;
 
+    //EndPoint para exibir produto na ladingPage
+    @GetMapping("/olhar_produto/{id}")
+    public ResponseEntity<?> selectProductIbLdPage(@PathVariable Long id){
+        return productService.selectProductByUser(id);
+    }
+
     //EndPoint para mostrar todos os produtos ladingPage
     @GetMapping("/todos_produtos")
     public ResponseEntity<?> selectForLandingPage(){
         return productService.selectAllProductsAndImgs();     
     }
 
-
-    //EndPoint do visualisar do BackOffice
-    @GetMapping("/selecionar_produto")
-    public ResponseEntity<?> selectProductForModal(@RequestBody ProductObj obj){
-        return productService.selectProduct(obj.getId());
+    //EndPoint do botão visualisar do BackOffice
+    @PreAuthorize("hasAnyRole('ADMIN', 'STOKIST')")
+    @GetMapping("/selecionar_produto/{id}")
+    public ResponseEntity<?> selectProductForModal(@PathVariable Long id){
+        return productService.selectProduct(id);
     }
 
+    //EndPoint de registrar produtos 
     @PostMapping("/resgister_Product")
     public ResponseEntity<?> testUpload(@ModelAttribute ProductObj productObj, @RequestPart("img") List<MultipartFile>img) {        
         return productService.registerNewProduct(productObj, img);
     }
 
-    //EndPoint atualizado de atualizar Produto
+    //EndPoint de atualizar Produtos
+    @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("/atualizar_produto")
     public ResponseEntity<?> updateExistProduct(@ModelAttribute ProductObj obj, @RequestPart("img") List<MultipartFile>img){
         System.out.println("CONTROLE");
@@ -56,20 +66,23 @@ public class ProductControl {
         return productService.updateProduct(obj, img);
     }
 
-    //EndPoint para listar todos os Produtos
-    @GetMapping("/listarProduto")
+    //EndPoint para listar todos os Produtos no BackOffice
+    @PreAuthorize("hasAnyRole('ADMIN', 'STOKIST')")
+    @GetMapping("/listar_produto")
     public ResponseEntity<?> catalogProducts(){
         return productService.listingProducts();
     }
 
-    //EndPoint para listar todos os Ordenando os mais recentes Produtos
+    //EndPoint para listar todos os produtos ordenando os mais recentes no BackOffice
+    @PreAuthorize("hasAnyRole('ADMIN', 'STOKIST')")
     @GetMapping("/listar_produto_recente")
     public ResponseEntity<?> recentProducts(){
         return productService.listingRecentsProducts();
     }
 
 
-    //EndPoint para pesquisar produtos pela palavra chave
+    //EndPoint para pesquisar produtos pela palavra chave no BackOffice
+    @PreAuthorize("hasAnyRole('ADMIN', 'STOKIST')")
     @GetMapping("/produtos_contem_palavra")
     public Iterable<ProductObj> productContain(@RequestParam String term){
         return productAction.findByProductNameContainingIgnoreCase(term); 
@@ -77,18 +90,21 @@ public class ProductControl {
 
 
     //EndPoint para alterar o status do produto
+    @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("/mudar_status_produto")
     public ResponseEntity<?> changeProductStatus(@RequestBody ProductObj obj){
         return productService.changeStatus(obj);
     }
 
     //EndPoint para aumentar quantidade de produtos 
+    @PreAuthorize("hasAnyRole('ADMIN', 'STOKIST')")
     @PutMapping("/aumentar_quantidade_produto")
     public ResponseEntity<?> upProductAmount(@RequestBody ProductObj obj, @RequestParam int increment){
         return productService.upAmount(obj, increment);
     }
 
     //EndPoint para diminuir a quantidade de produtos
+    @PreAuthorize("hasAnyRole('ADMIN', 'STOKIST')")
     @PutMapping("/diminuir_quantidade_produto")
     public ResponseEntity<?> decreaseProductAmount(@RequestBody ProductObj obj, @RequestParam int decrement){
         return productService.downAmount(obj, decrement);
