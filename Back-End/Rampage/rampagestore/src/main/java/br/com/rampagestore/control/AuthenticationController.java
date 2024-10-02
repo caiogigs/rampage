@@ -4,7 +4,6 @@ import java.io.UnsupportedEncodingException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -37,7 +36,6 @@ public class AuthenticationController {
     @Autowired
     private TokenService tokenService;
     
-    @PreAuthorize("hasAnyRole('ADMIN', 'STOKIST')")
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody @Valid AuthenticationDTO data) throws IllegalArgumentException, UnsupportedEncodingException{
         var usernamePassword = new UsernamePasswordAuthenticationToken(data.email(), data.password());
@@ -60,20 +58,17 @@ public class AuthenticationController {
         
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
-    @GetMapping("/listar_usuarios")
+    @GetMapping("/listarUsuarios")
     public Iterable<User> listingUsers(){
         return userRepository.findAll();
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
-    @GetMapping("/nome_contem")
+    @GetMapping("/nomeContem")
     public Iterable<User> nameContain(@RequestParam String term) {
         return userRepository.findByNameContaining(term);
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
-    @PostMapping("/mudar_status")
+    @PostMapping("/mudarStatus")
     public ResponseEntity<?> changeStatus(@RequestBody User user) {
         // Busca o usuário pelo email
         User changeUser = (User) userRepository.findByEmail(user.getEmail());
