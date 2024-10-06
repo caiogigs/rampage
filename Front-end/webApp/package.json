@@ -1,0 +1,36 @@
+{
+    
+    "name": "FrontPI4",
+    
+    "version": "1.0.0",
+    
+    "keywords": [
+    
+        
+    "util",
+    
+        
+    "functional",
+    
+        
+    "server",
+    
+        
+    "client",
+    
+        
+    "browser"
+    
+    ],
+    
+    "author": "caioi",
+    
+    "contributors": [],
+    
+    "dependencies": {
+    
+        
+    "FrontPI4": "file:"
+    
+    }
+}
