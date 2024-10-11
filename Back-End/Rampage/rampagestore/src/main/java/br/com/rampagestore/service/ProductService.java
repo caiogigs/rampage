@@ -196,7 +196,6 @@ public class ProductService {
     }
 
     // Método para aumentar a quantidade de produtos
-    @PreAuthorize("hasAnyRole('ADMIN', 'STOKIST')")
     public ResponseEntity<?> upAmount(ProductObj productObj, int increment) {
         ProductObj productUp = productAction.findById(productObj.getId());
         productUp.setAmount(productObj.getAmount() + increment);

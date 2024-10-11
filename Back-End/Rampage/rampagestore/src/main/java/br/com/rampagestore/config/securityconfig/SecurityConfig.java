@@ -43,6 +43,7 @@ public class SecurityConfig {
             .requestMatchers(HttpMethod.GET,"/todos_produtos").permitAll()
             .requestMatchers(HttpMethod.GET,"/olhar_produto/{id}").permitAll()
             .requestMatchers(HttpMethod.GET,"/selecionar_produto/{id}").permitAll()
+            .requestMatchers(HttpMethod.GET,"/listar_produto").permitAll()
             .anyRequest().authenticated()
             )
             .addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class)
