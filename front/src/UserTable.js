@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import RegisterForm from './RegisterForm';
+import './Css/UserTable.css'
 
 function UserTable() {
     const [users, setUsers] = useState([]);
@@ -104,7 +105,7 @@ function UserTable() {
                     </button>
                 </form>
                 <button
-                    className="btn btn-primary"
+                    className="btn btn-primary mybtn"
                     onClick={handleAddUserClick} // Chama o formulário de registro
                 >
                     + Adicionar Usuário

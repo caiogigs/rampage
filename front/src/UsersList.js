@@ -7,28 +7,28 @@ function UsersList(){
     const [error, setError] = useState(null); // Estado para armazenar erros, se houver
     const [users, setUsers] = useState([]); // Estado para armazenar os usuários
 
-    // Função para buscar usuários na API
-    const fetchUsers = async () => {
-        setLoading(true); // Inicia o estado de carregamento
-        try {
-            const response = await fetch('http://localhost:8080/auth/listarUsuarios');
-            if (!response.ok) {
-                throw new Error('Erro ao buscar usuários');
-            }
-            const data = await response.json();
-            setUsers(data); // Armazena os usuários recebidos
-        } catch (error) {
-            setError('Erro ao buscar usuários.');
-            console.error('Erro ao buscar usuários:', error);
-        } finally {
-            setLoading(false); // Termina o estado de carregamento
-        }
-    };
+    // // Função para buscar usuários na API
+    // const fetchUsers = async () => {
+    //     setLoading(true); // Inicia o estado de carregamento
+    //     try {
+    //         const response = await fetch('http://localhost:8080/auth/listarUsuarios');
+    //         if (!response.ok) {
+    //             throw new Error('Erro ao buscar usuários');
+    //         }
+    //         const data = await response.json();
+    //         setUsers(data); // Armazena os usuários recebidos
+    //     } catch (error) {
+    //         setError('Erro ao buscar usuários.');
+    //         console.error('Erro ao buscar usuários:', error);
+    //     } finally {
+    //         setLoading(false); // Termina o estado de carregamento
+    //     }
+    // };
 
-    // Função chamada ao clicar no botão "Listar Usuários"
-    const handleListUsers = () => {
-        fetchUsers(); // Busca os dados dos usuários
-    };
+    // // Função chamada ao clicar no botão "Listar Usuários"
+    // const handleListUsers = () => {
+    //     fetchUsers(); // Busca os dados dos usuários
+    // };
 
     return(
         <div>
