@@ -3,7 +3,6 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -44,7 +43,6 @@ public class ProductControl {
     }
 
     //EndPoint do botão visualisar do BackOffice
-    @PreAuthorize("hasAnyRole('ADMIN', 'STOKIST')")
     @GetMapping("/selecionar_produto/{id}")
     public ResponseEntity<?> selectProductForModal(@PathVariable Long id){
         return productService.selectProduct(id);
@@ -57,24 +55,20 @@ public class ProductControl {
     }
 
     //EndPoint de atualizar Produtos
-    @PreAuthorize("hasRole('ADMIN')")
-    @PutMapping("/atualizar_produto")
+    @PutMapping("atualizar_produto")
     public ResponseEntity<?> updateExistProduct(@ModelAttribute ProductObj obj, @RequestPart("img") List<MultipartFile>img){
-        System.out.println("CONTROLE");
         obj.setId(Long.valueOf(obj.getId()));
         System.out.println(obj.getId());
         return productService.updateProduct(obj, img);
     }
 
     //EndPoint para listar todos os Produtos no BackOffice
-    @PreAuthorize("hasAnyRole('ADMIN', 'STOKIST')")
     @GetMapping("/listar_produto")
     public ResponseEntity<?> catalogProducts(){
         return productService.listingProducts();
     }
 
     //EndPoint para listar todos os produtos ordenando os mais recentes no BackOffice
-    @PreAuthorize("hasAnyRole('ADMIN', 'STOKIST')")
     @GetMapping("/listar_produto_recente")
     public ResponseEntity<?> recentProducts(){
         return productService.listingRecentsProducts();
@@ -82,7 +76,6 @@ public class ProductControl {
 
 
     //EndPoint para pesquisar produtos pela palavra chave no BackOffice
-    @PreAuthorize("hasAnyRole('ADMIN', 'STOKIST')")
     @GetMapping("/produtos_contem_palavra")
     public Iterable<ProductObj> productContain(@RequestParam String term){
         return productAction.findByProductNameContainingIgnoreCase(term); 
@@ -90,21 +83,18 @@ public class ProductControl {
 
 
     //EndPoint para alterar o status do produto
-    @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("/mudar_status_produto")
     public ResponseEntity<?> changeProductStatus(@RequestBody ProductObj obj){
         return productService.changeStatus(obj);
     }
 
     //EndPoint para aumentar quantidade de produtos 
-    @PreAuthorize("hasAnyRole('ADMIN', 'STOKIST')")
     @PutMapping("/aumentar_quantidade_produto")
     public ResponseEntity<?> upProductAmount(@RequestBody ProductObj obj, @RequestParam int increment){
         return productService.upAmount(obj, increment);
     }
 
     //EndPoint para diminuir a quantidade de produtos
-    @PreAuthorize("hasAnyRole('ADMIN', 'STOKIST')")
     @PutMapping("/diminuir_quantidade_produto")
     public ResponseEntity<?> decreaseProductAmount(@RequestBody ProductObj obj, @RequestParam int decrement){
         return productService.downAmount(obj, decrement);

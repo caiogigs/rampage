@@ -21,7 +21,7 @@ public class ImageService {
             String uniqueImageName = UUID.randomUUID().toString() + fileExtension;
             try{
                 //Criando pasta de uplogad
-                String imagesFolder = "E:/PIStrint2/Back-end/Rampage/rampagestore/images";
+                String imagesFolder = "Rampage/rampagestore/images";
                 File dir = new File(imagesFolder);
                 if(!dir.exists()){
                     dir.mkdirs();

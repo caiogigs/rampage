@@ -9,7 +9,6 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -69,7 +68,7 @@ public class ProductService {
         }
     }    
     
-    //Método de selecionar protudo usado no modal (visualizar do Back-office)
+    //Método de selecionar produto usado no modal (visualizar do Back-office)
     public ResponseEntity<?> selectProduct(Long id) {
         Optional<ProductObj> productObjOptional = productAction.findById(id);
         Optional<ImageModel> imageModelOptional = imageRepository.findByIdProdutoAndMainImageTrue(id);
@@ -84,19 +83,19 @@ public class ProductService {
         }
     }
 
-    // Método para listar todos os produtos
+    //Método para listar todos os produtos
     public ResponseEntity<?> listingProducts() {
         List<ProductObj> prod = productAction.findAll();
         return new ResponseEntity<>(prod, HttpStatus.OK);
     }
 
-    // Método para listar todos os produtos ordenando do mais recente
+    //Método para listar todos os produtos ordenando do mais recente
     public ResponseEntity<?> listingRecentsProducts() {
         List<ProductObj> prod = productAction.findAllByOrderByCreatedAtDesc();
         return new ResponseEntity<>(prod, HttpStatus.OK);
     }
 
-    // Método para cadastrar Produtos
+    //Método para cadastrar Produtos
     public ResponseEntity<?> registerNewProduct(ProductObj obj, List<MultipartFile> images) {
         ProductObj existingProduct = productAction.findByProductName(obj.getProductName());
 
