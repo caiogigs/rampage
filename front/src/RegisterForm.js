@@ -3,9 +3,11 @@ import React, { useState } from 'react';
 function RegisterForm({ handleRegister, handleCancel }) {
     const [formData, setFormData] = useState({
         name: '',
+        birthDate: '',
         cpf: '',
         email: '',
         password: '',
+        gender: '',
         confirmPassword: '', // Novo campo para confirmação de senha
         role: 'STOKIST'
     });
@@ -53,6 +55,15 @@ function RegisterForm({ handleRegister, handleCancel }) {
                 className="form-control" 
                 required 
             />
+             <input 
+                type="text" 
+                name="birthDate" 
+                value={formData.birthDate} 
+                onChange={handleInputChange} 
+                placeholder="Data de Nascimento" 
+                className="form-control" 
+                required 
+            />
             <input 
                 type="text" 
                 name="cpf" 
@@ -86,6 +97,15 @@ function RegisterForm({ handleRegister, handleCancel }) {
                 value={formData.confirmPassword} 
                 onChange={handleInputChange} 
                 placeholder="Confirmar Senha" 
+                className="form-control" 
+                required 
+            />
+            <input 
+                type="text" 
+                name="gender" 
+                value={formData.gender} 
+                onChange={handleInputChange} 
+                placeholder="Genero" 
                 className="form-control" 
                 required 
             />

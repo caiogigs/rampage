@@ -8,7 +8,7 @@ const RegisterConsumerForm = () => {
     email: '',
     password: '',
     gender: '',
-    role: 'USER_ROLE', // Valor predefinido
+    role: 'CONSUMER', // Valor predefinido
     status: true, // Valor predefinido
   });
 
@@ -47,15 +47,14 @@ const RegisterConsumerForm = () => {
       registerDTO: userData,
       userAddress: addressData,
     };
-    const token = '${api.security.token.secret}';
+
     try {
-      const response = await fetch('http://localhost:8080/register_consumer', {
+      const response = await fetch('http://localhost:8080/auth/register_consumer', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`  // Substitua pelo seu token de autenticação, se necessário
         },
-        body: JSON.stringify(requestData)
+        body: JSON.stringify(requestData),
       });
 
       if (!response.ok) {
@@ -73,7 +72,7 @@ const RegisterConsumerForm = () => {
     <form onSubmit={handleSubmit}>
       <h2>Dados do Cliente</h2>
       <input type="text" name="name" value={userData.name} onChange={handleUserChange} placeholder="Nome" required />
-      <input type="date" name="birthDate" value={userData.birthDate} onChange={handleUserChange} required />
+      <input type="text" name="birthDate" value={userData.birthDate} onChange={handleUserChange} required />
       <input type="text" name="cpf" value={userData.cpf} onChange={handleUserChange} placeholder="CPF" required />
       <input type="email" name="email" value={userData.email} onChange={handleUserChange} placeholder="Email" required />
       <input type="password" name="password" value={userData.password} onChange={handleUserChange} placeholder="Senha" required />
