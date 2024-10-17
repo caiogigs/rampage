@@ -10,6 +10,8 @@ import Appc from './Appc';
 import UsersList from './UsersList';
 import HomeBackOffice from './HomeBackOffice';
 import ProductTable from './ProductTable';
+import UserConsumerLogin from './UserConsumerLogin';
+import ConsumerRegister from './CunsumerRegister';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
@@ -21,6 +23,9 @@ root.render(
             <Route path="/back-home" element={<HomeBackOffice />} />
             <Route path="/back-users-list" element={<UsersList />} />
             <Route path="/back-product-list" element={<ProductTable />} />
+            <Route path="/user-cadastrar" element={<UserConsumerLogin />} />
+            <Route path="/register_consumer" element={<ConsumerRegister/>}/>
+           
         </Routes>
     </Router>
   </React.StrictMode>

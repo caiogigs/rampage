@@ -19,6 +19,7 @@ form{
 }
 
 form input{
+  gap: 15px ;
   margin-bottom: 5px;   
 }
 
