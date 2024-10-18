@@ -104,6 +104,7 @@ public class AuthenticationController {
     //Registro de cliente
     @PostMapping("/register_consumer")
     public ResponseEntity<?> registerConsumer(@RequestBody @Valid RegisterConsumerRequest request){
+        System.out.println("oi");
         RegisterDTO data = request.getRegisterDTO();
         UserAddress userAddress = request.getUserAddress();
         return userService.registerNewConsumer(data, userAddress);
