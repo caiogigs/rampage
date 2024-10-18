@@ -3,11 +3,12 @@ import React, { useState } from 'react';
 function RegisterProduct({ handleCancel }) {
     // Estados para armazenar os dados do formulário
     const [productName, setProductName] = useState('');
-    const [productDetai, setProductDetai] = useState('');
+    const [productDetai, setproductDetai] = useState('');
     const [productPrice, setProductPrice] = useState('');
     const [avaliation, setAvaliation] = useState('');
     const [amount, setAmount] = useState('');
-    const [img, setImg] = useState(null);
+    const [imgs, setImgs] = useState([]); // Armazena múltiplas imagens
+    const [defaultImg, setDefaultImg] = useState(null); // Armazena a imagem padrão selecionada
 
     // Função para lidar com o envio do formulário
     const handleSubmit = (e) => {
@@ -15,17 +16,23 @@ function RegisterProduct({ handleCancel }) {
 
         // Cria o objeto de produto
         const formData = new FormData();
-            formData.append('productName', productName);
-            formData.append('productDetai', productDetai);
-            formData.append('productPrice', parseFloat(productPrice))
-            formData.append('avaliation', parseFloat(avaliation)); 
-            formData.append('amount', parseInt(amount, 10));
+        formData.append('productName', productName);
+        formData.append('productDetai', productDetai);
+        formData.append('productPrice', parseFloat(productPrice));
+        formData.append('avaliation', parseFloat(avaliation));
+        formData.append('amount', parseInt(amount, 10));
 
-        // Verifica se há imagem selecionada e adiciona ao formData
-        if(img){
-            formData.append('img', img);
+        // Adiciona a imagem padrão na primeira posição do array
+        if (defaultImg) {
+            formData.append('img', defaultImg); // Adiciona a imagem padrão
         }
 
+        // Verifica se há imagens selecionadas e adiciona ao formData
+        imgs.forEach(img => {
+            if (img !== defaultImg) { // Adiciona apenas as imagens que não são a padrão
+                formData.append('img', img); // 'imgs' é o nome do campo que será processado no backend
+            }
+        });
 
         // Chama a função de registro com os dados do produto
         handleRegisterProd(formData);
@@ -33,7 +40,7 @@ function RegisterProduct({ handleCancel }) {
 
     const handleRegisterProd = async (formData) => {
         try {
-            const response = await fetch('http://localhost:8080/resgister_Product', {
+            const response = await fetch('http://localhost:8080/register_Product', {
                 method: 'POST',
                 body: formData, // Envia como multipart/form-data
             });
@@ -46,6 +53,11 @@ function RegisterProduct({ handleCancel }) {
         } catch (error) {
             console.error('Erro ao enviar o formulário:', error);
         }
+    };
+
+    // Função para definir a imagem padrão
+    const handleSetDefaultImg = (img) => {
+        setDefaultImg(img);
     };
 
     return (
@@ -64,13 +76,13 @@ function RegisterProduct({ handleCancel }) {
                     />
                 </div>
                 <div className="mb-3">
-                    <label htmlFor="productDetai" className="form-label">Destalhes do Produto</label>
+                    <label htmlFor="productDetai" className="form-label">Detalhes do Produto</label>
                     <input
                         type="text"
                         className="form-control"
                         id="productDetai"
                         value={productDetai}
-                        onChange={(e) => setProductDetai(e.target.value)}
+                        onChange={(e) => setproductDetai(e.target.value)}
                         required
                     />
                 </div>
@@ -120,14 +132,35 @@ function RegisterProduct({ handleCancel }) {
                     </select>
                 </div>
                 <div className="mb-3">
-                    <label htmlFor="img" className="form-label">Imagens do Produto</label>
+                    <label htmlFor="imgs" className="form-label">Imagens do Produto</label>
                     <input
                         type="file"
                         className="form-control"
-                        id="img"
-                        onChange={(e) => setImg(e.target.files[0])} // Armazena o arquivo de imagem selecionado
+                        id="imgs"
+                        onChange={(e) => setImgs([...e.target.files])} // Armazena múltiplos arquivos de imagem selecionados
+                        multiple // Permite seleção de múltiplos arquivos
                     />
                 </div>
+
+                {/* Exibe as imagens selecionadas e permite escolher uma como padrão */}
+                {imgs.length > 0 && (
+                    <div className="mb-3">
+                        <h5>Imagens Selecionadas</h5>
+                        <div className="d-flex flex-wrap">
+                            {Array.from(imgs).map((img, index) => (
+                                <div key={index} className="me-3">
+                                    <img
+                                        src={URL.createObjectURL(img)}
+                                        alt={`Imagem ${index + 1}`}
+                                        style={{ width: '100px', height: '100px', objectFit: 'cover' }}
+                                        onClick={() => handleSetDefaultImg(img)} // Define a imagem como padrão ao clicar
+                                    />
+                                    {defaultImg === img && <span className="badge bg-success">Padrão</span>} {/* Indica a imagem padrão */}
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                )}
                 
                 <div className="mb-3">
                     <button type="submit" className="btn btn-primary">Registrar</button>
