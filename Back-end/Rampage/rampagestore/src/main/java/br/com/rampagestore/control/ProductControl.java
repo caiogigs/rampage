@@ -49,7 +49,7 @@ public class ProductControl {
     }
 
     //EndPoint de registrar produtos 
-    @PostMapping("/resgister_Product")
+    @PostMapping("/register_Product")
     public ResponseEntity<?> testUpload(@ModelAttribute ProductObj productObj, @RequestPart("img") List<MultipartFile>img) {        
         return productService.registerNewProduct(productObj, img);
     }

@@ -43,7 +43,7 @@ public class SecurityConfig {
             .requestMatchers(HttpMethod.POST,"/auth/register_consumer").permitAll()
             .requestMatchers(HttpMethod.POST,"/auth/register_Addres").permitAll()
             .requestMatchers(HttpMethod.POST,"/auth/register").permitAll()
-            .requestMatchers(HttpMethod.POST,"/resgister_Product").permitAll()
+            .requestMatchers(HttpMethod.POST,"/register_Product").permitAll()
             .requestMatchers(HttpMethod.GET,"/auth/listarUsuarios").permitAll()
             .requestMatchers(HttpMethod.GET,"/auth/nomeContem").permitAll()
             .requestMatchers(HttpMethod.POST,"/auth/mudarStatus").permitAll()
