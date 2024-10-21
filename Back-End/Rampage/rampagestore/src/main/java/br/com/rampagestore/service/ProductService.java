@@ -1,15 +1,24 @@
 package br.com.rampagestore.service;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.multipart.MultipartFile;
 
 import br.com.rampagestore.model.ImageModel;
@@ -48,6 +57,46 @@ public class ProductService {
         }
         return new ResponseEntity<>(productResponses, HttpStatus.OK);
     }
+
+    public ResponseEntity<?> cathProduct(Long id) {
+        try {
+            Optional<ProductObj> productObjOptional = productAction.findById(id);
+            if (productObjOptional.isEmpty()) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Produto não encontrado.");
+            }
+
+            ProductObj productObj = productObjOptional.get();
+            List<ImageModel> productImages = imageRepository.findByIdProduto(id);
+
+            if (productImages.isEmpty()) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Nenhuma imagem encontrada para este produto.");
+            }
+
+            // Separa a imagem principal das outras imagens
+            ImageModel mainImage = productImages.stream()
+                .filter(ImageModel::isMainImage)
+                .findFirst()
+                .orElseThrow(() -> new IllegalArgumentException("Imagem principal não encontrada."));
+
+            List<String> imagesDirections = productImages.stream()
+                .filter(image -> !image.isMainImage())
+                .map(ImageModel::getDirection)
+                .collect(Collectors.toList());
+
+            // Adiciona a imagem principal
+            imagesDirections.add(0, mainImage.getDirection());
+
+            Map<String, Object> response = new HashMap<>();
+            response.put("product", productObj);
+            response.put("images", imagesDirections);
+
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erro ao processar a solicitação.");
+        }
+    }
+
+
 
      //Método de selecionar produto usado na ladingPage quando cliente clicar no produto
      public ResponseEntity<?> selectProductByUser(Long id) {

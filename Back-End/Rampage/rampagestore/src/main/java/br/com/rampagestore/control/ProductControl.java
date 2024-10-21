@@ -36,6 +36,11 @@ public class ProductControl {
         return productService.selectProductByUser(id);
     }
 
+    @GetMapping("/select_produto/{id}")
+    public ResponseEntity<?> selectProduct(@PathVariable Long id){
+        return productService.cathProduct(id);
+    }
+
     //EndPoint para mostrar todos os produtos ladingPage
     @GetMapping("/todos_produtos")
     public ResponseEntity<?> selectForLandingPage(){
@@ -55,7 +60,7 @@ public class ProductControl {
     }
 
     //EndPoint de atualizar Produtos
-    @PutMapping("atualizar_produto")
+    @PutMapping("/atualizar_produto")
     public ResponseEntity<?> updateExistProduct(@ModelAttribute ProductObj obj, @RequestPart("img") List<MultipartFile>img){
         obj.setId(Long.valueOf(obj.getId()));
         System.out.println(obj.getId());

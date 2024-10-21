@@ -23,5 +23,9 @@ public interface ImageRepository extends CrudRepository<ImageModel, Long>{
 
     List<ImageModel> findByIdProdutoAndMainImageFalse(long idProduto);
 
+    List<ImageModel> findByIdProduto(Long id);
+
+
+
 
 }
