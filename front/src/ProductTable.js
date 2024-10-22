@@ -22,7 +22,7 @@ function ProductTable() {
   const fetchProducts = async () => {
     setLoading(true); // Inicia o estado de carregamento
     try {
-      const response = await fetch("http://localhost:8080/listar_produto_recente");
+      const response = await fetch("http://localhost:8080/listar_produto");
       if (!response.ok) {
         throw new Error("Erro ao buscar produtos");
       }
@@ -79,6 +79,7 @@ function ProductTable() {
   return (
     <div>
       <h2>Lista de Produtos</h2>
+      
       <button type="button" className="btn btn-primary" onClick={cadastraproduto}>
         Cadastrar
       </button>
@@ -111,13 +112,13 @@ function ProductTable() {
                 <td>{product.amount}</td>
                 <td>{product.status ? "Ativo" : "Inativo"}</td>
                 <td>
-                  <button onClick={() => handleEdit(product.id)}>Alterar</button>
+                  <button className="btn btn-warning" onClick={() => handleEdit(product.id)}>Alterar</button>
                   {product.status ? (
-                    <button onClick={() => handleDeactivate(product.id)}>Inativar</button>
+                    <button className="btn btn-secondary" onClick={() => handleDeactivate(product.id)}>Inativar</button>
                   ) : (
-                    <button onClick={() => handleReactivate(product.id)}>Reativar</button>
+                    <button className="btn btn-success" onClick={() => handleReactivate(product.id)}>Reativar</button>
                   )}
-                  <button onClick={() => handleView(product.id)}>Visualizar</button>
+                  <button className="btn btn-primary" onClick={() => handleView(product.id)}>Visualizar</button>
                 </td>
               </tr>
             ))}
