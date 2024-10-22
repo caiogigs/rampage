@@ -1,5 +1,7 @@
+import React, { useEffect, useState } from 'react';
 import './Css/font-awesome.min.css';
 import './Css/LandingPage.css';
+
 
 //imagens
 import g1 from './assets/img/gallery-1.jpeg';
@@ -25,78 +27,97 @@ import u3 from './assets/img/user-3.jpg';
 import u4 from './assets/img/user-4.jpg';
 import u5 from './assets/img/user-5.jpg';
 
-function LandingPage() {
+const LandingPage = () => {
+    const [products, setProducts] = useState([]);
+    const [error, setError] = useState(null);
+
+    useEffect(() => {
+        fetch('http://localhost:8080/todos_produtos') // Ajuste a URL conforme necessário
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok ' + response.statusText);
+                }
+                return response.json();
+            })
+            .then(data => {
+                console.log('Fetched products:', data); // Log dos dados recebidos
+                setProducts(data);
+            })
+            .catch(error => {
+                console.error('Error fetching products:', error);
+                setError(error.toString());
+            });
+    }, []);
 
     return (
         <div>
-            <header>
-                <nav className="navbar section-content">
-                    <a href="#" className="nav-logo">
-                        <h2 className="logo-text">Rampage Store</h2>
-                    </a>
-                    <ul className="nav-menu">
-                        <button id="menu-close-button" className="fas fa-times" />
-                        <li className="nav-item">
-                            <a href="#" className="nav-link">
-                                HOME
-                            </a>
-                        </li>
-                        <li className="nav-item">
-                            <a href="#" className="nav-link">
-                                SNEAKERS
-                            </a>
-                        </li>
-                        <li className="nav-item">
-                            <a href="#" className="nav-link">
-                                ROUPAS
-                            </a>
-                        </li>
-                        <li className="nav-item">
-                            <a href="#" className="nav-link">
-                                CONTATO
-                            </a>
-                        </li>
-                        <li className="nav-item">
-                            <a href="#" className="nav-link">
-                                SOBRE NÓS
-                            </a>
-                        </li>
-                    </ul>
-                    <button id="menu-open-button" className="fas fa-bars" />
-                </nav>
-            </header>
-            <main>
-                {/* Header / Navbar */}
-                <section className="hero-section">
-                    <div className="section-content">
-                        <div className="hero-details">
-                            <h2 className="title">Rampage Store</h2>
-                            <h3 className="subtitle">Os melhores preço é aqui</h3>
-                            <p className="description">Colocar uma texto aqui</p>
-                            <div className="buttons">
-                                <a href="#" className="button order-now">
-                                    Compre Agora
-                                </a>
-                                <a href="#" className="button contact-us">
-                                    Contato{" "}
-                                </a>
-                            </div>
-                        </div>
-                        <div className="hero-image-wrapper">
-                            <img
-                                src={tenMenu}
-                                alt="Hero"
-                                className="hero-image"
-                            />
-                        </div>
-                    </div>
-                </section>
+           <header>
+    <nav className="navbar section-content">
+        <button className="nav-logo">
+            <h2 className="logo-text">Rampage Store</h2>
+        </button>
+        <ul className="nav-menu">
+            <button id="menu-close-button" className="fas fa-times" />
+            <li className="nav-item">
+                <button onClick={() => {/* ação desejada */}} className="nav-link">HOME</button>
+            </li>
+            <li className="nav-item">
+                <button onClick={() => {/* ação desejada */}} className="nav-link">SNEAKERS</button>
+            </li>
+            <li className="nav-item">
+                <button onClick={() => {/* ação desejada */}} className="nav-link">ROUPAS</button>
+            </li>
+            <li className="nav-item">
+                <button onClick={() => {/* ação desejada */}} className="nav-link">CONTATO</button>
+            </li>
+            <li className="nav-item">
+                <button onClick={() => {/* ação desejada */}} className="nav-link">SOBRE NÓS</button>
+            </li>
+        </ul>
+        <button id="menu-open-button" className="fas fa-bars" />
+    </nav>
+</header>
+<main>
+    {/* Header / Navbar */}
+    <section className="hero-section">
+        <div className="section-content">
+            <div className="hero-details">
+                <h2 className="title">Rampage Store</h2>
+                <h3 className="subtitle">Os melhores preços estão aqui</h3>
+                <p className="description">Colocar um texto aqui</p>
+                <div className="buttons">
+                    <button onClick={() => {/* ação desejada */}} className="button order-now">Compre Agora</button>
+                    <button onClick={() => {/* ação desejada */}} className="button contact-us">Contato</button>
+                </div>
+            </div>
+            <div className="hero-image-wrapper">
+                <img src={tenMenu} alt="Hero" className="hero-image" />
+            </div>
+        </div>
+    </section>
                 {/*About section*/}
                 <section className="about-section">
-                    <div className="about-details">
-                        <h2 clas="section-title">About Us</h2>
-                        <p className="text">TEXTO OU PRODUTOS</p>
+                <div>
+            <h1>Produtos</h1>
+            {error && <p className="error-message">{error}</p>}
+            <div className="product-list">
+                {products.map((item) => (
+                    <div key={item.product.id} className="product-card">
+                        <h2>{item.product.productName}</h2>
+                        <p>{item.product.productDetai}</p>
+                        <p>Preço: {item.product.productPrice}</p>
+                        <p>Avaliação: {item.product.avaliation}</p>
+                        {item.imageDirection && item.imageDirection.length > 0 && (
+                            <img 
+                                src={item.imageDirection[1]} 
+                                alt={item.product.productName} 
+                                className="image" 
+                            />
+                        )}
                     </div>
+                ))}
+            </div>
+        </div>
                 </section>
                 {/*Menu section*/}
                 <section className="menu-section">
@@ -330,30 +351,30 @@ function LandingPage() {
                 </section>
                 {/* footer section*/}
                 <footer className="footer-section">
-                    <div className="section-content">
-                        <p className="copyright-text">2024 - Rampage Store</p>
-                        <div className="social-link-list">
-                            <a href="#" className="social-link">
-                                <i className="fa-brands fa-facebook"> </i>
-                            </a>
-                            <a href="#" className="social-link">
-                                <i className="fa-brands fa-instagram"> </i>
-                            </a>
-                            <a href="#" className="social-link">
-                                <i className="fa-brands fa-whatsapp"> </i>
-                            </a>
-                        </div>
-                        <p className="policy-text">
-                            <a href="#" className="policy-link">
-                                Privacy policy
-                            </a>
-                            <span className="separator">•</span>
-                            <a href="#" className="policy-link">
-                                Refund policy
-                            </a>
-                        </p>
-                    </div>
-                </footer>
+    <div className="section-content">
+        <p className="copyright-text">2024 - Rampage Store</p>
+        <div className="social-link-list">
+            <button onClick={() => {/* ação desejada */}} className="social-link">
+                <i className="fa-brands fa-facebook"> </i>
+            </button>
+            <button onClick={() => {/* ação desejada */}} className="social-link">
+                <i className="fa-brands fa-instagram"> </i>
+            </button>
+            <button onClick={() => {/* ação desejada */}} className="social-link">
+                <i className="fa-brands fa-whatsapp"> </i>
+            </button>
+        </div>
+        <p className="policy-text">
+            <button onClick={() => {/* ação desejada */}} className="policy-link">
+                Privacy policy
+            </button>
+            <span className="separator">•</span>
+            <button onClick={() => {/* ação desejada */}} className="policy-link">
+                Refund policy
+            </button>
+        </p>
+    </div>
+</footer>
             </main>
             {/*Link custom script */}
         </div>

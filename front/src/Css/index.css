@@ -28,6 +28,28 @@ form input[type="button"]{
 }
 
 *{
-  border: red solid 1px;
+  border: red solid 0px;
   margin: 5px;
+}
+.product-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+.product-card {
+  border: 1px solid #ccc;
+  padding: 20px;
+  border-radius: 8px;
+  width: 200px;
+}
+
+.link-button {
+  background: none;
+  color: blue;
+  text-decoration: underline;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  font: inherit;
 }
