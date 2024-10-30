@@ -77,7 +77,7 @@ function RegisterForm({ handleRegister, handleCancel }) {
             })
             .catch((err) => {
                 console.error('Erro ao cadastrar:', err);
-                alert(err.message);
+                alert(err.message || 'Erro ao cadastrar.');
             });
     };
 

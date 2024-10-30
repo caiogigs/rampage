@@ -125,14 +125,14 @@ function UserTable() {
                 body: JSON.stringify(formData),
             });
 
+            const data = await response.json();
+
             if (response.ok) {
-                const data = await response.json();
                 fetchUsers(searchTerm);
                 setShowUpdateForm(false);
                 return data.message;
             } else {
-                const errorData = await response.json();
-                throw new Error(errorData)
+                throw new Error(data.message)
             }
         } catch (error) {
             console.error('Erro ao enviar o formulário:', error);

@@ -18,6 +18,25 @@ function UpdateUserForm({ handleUpdate, handleCancel, currentUser }) {
         });
     };
 
+     //Metodo para formatar o CPF e o input do CPF
+     const handleCPFChange = (e) => {
+        const { name, value } = e.target;
+        let formattedValue = value.replace(/\D/g, '');
+        if (formattedValue.length > 3) {
+            formattedValue = formattedValue.slice(0, 3) + '.' + formattedValue.slice(3);
+        }
+        if (formattedValue.length > 7) {
+            formattedValue = formattedValue.slice(0, 7) + '.' + formattedValue.slice(7);
+        }
+        if (formattedValue.length > 11) {
+            formattedValue = formattedValue.slice(0, 11) + '-' + formattedValue.slice(11, 13);
+        }
+        setFormData({
+            ...formData,
+            [name]: formattedValue
+        });
+    };
+
     const handleSubmit = (e) => {
         e.preventDefault();
 
@@ -37,7 +56,7 @@ function UpdateUserForm({ handleUpdate, handleCancel, currentUser }) {
             })
             .catch((err) => {
                 console.error('Erro ao atualizar:', err);
-                alert('Erro ao realizar atualização.');
+                alert(err.message || 'Erro ao realizar atualização.');
             });
     };
 
@@ -56,7 +75,7 @@ function UpdateUserForm({ handleUpdate, handleCancel, currentUser }) {
                 type="text" 
                 name="cpf" 
                 value={formData.cpf} 
-                onChange={handleInputChange} 
+                onChange={handleCPFChange} 
                 placeholder="CPF" 
                 className="form-control" 
                 required 
