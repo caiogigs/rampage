@@ -33,7 +33,7 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
       }
 
     public boolean validateCpf(String cpf) {
-      cpf = cpf.replaceAll("[^0-9]", ""); // Remove caracteres não numéricos do CPF
+      cpf = cpf.replaceAll("[^0-9]", ""); // Remove caracteres não numéricos do CPF exceto X
       return validCpf(cpf); // Retorna true se o CPF for válido, false se for inválido
     }
     

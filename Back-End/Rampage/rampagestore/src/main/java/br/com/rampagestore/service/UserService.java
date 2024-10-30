@@ -5,11 +5,15 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Optional;
 
+import java.util.Collections;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.security.core.Authentication;
 
 import br.com.rampagestore.model.user.RegisterDTO;
 import br.com.rampagestore.model.user.User;
@@ -18,14 +22,22 @@ import br.com.rampagestore.model.user.UserResponse;
 import br.com.rampagestore.model.user.UserRole;
 import br.com.rampagestore.repository.AddresRepository;
 import br.com.rampagestore.repository.UserRepository;
+import br.com.rampagestore.valid.Validation;
 
 @Service
 public class UserService {
 
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
-    @Autowired UserRepository userRepository;
+    @Autowired 
+    private UserRepository userRepository;
 
-    @Autowired AddresRepository addresRepository;
+    @Autowired 
+    private AddresRepository addresRepository;
+
+    @Autowired
+    private Validation validation;
 
     //Método para o usuário visualizar as proprias informações
     public ResponseEntity<?> selectUserInfos(String email){
@@ -136,8 +148,53 @@ public class UserService {
         return ResponseEntity.ok().build();
     }
 
+    public ResponseEntity<?> registerUserBackOffice(RegisterDTO data){
+        if(this.userRepository.findByEmail(data.email()) != null){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Collections.singletonMap("message", "Já existe um usuário registrado com este Email"));
+        }
+        if(this.userRepository.findByCpf(data.cpf()) != null){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Collections.singletonMap("message", "Já existe um usuário registrado com este CPF"));     
+        }
+
+        UserRole role = data.role();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+        LocalDate userBirth = LocalDate.parse(data.birthDate(), formatter);
+        String userCPF = data.cpf().replaceAll("\\D", "");
+        String encryptedPassword = passwordEncoder.encode(data.password());
+        User newUser = new User(data.name(), userBirth, userCPF, data.email(), encryptedPassword, data.gender(), role, true);
+        this.userRepository.save(newUser);
+        return ResponseEntity.status(HttpStatus.OK).body(Collections.singletonMap("message", "Cadastro realizado com sucesso!"));
+    }
 
 
 
+    //Método de Atualizar usuários do BackOffice
+    public ResponseEntity<?> updateUsersBackOffice(long id, RegisterDTO data) {
+        Optional<User> optionalUser = userRepository.findById(id);
+        if (optionalUser.isPresent()) {
+            User user = optionalUser.get();
+            user.setName(data.name());
+            user.setCpf(data.cpf());
+    
+            if (data.password() != null && !data.password().isEmpty()) {
+                String encryptedPassword = passwordEncoder.encode(data.password());
+                user.setPassword(encryptedPassword);
+            }
+    
+            // Verifica se o usuário logado é o mesmo que está sendo atualizado
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            String currentUserEmail = authentication.getName();
+            String message = "Usuário atualizado com sucesso";
+            if (user.getEmail().equals(currentUserEmail)) {
+                message+= ". Exceto o grupo, pois o usuário está logado no momento.";
+            } else {
+                user.setRole(data.role());
+            }
+            userRepository.save(user);
+            return ResponseEntity.ok(Collections.singletonMap("message", message));
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Usuário não encontrado");
+        }
+    }
     
 }

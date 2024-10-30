@@ -1,19 +1,27 @@
 package br.com.rampagestore.control;
-
+import java.util.Collection;
 import java.io.UnsupportedEncodingException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
+
+
+import org.apache.el.stream.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
@@ -26,6 +34,7 @@ import br.com.rampagestore.model.user.RegisterConsumerRequest;
 import br.com.rampagestore.model.user.RegisterDTO;
 import br.com.rampagestore.model.user.User;
 import br.com.rampagestore.model.user.UserAddress;
+import br.com.rampagestore.model.user.UserResponse;
 import br.com.rampagestore.model.user.UserRole;
 import br.com.rampagestore.repository.UserRepository;
 import br.com.rampagestore.service.UserService;
@@ -115,6 +124,11 @@ public class AuthenticationController {
     public ResponseEntity<?> login(@RequestBody @Valid AuthenticationDTO data) throws IllegalArgumentException, UnsupportedEncodingException{
         var usernamePassword = new UsernamePasswordAuthenticationToken(data.email(), data.password());
         var auth = this.authenticationManager.authenticate(usernamePassword);
+        var user = (User) auth.getPrincipal();
+        if (user.getAuthorities().stream().noneMatch(authority -> authority.getAuthority().equals("ROLE_ADMIN") || authority.getAuthority().equals("ROLE_STOKIST"))) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Acesso negado");
+        }
+
         var token = tokenService.generateToken((User) auth.getPrincipal());
         return ResponseEntity.ok(new LoginReponseDTO(token));
     }
@@ -122,17 +136,7 @@ public class AuthenticationController {
     //Registro de Funcionarios
     @PostMapping("/register")
     public ResponseEntity<?> register(@RequestBody @Valid RegisterDTO data){
-        if(this.userRepository.findByEmail(data.email()) != null)
-            return ResponseEntity.badRequest().build();
-        
-        UserRole role = data.role();
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-        LocalDate userBirth = LocalDate.parse(data.birthDate(), formatter);
-        String encryptedPassword = new BCryptPasswordEncoder().encode(data.password());
-        User newUser = new User(data.name(), userBirth, data.cpf(), data.email(), encryptedPassword, data.gender(), role, true);
-        this.userRepository.save(newUser);
-        return ResponseEntity.ok().build();
-        
+        return userService.registerUserBackOffice(data);
     }
 
     @GetMapping("/listarUsuarios")
@@ -140,11 +144,13 @@ public class AuthenticationController {
         return userRepository.findAll();
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/nomeContem")
     public Iterable<User> nameContain(@RequestParam String term) {
         return userRepository.findByNameContaining(term);
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/mudarStatus")
     public ResponseEntity<?> changeStatus(@RequestBody User user) {
         // Busca o usuário pelo email
@@ -160,7 +166,11 @@ public class AuthenticationController {
         return ResponseEntity.ok().build(); // Retorna 200 OK
     }
     
-    
+    @PreAuthorize("hasRole('ADMIN')")
+    @PutMapping("/updateUser/{id}")
+    public ResponseEntity<?> updateUser(@PathVariable Long id, @RequestBody @Valid RegisterDTO data){
+        return userService.updateUsersBackOffice(id, data);        
+    }
     
     
 
