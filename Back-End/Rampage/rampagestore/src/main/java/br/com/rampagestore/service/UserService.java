@@ -22,7 +22,6 @@ import br.com.rampagestore.model.user.UserResponse;
 import br.com.rampagestore.model.user.UserRole;
 import br.com.rampagestore.repository.AddresRepository;
 import br.com.rampagestore.repository.UserRepository;
-import br.com.rampagestore.valid.Validation;
 
 @Service
 public class UserService {
@@ -35,9 +34,6 @@ public class UserService {
 
     @Autowired 
     private AddresRepository addresRepository;
-
-    @Autowired
-    private Validation validation;
 
     //Método para o usuário visualizar as proprias informações
     public ResponseEntity<?> selectUserInfos(String email){
@@ -172,6 +168,12 @@ public class UserService {
     public ResponseEntity<?> updateUsersBackOffice(long id, RegisterDTO data) {
         Optional<User> optionalUser = userRepository.findById(id);
         if (optionalUser.isPresent()) {
+            User existingUser = (User) userRepository.findByCpf(data.cpf());
+            if(existingUser != null && existingUser.getId() != id ){
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Collections.singletonMap("message","Erro ao atualizar! " 
+                + "Já existe um usuário registrado com este CPF." 
+                + "Verifique o CPF informado ou Contacte o Administrador do Sistema"));     
+            }
             User user = optionalUser.get();
             user.setName(data.name());
             user.setCpf(data.cpf());

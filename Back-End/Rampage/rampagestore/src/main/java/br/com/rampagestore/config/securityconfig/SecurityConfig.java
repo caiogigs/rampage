@@ -50,7 +50,6 @@ public class SecurityConfig {
             .requestMatchers(HttpMethod.POST,"/resgister_Product").permitAll()
 
             .requestMatchers(HttpMethod.GET,"/auth/listarUsuarios").permitAll()
-            .requestMatchers(HttpMethod.POST,"/auth/register").permitAll()
             
             
             .requestMatchers(HttpMethod.GET,"/auth/selecionar_usuario").permitAll()

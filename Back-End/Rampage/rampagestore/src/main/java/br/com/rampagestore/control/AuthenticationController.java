@@ -1,27 +1,19 @@
 package br.com.rampagestore.control;
-import java.util.Collection;
+
 import java.io.UnsupportedEncodingException;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 
-
-
-import org.apache.el.stream.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
@@ -34,8 +26,6 @@ import br.com.rampagestore.model.user.RegisterConsumerRequest;
 import br.com.rampagestore.model.user.RegisterDTO;
 import br.com.rampagestore.model.user.User;
 import br.com.rampagestore.model.user.UserAddress;
-import br.com.rampagestore.model.user.UserResponse;
-import br.com.rampagestore.model.user.UserRole;
 import br.com.rampagestore.repository.UserRepository;
 import br.com.rampagestore.service.UserService;
 import jakarta.validation.Valid;
@@ -133,6 +123,7 @@ public class AuthenticationController {
         return ResponseEntity.ok(new LoginReponseDTO(token));
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     //Registro de Funcionarios
     @PostMapping("/register")
     public ResponseEntity<?> register(@RequestBody @Valid RegisterDTO data){
@@ -153,17 +144,13 @@ public class AuthenticationController {
     @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/mudarStatus")
     public ResponseEntity<?> changeStatus(@RequestBody User user) {
-        // Busca o usuário pelo email
         User changeUser = (User) userRepository.findByEmail(user.getEmail());
         if (changeUser == null) {
-            return ResponseEntity.notFound().build(); // Retorna 404 se o usuário não for encontrado
+            return ResponseEntity.notFound().build(); 
         }
-    
-        // Atualiza o status do usuário
         changeUser.setStatus(!changeUser.isStatus());
-        userRepository.save(changeUser); // Salva o usuário atualizado
-    
-        return ResponseEntity.ok().build(); // Retorna 200 OK
+        userRepository.save(changeUser); 
+        return ResponseEntity.ok().build(); 
     }
     
     @PreAuthorize("hasRole('ADMIN')")
