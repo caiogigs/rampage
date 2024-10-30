@@ -9,7 +9,7 @@ function RegisterForm({ handleRegister, handleCancel }) {
         password: '',
         gender: '',
         confirmPassword: '', // Novo campo para confirmação de senha
-        role: 'STOKIST'
+        role: ''
     });
     const [error, setError] = useState(''); // Estado para armazenar mensagens de erro
 
@@ -20,6 +20,43 @@ function RegisterForm({ handleRegister, handleCancel }) {
             [name]: value
         });
     };
+
+    //Metodo para formatar a data e o input da data
+    const handleDateChange = (e) => {
+        const { name, value } = e.target;
+        let formattedValue = value.replace(/\D/g, ''); // Remove todos os caracteres não numéricos
+        if (formattedValue.length > 2) {
+            formattedValue = formattedValue.slice(0, 2) + '/' + formattedValue.slice(2);
+        }
+        if (formattedValue.length > 5) {
+            formattedValue = formattedValue.slice(0, 5) + '/' + formattedValue.slice(5, 9);
+        }
+        setFormData({
+            ...formData,
+            [name]: formattedValue
+        });
+    };
+
+     //Metodo para formatar o CPF e o input do CPF
+    const handleCPFChange = (e) => {
+        const { name, value } = e.target;
+        let formattedValue = value.replace(/\D/g, '');
+        if (formattedValue.length > 3) {
+            formattedValue = formattedValue.slice(0, 3) + '.' + formattedValue.slice(3);
+        }
+        if (formattedValue.length > 7) {
+            formattedValue = formattedValue.slice(0, 7) + '.' + formattedValue.slice(7);
+        }
+        if (formattedValue.length > 11) {
+            formattedValue = formattedValue.slice(0, 11) + '-' + formattedValue.slice(11, 13);
+        }
+        setFormData({
+            ...formData,
+            [name]: formattedValue
+        });
+    };
+
+    
 
     const handleSubmit = (e) => {
         e.preventDefault();
@@ -35,12 +72,12 @@ function RegisterForm({ handleRegister, handleCancel }) {
 
         // Chamando a função handleRegister e passando o formData
         handleRegister(formData)
-            .then(() => {
-                alert('Cadastro realizado com sucesso!');
+            .then((message) => {
+                alert(message);
             })
             .catch((err) => {
                 console.error('Erro ao cadastrar:', err);
-                alert('Erro ao realizar cadastro.');
+                alert(err.message);
             });
     };
 
@@ -59,8 +96,8 @@ function RegisterForm({ handleRegister, handleCancel }) {
                 type="text" 
                 name="birthDate" 
                 value={formData.birthDate} 
-                onChange={handleInputChange} 
-                placeholder="Data de Nascimento" 
+                onChange={handleDateChange} 
+                placeholder="Data de Nascimento (dd/mm/aaaa)" 
                 className="form-control" 
                 required 
             />
@@ -68,7 +105,7 @@ function RegisterForm({ handleRegister, handleCancel }) {
                 type="text" 
                 name="cpf" 
                 value={formData.cpf} 
-                onChange={handleInputChange} 
+                onChange={handleCPFChange} 
                 placeholder="CPF" 
                 className="form-control" 
                 required 
@@ -100,15 +137,20 @@ function RegisterForm({ handleRegister, handleCancel }) {
                 className="form-control" 
                 required 
             />
-            <input 
-                type="text" 
-                name="gender" 
-                value={formData.gender} 
-                onChange={handleInputChange} 
-                placeholder="Genero" 
-                className="form-control" 
-                required 
-            />
+            <select
+                name="gender"
+                value={formData.gender}
+                onChange={handleInputChange}
+                className='form-control'
+                required
+            >
+                 <option value="" disabled>Gênero</option>
+                <option value="female">Feminino</option>
+                <option value="male">Masculino</option>
+                <option value="non-binary">Não-binário</option>
+                <option value="other">Outro</option>
+                <option value="prefer-not-to-say">Prefiro não dizer</option>
+            </select>
             <select 
                 name="role" 
                 value={formData.role} 
@@ -116,6 +158,7 @@ function RegisterForm({ handleRegister, handleCancel }) {
                 className="form-control" 
                 required
             >
+                <option value="" disabled>Selecione o grupo deste usuário</option>
                 <option value="ADMIN">Administrador</option>
                 <option value="STOKIST">Estoquista</option>
             </select>
