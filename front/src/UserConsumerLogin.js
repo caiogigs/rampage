@@ -1,10 +1,13 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 const UserConsumerLogin = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loginError, setLoginError] = useState('');
   const [loading, setLoading] = useState(false);
+
+  const navigate = useNavigate();
 
   const handleLogin = async () => {
     setLoading(true); 
@@ -29,6 +32,7 @@ const UserConsumerLogin = () => {
           localStorage.setItem('authToken', data.token); // Armazena o token no localStorage
           alert('Login bem-sucedido!');
           setLoginError('');
+          navigate('/pagina-principal');
         } else {
           setLoginError('Falha no login. Verifique suas credenciais.');
         }
