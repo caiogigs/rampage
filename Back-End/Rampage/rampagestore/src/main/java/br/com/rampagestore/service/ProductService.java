@@ -11,7 +11,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import java.util.Collections;
 
+import org.hibernate.mapping.Collection;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.HttpStatus;
@@ -147,37 +149,35 @@ public class ProductService {
     //Método para cadastrar Produtos
     public ResponseEntity<?> registerNewProduct(ProductObj obj, List<MultipartFile> images) {
         ProductObj existingProduct = productAction.findByProductName(obj.getProductName());
-
+    
         if (existingProduct != null) {
-            message.setMessage("Tentativa de cadastro invalida. " +
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Collections.singletonMap("message", "Tentativa de cadastro inválida. " +
                     "O produto: " + obj.getProductName() + ", já está cadastrado. " +
-                    "Verifique a Lista de Produtos e/ou as informações fornecidas e tente novamente.");
-            return new ResponseEntity<>(message, HttpStatus.BAD_REQUEST);
-        } else {
-            if (!images.isEmpty()) {
-
-                ProductObj productObj = new ProductObj(obj.getProductName(), obj.getProductDetai(),
-                        obj.getProductPrice(), obj.getAvaliation(), true, obj.getAmount());
-
-                productAction.save(productObj);
-                Long productId = productObj.getId();
-
-                try {
-                    saveImages(productId, images);
-                } catch (IOException e) {
-                    message.setMessage("Erro ao salvar imagens: " + e.getMessage());
-                    return new ResponseEntity<>(message, HttpStatus.INTERNAL_SERVER_ERROR);
-                }
-                message.setMessage("Produto: " + productObj.getProductName() + ", Cadastrado com sucesso! " +
-                        "Verifique a lista de produtos.");
-                return new ResponseEntity<>(message, HttpStatus.CREATED);
-            }
-            message.setMessage("Selecione imagens do produtor para realizar o cadastro");
-            return new ResponseEntity<>(message, HttpStatus.BAD_REQUEST);
-
+                    "Verifique a lista de produtos e/ou as informações fornecidas e tente novamente."));
         }
-
+    
+        // Corrigido: Se images for null ou vazio, retorna erro
+        if (images == null || images.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Collections.singletonMap("message", "Selecione imagens do produto para realizar o cadastro."));
+        }
+    
+        ProductObj productObj = new ProductObj(obj.getProductName(), obj.getProductDetai(),
+                obj.getProductPrice(), obj.getAvaliation(), true, obj.getAmount());
+    
+        productAction.save(productObj);
+        Long productId = productObj.getId();
+    
+        try {
+            saveImages(productId, images);
+        } catch (IOException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Collections.singletonMap("message", "Erro ao salvar imagens: " + e.getMessage()));
+        }
+    
+        return ResponseEntity.status(HttpStatus.CREATED).body(Collections.singletonMap("message", "Produto: " + productObj.getProductName() + ", cadastrado com sucesso! " +
+                "Verifique a lista de produtos."));
     }
+        
+        
 
     // Método para iterar e colocar as imagens no diretorio e banco de dados
     public void saveImages(long productId, List<MultipartFile> images) throws IOException {
