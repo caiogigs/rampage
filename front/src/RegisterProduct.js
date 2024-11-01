@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-function RegisterProduct({ handleCancel }) {
+function RegisterProduct({ handleRegisterProd, handleCancel }) {
     // Estados para armazenar os dados do formulário
     const [productName, setProductName] = useState('');
     const [productDetai, setproductDetai] = useState('');
@@ -14,6 +14,33 @@ function RegisterProduct({ handleCancel }) {
     const handleSubmit = (e) => {
         e.preventDefault();
 
+
+        if (productName.length > 200) {
+            alert('O nome do produto não pode exceder 200 caracteres');
+            return;
+        }
+        if (productDetai.length > 2000) {
+            alert('Os detalhes do produto não podem exceder 2000 caracteres');
+            return;
+        }
+        if (!/^\d+(\.\d{1,2})?$/.test(productPrice)) {
+            alert('O preço deve ter no máximo duas casas decimais');
+            return;
+        }
+
+        if (parseFloat(productPrice) < 0) {
+            alert('O preço não pode ser negativo');
+            return;
+        }
+        if (parseInt(amount, 10) < 0) {
+            alert('A quantidade não pode ser negativa');
+            return;
+        }
+        if (imgs.length <= 0) {
+            alert('Selecione imagens do produto para realizar o cadastro'); // Mensagem de erro
+            return; // Encerra a função se não houver imagens
+        }
+        
         // Cria o objeto de produto
         const formData = new FormData();
         formData.append('productName', productName);
@@ -21,6 +48,7 @@ function RegisterProduct({ handleCancel }) {
         formData.append('productPrice', parseFloat(productPrice));
         formData.append('avaliation', parseFloat(avaliation));
         formData.append('amount', parseInt(amount, 10));
+
 
         // Adiciona a imagem padrão na primeira posição do array
         if (defaultImg) {
@@ -35,24 +63,15 @@ function RegisterProduct({ handleCancel }) {
         });
 
         // Chama a função de registro com os dados do produto
-        handleRegisterProd(formData);
-    };
+        handleRegisterProd(formData)
+        .then((message) => {
+            alert(message); // Alerta com a mensagem de sucesso
+        })
+        .catch((err) => {
+            console.error('Erro ao cadastrar:', err);
+            alert(err.message); // Alerta com a mensagem de erro
+        });
 
-    const handleRegisterProd = async (formData) => {
-        try {
-            const response = await fetch('http://localhost:8080/register_Product', {
-                method: 'POST',
-                body: formData, // Envia como multipart/form-data
-            });
-
-            if (response.ok) {
-                console.log('Produto registrado com sucesso');
-            } else {
-                console.error('Erro ao registrar produto');
-            }
-        } catch (error) {
-            console.error('Erro ao enviar o formulário:', error);
-        }
     };
 
     // Função para definir a imagem padrão
@@ -66,80 +85,91 @@ function RegisterProduct({ handleCancel }) {
             <form onSubmit={handleSubmit}>
                 <div className="mb-3">
                     <label htmlFor="productName" className="form-label">Nome do Produto</label>
-                    <input
-                        type="text"
-                        className="form-control"
-                        id="productName"
-                        value={productName}
-                        onChange={(e) => setProductName(e.target.value)}
-                        required
-                    />
+                    <div>
+                        <input
+                            type="text"
+                            className="form-control"
+                            id="productName"
+                            value={productName}
+                            onChange={(e) => setProductName(e.target.value)}
+                            required
+                        />
+                    </div>
                 </div>
                 <div className="mb-3">
                     <label htmlFor="productDetai" className="form-label">Detalhes do Produto</label>
-                    <input
-                        type="text"
-                        className="form-control"
-                        id="productDetai"
-                        value={productDetai}
-                        onChange={(e) => setproductDetai(e.target.value)}
-                        required
-                    />
+                    <div>
+                        <input
+                            type="text"
+                            className="form-control"
+                            id="productDetai"
+                            value={productDetai}
+                            onChange={(e) => setproductDetai(e.target.value)}
+                            required
+                        />
+                    </div>
                 </div>
                 <div className="mb-3">
                     <label htmlFor="amount" className="form-label">Quantidade</label>
-                    <input
-                        type="number"
-                        className="form-control"
-                        id="amount"
-                        value={amount}
-                        onChange={(e) => setAmount(e.target.value)}
-                        required
-                    />
+                    <div>
+                        <input
+                            type="number"
+                            className="form-control"
+                            id="amount"
+                            value={amount}
+                            onChange={(e) => setAmount(e.target.value)}
+                            required
+                        />
+                    </div>
                 </div>
                 <div className="mb-3">
                     <label htmlFor="productPrice" className="form-label">Preço</label>
-                    <input
-                        type="number"
-                        step="0.01"
-                        className="form-control"
-                        id="productPrice"
-                        value={productPrice}
-                        onChange={(e) => setProductPrice(e.target.value)}
-                        required
-                    />
+                    <div>
+                        <input
+                            type="number"
+                            step="0.01"
+                            className="form-control"
+                            id="productPrice"
+                            value={productPrice}
+                            onChange={(e) => setProductPrice(e.target.value)}
+                            required
+                        />
+                    </div>
                 </div>
                 <div className="mb-3">
                     <label htmlFor="avaliation" className="form-label">Avaliação</label>
-                    <select
-                        className="form-control"
-                        id="avaliation"
-                        value={avaliation}
-                        onChange={(e) => setAvaliation(e.target.value)}
-                        required
-                    >
-                        <option value="">Selecione uma avaliação</option>
-                        <option value="0.5">0.5</option>
-                        <option value="1">1</option>
-                        <option value="1.5">1.5</option>
-                        <option value="2">2</option>
-                        <option value="2.5">2.5</option>
-                        <option value="3">3</option>
-                        <option value="3.5">3.5</option>
-                        <option value="4">4</option>
-                        <option value="4.5">4.5</option>
-                        <option value="5">5</option>
-                    </select>
+                    <div>
+                        <select
+                            className="form-control"
+                            id="avaliation"
+                            value={avaliation}
+                            onChange={(e) => setAvaliation(e.target.value)}
+                            required
+                        >
+                            <option value="">Selecione uma avaliação</option>
+                            <option value="1">1</option>
+                            <option value="1.5">1.5</option>
+                            <option value="2">2</option>
+                            <option value="2.5">2.5</option>
+                            <option value="3">3</option>
+                            <option value="3.5">3.5</option>
+                            <option value="4">4</option>
+                            <option value="4.5">4.5</option>
+                            <option value="5">5</option>
+                        </select>
+                    </div>
                 </div>
                 <div className="mb-3">
                     <label htmlFor="imgs" className="form-label">Imagens do Produto</label>
-                    <input
-                        type="file"
-                        className="form-control"
-                        id="imgs"
-                        onChange={(e) => setImgs([...e.target.files])} // Armazena múltiplos arquivos de imagem selecionados
-                        multiple // Permite seleção de múltiplos arquivos
-                    />
+                    <div>
+                        <input
+                            type="file"
+                            className="form-control"
+                            id="imgs"
+                            onChange={(e) => setImgs([...e.target.files])} // Armazena múltiplos arquivos de imagem selecionados
+                            multiple // Permite seleção de múltiplos arquivos
+                        />
+                    </div>
                 </div>
 
                 {/* Exibe as imagens selecionadas e permite escolher uma como padrão */}

@@ -5,7 +5,7 @@ function ProductTable() {
   const [products, setProducts] = useState([]); // Estado para armazenar produtos
   const [loading, setLoading] = useState(true); // Estado para controlar o carregamento
   const [error, setError] = useState(null); // Estado para armazenar erros, se houver
-  const [cadastroProduto, setCadastroProduto] = useState(false); // Estado para controlar o cadastro de produtos
+  const [showRegisterProductForm, setShowRegisterProductForm] = useState(false);
   const [searchTerm, setSearchTerm] = useState(''); // Estado para armazenar o termo de pesquisa
 
   const searchProductByName = async (term = '') => {
@@ -36,8 +36,38 @@ function ProductTable() {
     }
   };
 
-  const cadastraproduto = () => {
-    setCadastroProduto(true);
+  const handleRegisterProd = async (formData) => {
+    try {
+        const response = await fetch('http://localhost:8080/register_Product', {
+            method: 'POST',
+            body: formData, // Envia como multipart/form-data
+        });
+
+        const data = await response.json();
+
+        if (response.ok) {
+          fetchProducts(); // Recarrega a lista de produtos após o registro
+          setShowRegisterProductForm(false); // Oculta o formulário após o registro
+          return data.message;
+        } else {
+            const errorMessage = data?.message || 'Erro desconhecido. Tente novamente.'; 
+            alert(errorMessage);
+            console.error('Erro ao registrar produto:', errorMessage);
+        }
+    } catch (error) {
+      console.error('Erro ao enviar o formulário:', error);
+      alert('Erro ao registrar produto. Por favor, tente novamente.');
+    }
+  };
+
+
+  const handleAddProductClick = () => {
+    setShowRegisterProductForm(true); // Mostra o formulário de registro
+  };
+
+  const handleCancel = () => {
+    setShowRegisterProductForm(false); // Corrigido aqui
+    fetchProducts(); // Recarrega a lista de produtos após o cancelamento
   };
 
   useEffect(() => {
@@ -53,7 +83,6 @@ function ProductTable() {
   }, [searchTerm]);
 
   const handleEdit = (id) => {
-    // Lógica para editar o produto
     console.log(`Editando produto com ID: ${id}`);
     // Você pode redirecionar para um formulário de edição ou abrir um modal
   };
@@ -76,18 +105,23 @@ function ProductTable() {
     // Você pode redirecionar para uma página de detalhes do produto
   };
 
+
+  if (showRegisterProductForm) {
+    return <RegisterProduct handleRegisterProd={handleRegisterProd} handleCancel={handleCancel} />;
+}
+  
+
   return (
     <div>
       <h2>Lista de Produtos</h2>
-      
-      <button type="button" className="btn btn-primary" onClick={cadastraproduto}>
-        Cadastrar
+      <button type="button" className="btn btn-primary" onClick={handleAddProductClick}>
+        + Novo Produto
       </button>
       <input
         type="text"
         placeholder="Buscar produtos..."
         value={searchTerm}
-        onChange={(e) => setSearchTerm(e.target.value)} // Atualiza o termo de pesquisa
+        onChange={(e) => setSearchTerm(e.target.value)}
       />
       {loading && <p>Carregando produtos...</p>}
       {error && <p className="error">{error}</p>}
@@ -100,7 +134,7 @@ function ProductTable() {
               <th>Preço</th>
               <th>Quantidade</th>
               <th>Status</th>
-              <th>Ações</th> {/* Coluna para ações */}
+              <th>Ações</th>
             </tr>
           </thead>
           <tbody>
@@ -125,10 +159,9 @@ function ProductTable() {
           </tbody>
         </table>
       )}
-      {cadastroProduto && (
-        <div>
-          <RegisterProduct />
-        </div>
+      {showRegisterProductForm && (
+         <RegisterProduct handleCancel={handleCancel} handleRegisterProd={handleRegisterProd} />
+         
       )}
     </div>
   );

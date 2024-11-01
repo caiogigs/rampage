@@ -141,7 +141,7 @@ function UserTable() {
     };
 
     if (showRegisterForm) {
-        return <RegisterForm handleRegister={handleRegister} handleCancel={handleCancel} />;
+        return <RegiterForm handleRegister={handleRegister} handleCancel={handleCancel} />;
     }
 
     if (showUpdateForm) {

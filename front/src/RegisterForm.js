@@ -11,6 +11,7 @@ function RegisterForm({ handleRegister, handleCancel }) {
         confirmPassword: '', // Novo campo para confirmação de senha
         role: ''
     });
+
     const [error, setError] = useState(''); // Estado para armazenar mensagens de erro
 
     const handleInputChange = (e) => {
@@ -77,7 +78,7 @@ function RegisterForm({ handleRegister, handleCancel }) {
             })
             .catch((err) => {
                 console.error('Erro ao cadastrar:', err);
-                alert(err.message || 'Erro ao cadastrar.');
+                alert(err.message);
             });
     };
 
