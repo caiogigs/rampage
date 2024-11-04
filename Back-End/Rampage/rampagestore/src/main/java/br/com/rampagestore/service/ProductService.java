@@ -1,26 +1,16 @@
 package br.com.rampagestore.service;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
-import java.util.stream.Collectors;
-import java.util.Collections;
 
-import org.hibernate.mapping.Collection;
+import br.com.rampagestore.model.enums.ImageType;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.multipart.MultipartFile;
 
 import br.com.rampagestore.model.ImageModel;
@@ -51,54 +41,14 @@ public class ProductService {
         List<ProductObj> productObjs = productAction.findAll();
         List<ProductResponse> productResponses = new ArrayList<>(); 
         for(ProductObj product : productObjs){
-            Optional<ImageModel> imageModelOptional = imageRepository.findByIdProdutoAndMainImageTrue(product.getId());
-            List<String> imagesDirections = new ArrayList<>();
-            imagesDirections.add(imageModelOptional.get().getDirection());
-            ProductResponse productResponse = new ProductResponse(product, imagesDirections);
+            ImageModel image = imageService.listMainImageBase64(product);
+            List<byte[]> imagesDirections = new ArrayList<>();
+            imagesDirections.add(image.getImageBase64());
+            ProductResponse productResponse = new ProductResponse(product, imagesDirections, ImageType.BASE64);
             productResponses.add(productResponse);
         }
         return new ResponseEntity<>(productResponses, HttpStatus.OK);
     }
-
-    public ResponseEntity<?> cathProduct(Long id) {
-        try {
-            Optional<ProductObj> productObjOptional = productAction.findById(id);
-            if (productObjOptional.isEmpty()) {
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Produto não encontrado.");
-            }
-
-            ProductObj productObj = productObjOptional.get();
-            List<ImageModel> productImages = imageRepository.findByIdProduto(id);
-
-            if (productImages.isEmpty()) {
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Nenhuma imagem encontrada para este produto.");
-            }
-
-            // Separa a imagem principal das outras imagens
-            ImageModel mainImage = productImages.stream()
-                .filter(ImageModel::isMainImage)
-                .findFirst()
-                .orElseThrow(() -> new IllegalArgumentException("Imagem principal não encontrada."));
-
-            List<String> imagesDirections = productImages.stream()
-                .filter(image -> !image.isMainImage())
-                .map(ImageModel::getDirection)
-                .collect(Collectors.toList());
-
-            // Adiciona a imagem principal
-            imagesDirections.add(0, mainImage.getDirection());
-
-            Map<String, Object> response = new HashMap<>();
-            response.put("product", productObj);
-            response.put("images", imagesDirections);
-
-            return ResponseEntity.ok(response);
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erro ao processar a solicitação.");
-        }
-    }
-
-
 
      //Método de selecionar produto usado na ladingPage quando cliente clicar no produto
      public ResponseEntity<?> selectProductByUser(Long id) {
@@ -112,7 +62,7 @@ public class ProductService {
             for(ImageModel image : productImages){
                 imagesDirections.add(image.getDirection());
             }
-            return new ResponseEntity<>(new ProductResponse(productObj, imagesDirections), HttpStatus.OK);
+            return new ResponseEntity<>(new ProductResponse(productObj, imagesDirections, ImageType.STRING), HttpStatus.OK);
         } else {
             message.setMessage("Produto ou imagem principal não encontrada para o ID: " + id);
             return new ResponseEntity<>(message, HttpStatus.NOT_FOUND);
@@ -127,7 +77,7 @@ public class ProductService {
             ProductObj productObj = productObjOptional.get();
             List<String> imagesDirections = new ArrayList<>();
             imagesDirections.add(imageModelOptional.get().getDirection());
-            return new ResponseEntity<>(new ProductResponse(productObj, imagesDirections), HttpStatus.OK);
+            return new ResponseEntity<>(new ProductResponse(productObj, imagesDirections, ImageType.STRING), HttpStatus.OK);
         } else {
             message.setMessage("Produto ou imagem principal não encontrada para o ID: " + id);
             return new ResponseEntity<>(message, HttpStatus.NOT_FOUND);
@@ -149,35 +99,37 @@ public class ProductService {
     //Método para cadastrar Produtos
     public ResponseEntity<?> registerNewProduct(ProductObj obj, List<MultipartFile> images) {
         ProductObj existingProduct = productAction.findByProductName(obj.getProductName());
-    
+
         if (existingProduct != null) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Collections.singletonMap("message", "Tentativa de cadastro inválida. " +
+            message.setMessage("Tentativa de cadastro invalida. " +
                     "O produto: " + obj.getProductName() + ", já está cadastrado. " +
-                    "Verifique a lista de produtos e/ou as informações fornecidas e tente novamente."));
+                    "Verifique a Lista de Produtos e/ou as informações fornecidas e tente novamente.");
+            return new ResponseEntity<>(message, HttpStatus.BAD_REQUEST);
+        } else {
+            if (!images.isEmpty()) {
+
+                ProductObj productObj = new ProductObj(obj.getProductName(), obj.getProductDetai(),
+                        obj.getProductPrice(), obj.getAvaliation(), true, obj.getAmount());
+
+                productAction.save(productObj);
+                Long productId = productObj.getId();
+
+                try {
+                    saveImages(productId, images);
+                } catch (IOException e) {
+                    message.setMessage("Erro ao salvar imagens: " + e.getMessage());
+                    return new ResponseEntity<>(message, HttpStatus.INTERNAL_SERVER_ERROR);
+                }
+                message.setMessage("Produto: " + productObj.getProductName() + ", Cadastrado com sucesso! " +
+                        "Verifique a lista de produtos.");
+                return new ResponseEntity<>(message, HttpStatus.CREATED);
+            }
+            message.setMessage("Selecione imagens do produtor para realizar o cadastro");
+            return new ResponseEntity<>(message, HttpStatus.BAD_REQUEST);
+
         }
-    
-        // Corrigido: Se images for null ou vazio, retorna erro
-        if (images == null || images.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Collections.singletonMap("message", "Selecione imagens do produto para realizar o cadastro."));
-        }
-    
-        ProductObj productObj = new ProductObj(obj.getProductName(), obj.getProductDetai(),
-                obj.getProductPrice(), obj.getAvaliation(), true, obj.getAmount());
-    
-        productAction.save(productObj);
-        Long productId = productObj.getId();
-    
-        try {
-            saveImages(productId, images);
-        } catch (IOException e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Collections.singletonMap("message", "Erro ao salvar imagens: " + e.getMessage()));
-        }
-    
-        return ResponseEntity.status(HttpStatus.CREATED).body(Collections.singletonMap("message", "Produto: " + productObj.getProductName() + ", cadastrado com sucesso! " +
-                "Verifique a lista de produtos."));
+
     }
-        
-        
 
     // Método para iterar e colocar as imagens no diretorio e banco de dados
     public void saveImages(long productId, List<MultipartFile> images) throws IOException {

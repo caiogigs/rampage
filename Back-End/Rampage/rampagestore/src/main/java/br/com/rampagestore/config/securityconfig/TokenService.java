@@ -6,7 +6,6 @@ import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.util.Date;
 
-
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -19,7 +18,6 @@ import br.com.rampagestore.model.user.User;
 
 @Service
 public class TokenService {
-
     
     @Value("${api.security.token.secret}")
     private String secret;
@@ -53,12 +51,9 @@ public class TokenService {
         }
     }
 
-
     private Date generateExpirationDate() {
         Instant expirationInstant = LocalDateTime.now().plusHours(2).toInstant(ZoneOffset.of("-03:00"));
         return Date.from(expirationInstant); // Converte Instant para Date
     }
-
-
 }
     

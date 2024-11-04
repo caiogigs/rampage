@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import './';
-import LoginForm from './LoginForm';
+import LoginForm from './login/LoginForm';
 import { useNavigate } from 'react-router-dom';
 
 function App() {

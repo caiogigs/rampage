@@ -55,7 +55,7 @@ public class ProductControl {
     }
 
     //EndPoint de atualizar Produtos
-    @PutMapping("atualizar_produto")
+    @PutMapping("/atualizar_produto")
     public ResponseEntity<?> updateExistProduct(@ModelAttribute ProductObj obj, @RequestPart("img") List<MultipartFile>img){
         obj.setId(Long.valueOf(obj.getId()));
         System.out.println(obj.getId());

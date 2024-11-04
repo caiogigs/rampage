@@ -7,7 +7,6 @@ public class ModelMessage {
     
     private String message;
 
-
     public String getMessage() {
         return message;
     }

@@ -21,17 +21,13 @@ public class ImageController {
     private ImageService imageService;
 
     private String diretory = "F:/PIStrint2/Back-end/Rampage/rampagestore/images";
-    
-    @PostMapping("/upload")
-    public ResponseEntity<?> uploadImage(@RequestParam("file") MultipartFile file){
-        try{
-            String filePath = imageService.saveImage(file);
 
-            return ResponseEntity.ok("Imagem enviada com sucesso " + filePath); 
-        }catch(IOException e){
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-            .body("Falha ao enviar a imagem: "+ e.getMessage());
-        }
+    @PostMapping("/upload")
+    public ResponseEntity<?> uploadImage(@RequestParam("file") MultipartFile file) {
+
+        String filePath = imageService.saveImage(file);
+
+        return ResponseEntity.ok("Imagem enviada com sucesso " + filePath);
     }
 
 }

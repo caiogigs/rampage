@@ -1,10 +1,6 @@
 package br.com.rampagestore.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 
 @Entity
 @Table(name = "images")
@@ -19,6 +15,9 @@ public class ImageModel {
     private String direction;
     private boolean mainImage;
     private boolean status;
+
+    @Transient
+    private byte[] imageBase64;
     
     public ImageModel() {
     }
@@ -70,7 +69,11 @@ public class ImageModel {
         this.status = status;
     }
 
-    
+    public byte[] getImageBase64() {
+        return imageBase64;
+    }
 
-
+    public void setImageBase64(byte[] imageBase64) {
+        this.imageBase64 = imageBase64;
+    }
 }

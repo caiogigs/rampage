@@ -1,12 +1,12 @@
-import { useState } from 'react';
-import './App.css';
-import HomeBackOffice from './HomeBackOffice';
-import LoginForm from './LoginForm';
+import { useState } from "react";
+import "./App.css";
+import HomeBackOffice from "./HomeBackOffice";
+import LoginForm from "./LoginForm";
 
 function App() {
   // Estado para dados do formulário de login
-  const [formData, setFormData] = useState({ email: '', password: '' });
-  const [loginError, setLoginError] = useState('');
+  const [formData, setFormData] = useState({ email: "", password: "" });
+  const [loginError, setLoginError] = useState("");
   const [isAuthenticated, setIsAuthenticated] = useState(false);
 
   // Função para lidar com mudanças nos campos de entrada
@@ -16,31 +16,31 @@ function App() {
 
   // Função para realizar o login
   const handleLogin = () => {
-    fetch('http://localhost:8080/auth/login', {
-      method: 'POST',
+    fetch("http://localhost:8080/auth/login", {
+      method: "POST",
       body: JSON.stringify(formData),
       headers: {
-        'Content-Type': 'application/json',
-        'Accept': 'application/json',
+        "Content-Type": "application/json",
+        Accept: "application/json",
       },
     })
-    .then(response => response.json())
-    .then(data => {
-      if (data.token) {
-        localStorage.setItem('authToken', data.token);
-        setIsAuthenticated(true); // Atualiza o estado de autenticação
-        setLoginError('');
-      } else {
-        setLoginError('Falha no login. Verifique suas credenciais.');
-      }
-    })
-    .catch(() => setLoginError('Erro ao conectar com o servidor.'));
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.token) {
+          localStorage.setItem("authToken", data.token);
+          setIsAuthenticated(true); // Atualiza o estado de autenticação
+          setLoginError("");
+        } else {
+          setLoginError("Falha no login. Verifique suas credenciais.");
+        }
+      })
+      .catch(() => setLoginError("Erro ao conectar com o servidor."));
   };
 
   // Função para limpar os dados do formulário
   const handleCancel = () => {
-    setFormData({ email: '', password: '' });
-    setLoginError('');
+    setFormData({ email: "", password: "" });
+    setLoginError("");
   };
 
   return (
@@ -48,11 +48,11 @@ function App() {
       {isAuthenticated ? (
         <HomeBackOffice />
       ) : (
-        <LoginForm 
-          handleLogin={handleLogin} 
-          handleCancel={handleCancel} 
-          formData={formData} 
-          handleInputChange={handleInputChange} 
+        <LoginForm
+          handleLogin={handleLogin}
+          handleCancel={handleCancel}
+          formData={formData}
+          handleInputChange={handleInputChange}
         />
       )}
       {loginError && <p className="error">{loginError}</p>}

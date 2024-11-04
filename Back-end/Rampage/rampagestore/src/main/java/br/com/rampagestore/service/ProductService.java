@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import br.com.rampagestore.model.enums.ImageType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -40,10 +41,10 @@ public class ProductService {
         List<ProductObj> productObjs = productAction.findAll();
         List<ProductResponse> productResponses = new ArrayList<>(); 
         for(ProductObj product : productObjs){
-            Optional<ImageModel> imageModelOptional = imageRepository.findByIdProdutoAndMainImageTrue(product.getId());
-            List<String> imagesDirections = new ArrayList<>();
-            imagesDirections.add(imageModelOptional.get().getDirection());
-            ProductResponse productResponse = new ProductResponse(product, imagesDirections);
+            ImageModel image = imageService.listMainImageBase64(product);
+            List<byte[]> imagesDirections = new ArrayList<>();
+            imagesDirections.add(image.getImageBase64());
+            ProductResponse productResponse = new ProductResponse(product, imagesDirections, ImageType.BASE64);
             productResponses.add(productResponse);
         }
         return new ResponseEntity<>(productResponses, HttpStatus.OK);
@@ -61,7 +62,7 @@ public class ProductService {
             for(ImageModel image : productImages){
                 imagesDirections.add(image.getDirection());
             }
-            return new ResponseEntity<>(new ProductResponse(productObj, imagesDirections), HttpStatus.OK);
+            return new ResponseEntity<>(new ProductResponse(productObj, imagesDirections, ImageType.STRING), HttpStatus.OK);
         } else {
             message.setMessage("Produto ou imagem principal não encontrada para o ID: " + id);
             return new ResponseEntity<>(message, HttpStatus.NOT_FOUND);
@@ -76,7 +77,7 @@ public class ProductService {
             ProductObj productObj = productObjOptional.get();
             List<String> imagesDirections = new ArrayList<>();
             imagesDirections.add(imageModelOptional.get().getDirection());
-            return new ResponseEntity<>(new ProductResponse(productObj, imagesDirections), HttpStatus.OK);
+            return new ResponseEntity<>(new ProductResponse(productObj, imagesDirections, ImageType.STRING), HttpStatus.OK);
         } else {
             message.setMessage("Produto ou imagem principal não encontrada para o ID: " + id);
             return new ResponseEntity<>(message, HttpStatus.NOT_FOUND);

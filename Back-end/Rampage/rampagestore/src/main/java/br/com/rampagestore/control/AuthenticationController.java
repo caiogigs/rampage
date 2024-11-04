@@ -124,7 +124,7 @@ public class AuthenticationController {
     public ResponseEntity<?> register(@RequestBody @Valid RegisterDTO data){
         if(this.userRepository.findByEmail(data.email()) != null)
             return ResponseEntity.badRequest().build();
-        
+
         UserRole role = data.role();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
         LocalDate userBirth = LocalDate.parse(data.birthDate(), formatter);
@@ -132,7 +132,7 @@ public class AuthenticationController {
         User newUser = new User(data.name(), userBirth, data.cpf(), data.email(), encryptedPassword, data.gender(), role, true);
         this.userRepository.save(newUser);
         return ResponseEntity.ok().build();
-        
+
     }
 
     @GetMapping("/listarUsuarios")

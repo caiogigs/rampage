@@ -6,11 +6,11 @@ import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 
 //Paginas
 import Appc               from './Appc';
-import UsersList          from './UsersList';
+import UsersList          from './user/UsersList';
 import HomeBackOffice     from './HomeBackOffice';
-import ProductTable       from './ProductTable';
-import UserConsumerLogin  from './UserConsumerLogin';
-import ConsumerRegister   from './CunsumerRegister';
+import ProductTable       from './product/ProductTable';
+import UserConsumerLogin  from './user/UserConsumerLogin';
+import ConsumerRegister   from './user/UserConsumerLogin';
 import LandingPage        from './LandingPage';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
