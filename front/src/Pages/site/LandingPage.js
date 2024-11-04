@@ -1,32 +1,32 @@
 import React, { useEffect, useState } from "react";
-import "./Css/font-awesome.min.css";
-import "./Css/LandingPage.css";
+import "../../Css/font-awesome.min.css";
+import "../../Css/LandingPage.css";
 
 //imagens
-import g1 from "./assets/img/gallery-1.jpeg";
-import g2 from "./assets/img/gallery-2.jpg";
-import g3 from "./assets/img/gallery-3.jpg";
-import g4 from "./assets/img/gallery-4.jpg";
-import g5 from "./assets/img/gallery-5.jpeg";
-import g6 from "./assets/img/gallery-6.jpeg";
+import g1 from "../../assets/img/gallery-1.jpeg";
+import g2 from "../../assets/img/gallery-2.jpg";
+import g3 from "../../assets/img/gallery-3.jpg";
+import g4 from "../../assets/img/gallery-4.jpg";
+import g5 from "../../assets/img/gallery-5.jpeg";
+import g6 from "../../assets/img/gallery-6.jpeg";
 
-import tenMenu from "./assets/img/tenis-menu.png";
+import tenMenu from "../../assets/img/tenis-menu.png";
 
-import t1 from "./assets/img/tenis1.png";
-import t2 from "./assets/img/tenis2.png";
-import t3 from "./assets/img/tenis3.png";
-import t4 from "./assets/img/tenis4.png";
-import t5 from "./assets/img/tenis5.png";
-import t6 from "./assets/img/tenis6.png";
+import t1 from "../../assets/img/tenis1.png";
+import t2 from "../../assets/img/tenis2.png";
+import t3 from "../../assets/img/tenis3.png";
+import t4 from "../../assets/img/tenis4.png";
+import t5 from "../../assets/img/tenis5.png";
+import t6 from "../../assets/img/tenis6.png";
 
-import u1 from "./assets/img/user-1.jpg";
-import u2 from "./assets/img/user-2.jpg";
-import u3 from "./assets/img/user-3.jpg";
-import u4 from "./assets/img/user-4.jpg";
-import u5 from "./assets/img/user-5.jpg";
-import Barra from "./Components/Navbar/Navbar";
-import StarRating from "./Components/StarsRating/StarRating";
-import Footer from "./Components/Footer/footer";
+import u1 from "../../assets/img/user-1.jpg";
+import u2 from "../../assets/img/user-2.jpg";
+import u3 from "../../assets/img/user-3.jpg";
+import u4 from "../../assets/img/user-4.jpg";
+import u5 from "../../assets/img/user-5.jpg";
+import Barra from "../../Components/Navbar/Navbar";
+import StarRating from "../../Components/StarsRating/StarRating";
+import Footer from "../../Components/Footer/footer";
 
 const LandingPage = () => {
   const [products, setProducts] = useState([]);

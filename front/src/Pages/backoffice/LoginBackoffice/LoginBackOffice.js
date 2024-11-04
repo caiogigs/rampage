@@ -1,7 +1,6 @@
 import { useState } from "react";
-import "./App.css";
-import HomeBackOffice from "./HomeBackOffice";
-import LoginForm from "./LoginForm";
+import LoginForm from "../../../Components/LoginForm/LoginForm";
+import { useNavigate } from "react-router-dom";
 
 function App() {
   // Estado para dados do formulário de login
@@ -43,10 +42,13 @@ function App() {
     setLoginError("");
   };
 
+  // Navegação entre páginas
+  const navigate = useNavigate();
+
   return (
     <div>
       {isAuthenticated ? (
-        <HomeBackOffice />
+        navigate("/back-home")
       ) : (
         <LoginForm
           handleLogin={handleLogin}

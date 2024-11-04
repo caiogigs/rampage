@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import RegisterForm from '../register/RegisterForm';
-import UpdateUserForm from './UpdateUserForm';
-import '../Css/UserTable.css'
+import RegisterForm from '../../../Components/RegisterForm/RegisterForm';
+import UpdateUserForm from '../internalUser/UpdateUserForm';
+import '../../../Css/UserTable.css'
 
 function UserTable() {
     const [users, setUsers] = useState([]);
