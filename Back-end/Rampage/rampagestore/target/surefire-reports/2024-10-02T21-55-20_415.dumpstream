@@ -1,5 +1,0 @@
-# Created at 2024-10-02T21:55:20.951
-Boot Manifest-JAR contains absolute paths in classpath 'd:\PIStrint2\Back-end\Rampage\rampagestore\target\test-classes'
-Hint: <argLine>-Djdk.net.URLClassPath.disableClassPathURLCheck=true</argLine>
-'other' has different root
-
