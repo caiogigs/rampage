@@ -119,7 +119,7 @@ public class AuthenticationController {
         var auth = this.authenticationManager.authenticate(usernamePassword);
         var token = tokenService.generateToken((User) auth.getPrincipal());
         UserRole role = ((User) auth.getPrincipal()).getRole();
-
+        System.out.println(role);
         return ResponseEntity.ok(new LoginReponseDTO(token, role));
     }
 

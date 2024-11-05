@@ -21,7 +21,7 @@ class LoginService {
         
         if (data.token) {
           localStorage.setItem("authToken", data.token);
-          localStorage.setItem("userRole", data.role);
+          localStorage.setItem("userRole", data.userRole);
         } else {
           error = "Falha no login. Verifique suas credenciais.";
         }

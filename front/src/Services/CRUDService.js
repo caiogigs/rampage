@@ -1,25 +1,29 @@
 import authService from "../auth/AuthService";
 
 class CrudService {
-  _url;
-  _path;
-  _token;
-  _headers;
 
   constructor(urlControllerEndpoint) {
     this.url = "http://localhost:8080";
     this._path = this.url + urlControllerEndpoint;
-    this.token = authService.getToken();
+    this._token = authService.getToken();
     this._headers = {
-      Authorization: `Bearer ${this.token}`,
+      Authorization: `Bearer ${this._token}`,
       "Content-Type": "application/json",
       Accept: "application/json",
     };
   }
 
-  async list(urlEndpoint) {
-    return await fetch(this._path + urlEndpoint)
+  async doGet(urlEndpoint) {
+    return await fetch(
+      this._path + urlEndpoint,
+      {
+        method: 'GET',
+        headers: this._headers
+      }
+    )
       .then((response) => {
+        console.log(this._headers);
+        
         if (!response.ok) {
           throw new Error("Network response was not ok " + response.statusText);
         }
@@ -35,7 +39,7 @@ class CrudService {
       });
   }
 
-  async listByData(urlEndpoint, data) {
+  async doPost(urlEndpoint, data) {
     return await fetch(this._path + urlEndpoint, {
       method: "POST",
       body: JSON.stringify(data),
@@ -57,9 +61,7 @@ class CrudService {
       });
   }
 
-  async listById(urlEndpoint, id) {
-    console.log(this._headers);
-    
+  async doGetById(urlEndpoint, id) {    
     return await fetch(
       `${this._path}${urlEndpoint}?id=${encodeURIComponent(id)}`,
       {

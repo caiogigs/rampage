@@ -38,6 +38,7 @@ public class ProductService {
 
     //Método usado para colocar produtos no landingPage
     public ResponseEntity<?> selectAllProductsAndImgs(){
+        System.out.println("BATEU AQUI");
         List<ProductObj> productObjs = productAction.findAll();
         List<ProductResponse> productResponses = new ArrayList<>(); 
         for(ProductObj product : productObjs){

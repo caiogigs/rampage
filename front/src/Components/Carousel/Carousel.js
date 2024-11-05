@@ -1,11 +1,11 @@
 import Carousel from "react-bootstrap/Carousel";
 import ImgCarrosel from "../ImgCarrossel/ImgCarrosel";
+import React from "react";
 
-function Carrosel({imageBase64}) {
-    console.log("PORRAAAAAAA", imageBase64);
-    if (!Array.isArray(imageBase64)) {
-        return <p>Sem imagens disponíveis.</p>;
-      }
+const Carrosel = React.memo(({ imageBase64 }) => {
+  if (!Array.isArray(imageBase64)) {
+    return <p>Sem imagens disponíveis.</p>;
+  }
   return (
     <Carousel data-bs-theme="dark">
       {imageBase64.map((image, index) => (
@@ -16,7 +16,6 @@ function Carrosel({imageBase64}) {
       ))}
     </Carousel>
   );
-}
+});
 
 export default Carrosel;
-

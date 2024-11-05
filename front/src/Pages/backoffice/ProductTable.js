@@ -1,20 +1,21 @@
 import React, { useEffect, useState } from "react";
 import RegisterProduct from "./RegisterProduct";
+import productService from "../../Services/ProductService/ProductService";
 
 function ProductTable() {
   const [products, setProducts] = useState([]); // Estado para armazenar produtos
   const [loading, setLoading] = useState(true); // Estado para controlar o carregamento
   const [error, setError] = useState(null); // Estado para armazenar erros, se houver
   const [showRegisterProductForm, setShowRegisterProductForm] = useState(false);
-  const [searchTerm, setSearchTerm] = useState(''); // Estado para armazenar o termo de pesquisa
+  const [searchTerm, setSearchTerm] = useState(""); // Estado para armazenar o termo de pesquisa
 
-  const searchProductByName = async (term = '') => {
+  const searchProductByName = async (term = "") => {
     try {
-      const response = await fetch(`http://localhost:8080/produtos_contem_palavra?term=${encodeURIComponent(term)}`);
-      const data = await response.json();
+      const data = await productService.getProductByTerm(term);
       setProducts(data); // Atualiza a lista de produtos com os resultados da pesquisa
+      
     } catch (error) {
-      console.error('Erro ao buscar produtos:', error);
+      console.error("Erro ao buscar produtos:", error);
     }
   };
 
@@ -22,11 +23,11 @@ function ProductTable() {
   const fetchProducts = async () => {
     setLoading(true); // Inicia o estado de carregamento
     try {
-      const response = await fetch("http://localhost:8080/listar_produto");
-      if (!response.ok) {
+      const data = await productService.doGet("/listar_produto");
+      if (!data) {
         throw new Error("Erro ao buscar produtos");
       }
-      const data = await response.json();
+
       setProducts(data); // Armazena os produtos recebidos
     } catch (error) {
       setError("Erro ao buscar produtos.");
@@ -38,28 +39,22 @@ function ProductTable() {
 
   const handleRegisterProd = async (formData) => {
     try {
-        const response = await fetch('http://localhost:8080/register_Product', {
-            method: 'POST',
-            body: formData, // Envia como multipart/form-data
-        });
-
-        const data = await response.json();
-
-        if (response.ok) {
-          fetchProducts(); // Recarrega a lista de produtos após o registro
-          setShowRegisterProductForm(false); // Oculta o formulário após o registro
-          return data.message;
-        } else {
-            const errorMessage = data?.message || 'Erro desconhecido. Tente novamente.'; 
-            alert(errorMessage);
-            console.error('Erro ao registrar produto:', errorMessage);
-        }
+      const data = await productService.doPostMultiPartFile("/register_Product", formData);
+      if (data) {
+        fetchProducts(); // Recarrega a lista de produtos após o registro
+        setShowRegisterProductForm(false); // Oculta o formulário após o registro
+        return data.message;
+      } else {
+        const errorMessage =
+          data?.message || "Erro desconhecido. Tente novamente.";
+        alert(errorMessage);
+        console.error("Erro ao registrar produto:", errorMessage);
+      }
     } catch (error) {
-      console.error('Erro ao enviar o formulário:', error);
-      alert('Erro ao registrar produto. Por favor, tente novamente.');
+      console.error("Erro ao enviar o formulário:", error);
+      alert("Erro ao registrar produto. Por favor, tente novamente.");
     }
   };
-
 
   const handleAddProductClick = () => {
     setShowRegisterProductForm(true); // Mostra o formulário de registro
@@ -105,16 +100,23 @@ function ProductTable() {
     // Você pode redirecionar para uma página de detalhes do produto
   };
 
-
   if (showRegisterProductForm) {
-    return <RegisterProduct handleRegisterProd={handleRegisterProd} handleCancel={handleCancel} />;
-}
-  
+    return (
+      <RegisterProduct
+        handleRegisterProd={handleRegisterProd}
+        handleCancel={handleCancel}
+      />
+    );
+  }
 
   return (
     <div>
       <h2>Lista de Produtos</h2>
-      <button type="button" className="btn btn-primary" onClick={handleAddProductClick}>
+      <button
+        type="button"
+        className="btn btn-primary"
+        onClick={handleAddProductClick}
+      >
         + Novo Produto
       </button>
       <input
@@ -146,13 +148,33 @@ function ProductTable() {
                 <td>{product.amount}</td>
                 <td>{product.status ? "Ativo" : "Inativo"}</td>
                 <td>
-                  <button className="btn btn-warning" onClick={() => handleEdit(product.id)}>Alterar</button>
+                  <button
+                    className="btn btn-warning"
+                    onClick={() => handleEdit(product.id)}
+                  >
+                    Alterar
+                  </button>
                   {product.status ? (
-                    <button className="btn btn-secondary" onClick={() => handleDeactivate(product.id)}>Inativar</button>
+                    <button
+                      className="btn btn-secondary"
+                      onClick={() => handleDeactivate(product.id)}
+                    >
+                      Inativar
+                    </button>
                   ) : (
-                    <button className="btn btn-success" onClick={() => handleReactivate(product.id)}>Reativar</button>
+                    <button
+                      className="btn btn-success"
+                      onClick={() => handleReactivate(product.id)}
+                    >
+                      Reativar
+                    </button>
                   )}
-                  <button className="btn btn-primary" onClick={() => handleView(product.id)}>Visualizar</button>
+                  <button
+                    className="btn btn-primary"
+                    onClick={() => handleView(product.id)}
+                  >
+                    Visualizar
+                  </button>
                 </td>
               </tr>
             ))}
@@ -160,8 +182,10 @@ function ProductTable() {
         </table>
       )}
       {showRegisterProductForm && (
-         <RegisterProduct handleCancel={handleCancel} handleRegisterProd={handleRegisterProd} />
-         
+        <RegisterProduct
+          handleCancel={handleCancel}
+          handleRegisterProd={handleRegisterProd}
+        />
       )}
     </div>
   );

@@ -28,21 +28,15 @@ import Barra from "../../Components/Navbar/Navbar";
 import StarRating from "../../Components/StarsRating/StarRating";
 import Footer from "../../Components/Footer/footer";
 import { Link } from "react-router-dom";
+import siteService from "../../Services/SiteService/SiteService";
 
 const LandingPage = () => {
   const [products, setProducts] = useState([]);
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    fetch("http://localhost:8080/todos_produtos") // Ajuste a URL conforme necessário
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error("Network response was not ok " + response.statusText);
-        }
-        return response.json();
-      })
+    siteService.doGet("/todos_produtos")
       .then((data) => {
-        console.log("Fetched products:", data); // Log dos dados recebidos
         setProducts(data);
       })
       .catch((error) => {

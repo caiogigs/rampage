@@ -1,25 +1,42 @@
 import CrudService from "../CRUDService";
 
-class ProductService extends CrudService{
+class ProductService extends CrudService {
+  static instance = null;
 
-    static instance = null;
+  constructor() {
+    super("/product-controller");
 
-    constructor(){
-        super("");
+    if (ProductService.instance) return ProductService.instance;
+    ProductService.instance = this;
+  }
 
-        if (ProductService.instance)
-            return ProductService.instance; 
-        ProductService.instance = this;
-    }
+  getProductByTerm = async (term) => {
+    return await fetch(
+      `${this._path}/produtos_contem_palavra?term=${encodeURIComponent(term)}`,
+      {
+        headers: {Authorization: `Bearer ${this._token}`}
+      }
+    )
+      .then((response) => response.json())
+      .then((data) => data)
+      .catch((err) => alert("Erro ao buscar produtos."));
+  };
 
-    getProductByID = async (productId) => {
-        return this.listById("/product-by-id", productId)
-        .catch((err) => {
-            window.alert("Erro ao buscar Produto.");
-            console.error(err);
-        });
-    }
-
+  doPostMultiPartFile = async (urlEndpoint, data) => {
+    return await fetch(
+        `${this._path}${urlEndpoint}`, 
+        {
+            method: "POST",
+            body: data,
+            headers: {
+                Authorization: `Bearer ${this._token}`
+            }
+        }
+      )
+        .then((response) => response.json())
+        .then((data) => data)
+        .catch((err) => alert("Erro ao fazer requisição."));
+  }
 }
 
 const productService = new ProductService();
