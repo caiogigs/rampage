@@ -12,6 +12,7 @@ import ProductTable       from './Pages/backoffice/ProductTable';
 import UserConsumerLogin  from './Pages/site/UserConsumerLogin';
 import ConsumerRegister   from './Pages/site/ConsumerRegister';
 import LandingPage        from './Pages/site/LandingPage';
+import ProductDetails from './Pages/site/Product-Details/ProductDetails';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
@@ -25,6 +26,8 @@ root.render(
             <Route path="/user-cadastrar"     element={<ConsumerRegister  />} />
             <Route path="/login_consumer"     element={<UserConsumerLogin />} />
             <Route path="/pagina-principal"   element={<LandingPage       />} />
+            <Route path="/product-detail"    element={<ProductDetails       />} />
+            <Route path="/cart"       	      element={<LandingPage       />} />
           </Routes>
       </Router>
   </React.StrictMode>

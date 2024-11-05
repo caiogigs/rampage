@@ -39,7 +39,7 @@ public class ProductControl {
     //EndPoint para mostrar todos os produtos ladingPage
     @GetMapping("/todos_produtos")
     public ResponseEntity<?> selectForLandingPage(){
-        return productService.selectAllProductsAndImgs();     
+        return productService.selectAllProductsAndImgs();
     }
 
     //EndPoint do botão visualisar do BackOffice
@@ -48,9 +48,14 @@ public class ProductControl {
         return productService.selectProduct(id);
     }
 
+    @GetMapping("/product-by-id")
+    public ResponseEntity<?> listingProductById(@RequestParam(name = "id") Long id) {
+        return productService.listingProductById(id);
+    }
+
     //EndPoint de registrar produtos 
     @PostMapping("/register_Product")
-    public ResponseEntity<?> testUpload(@ModelAttribute ProductObj productObj, @RequestPart("img") List<MultipartFile>img) {        
+    public ResponseEntity<?> testUpload(@ModelAttribute ProductObj productObj, @RequestPart("img") List<MultipartFile>img) {
         return productService.registerNewProduct(productObj, img);
     }
 
@@ -78,7 +83,7 @@ public class ProductControl {
     //EndPoint para pesquisar produtos pela palavra chave no BackOffice
     @GetMapping("/produtos_contem_palavra")
     public Iterable<ProductObj> productContain(@RequestParam String term){
-        return productAction.findByProductNameContainingIgnoreCase(term); 
+        return productAction.findByProductNameContainingIgnoreCase(term);
     }
 
 

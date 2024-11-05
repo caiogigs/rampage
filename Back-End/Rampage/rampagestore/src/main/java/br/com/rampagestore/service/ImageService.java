@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -83,16 +84,16 @@ public class ImageService {
     }
 
     // LISTAR IMAGENS
-    public List<ImageModel> listAllImagesBase64(ProductObj product) {
+    public List<byte[]> listAllImagesBase64(ProductObj product) {
         List<ImageModel> images = imageRepository.findByIdProdutoOrderByMainImageDesc(product.getId());
+        List<byte[]> images64 = new ArrayList<>();
 
         for (ImageModel imagem : images) {
             String imagePath = imagem.getDirection();
 
             try {
 
-                byte[] conteudoImagem = getImageContent(imagePath);
-                imagem.setImageBase64(conteudoImagem);
+                images64.add(getImageContent(imagePath));
 
             } catch (IOException e) {
                 e.printStackTrace();
@@ -100,7 +101,7 @@ public class ImageService {
             }
         }
 
-        return images;
+        return images64;
     }
 
     private byte[] getImageContent(String imagePath) throws IOException {

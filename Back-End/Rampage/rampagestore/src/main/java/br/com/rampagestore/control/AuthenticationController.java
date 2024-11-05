@@ -60,7 +60,9 @@ public class AuthenticationController {
         var usernamePassword = new UsernamePasswordAuthenticationToken(data.email(), data.password());
         var auth = this.authenticationManager.authenticate(usernamePassword);
         var token = tokenService.generateToken((User) auth.getPrincipal());
-        return ResponseEntity.ok(new LoginReponseDTO(token));
+        UserRole role = ((User) auth.getPrincipal()).getRole();
+
+        return ResponseEntity.ok(new LoginReponseDTO(token, role));
     }
 
     //Indicar endereço padrão de cobrança
@@ -116,7 +118,9 @@ public class AuthenticationController {
         var usernamePassword = new UsernamePasswordAuthenticationToken(data.email(), data.password());
         var auth = this.authenticationManager.authenticate(usernamePassword);
         var token = tokenService.generateToken((User) auth.getPrincipal());
-        return ResponseEntity.ok(new LoginReponseDTO(token));
+        UserRole role = ((User) auth.getPrincipal()).getRole();
+
+        return ResponseEntity.ok(new LoginReponseDTO(token, role));
     }
 
     //Registro de Funcionarios

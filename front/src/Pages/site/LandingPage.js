@@ -27,6 +27,7 @@ import u5 from "../../assets/img/user-5.jpg";
 import Barra from "../../Components/Navbar/Navbar";
 import StarRating from "../../Components/StarsRating/StarRating";
 import Footer from "../../Components/Footer/footer";
+import { Link } from "react-router-dom";
 
 const LandingPage = () => {
   const [products, setProducts] = useState([]);
@@ -87,31 +88,35 @@ const LandingPage = () => {
             </div>
           </div>
         </section>
-        {/*About section*/}
+        {/*Product section*/}
         <section className="about-section">
           <div>
             <h1>Produtos</h1>
             {error && <p className="error-message">{error}</p>}
             <div className="product-list">
               {products.map((item) => (
-                <div key={item.product.id} className="product-card">
-                  <h2>{item.product.productName}</h2>
-                  <p>{item.product.productDetai}</p>
-                  <p>Preço: {item.product.productPrice}</p>
-                  <div className="rating">
-                    <StarRating
-                      className="rating"
-                      avaliacao={item.product.avaliation}
-                    />
+                <Link
+                  to={`/product-detail?product=${encodeURIComponent(item.product.id)}`}
+                >
+                  <div key={item.product.id} className="product-card">
+                    <h2>{item.product.productName}</h2>
+                    <p>{item.product.productDetai}</p>
+                    <p>Preço: {item.product.productPrice}</p>
+                    <div className="rating">
+                      <StarRating
+                        className="rating"
+                        avaliacao={item.product.avaliation}
+                      />
+                    </div>
+                    {item.imageBase64 && item.imageBase64.length > 0 && (
+                      <img
+                        src={`data:image/jpeg;base64,${item.imageBase64}`}
+                        alt={item.product.productName}
+                        className="image"
+                      />
+                    )}
                   </div>
-                  {item.imageBase64 && item.imageBase64.length > 0 && (
-                    <img
-                      src={`data:image/jpeg;base64,${item.imageBase64}`}
-                      alt={item.product.productName}
-                      className="image"
-                    />
-                  )}
-                </div>
+                </Link>
               ))}
             </div>
           </div>

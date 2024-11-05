@@ -1,6 +1,7 @@
 import { useState } from "react";
-import LoginForm from "../../../Components/LoginForm/LoginForm";
 import { useNavigate } from "react-router-dom";
+import authService from "../../../auth/AuthService";
+import LoginForm from "../../../Components/LoginForm/LoginForm";
 
 function App() {
   // Estado para dados do formulário de login
@@ -15,25 +16,12 @@ function App() {
 
   // Função para realizar o login
   const handleLogin = () => {
-    fetch("http://localhost:8080/auth/login", {
-      method: "POST",
-      body: JSON.stringify(formData),
-      headers: {
-        "Content-Type": "application/json",
-        Accept: "application/json",
-      },
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        if (data.token) {
-          localStorage.setItem("authToken", data.token);
-          setIsAuthenticated(true); // Atualiza o estado de autenticação
-          setLoginError("");
-        } else {
-          setLoginError("Falha no login. Verifique suas credenciais.");
-        }
-      })
-      .catch(() => setLoginError("Erro ao conectar com o servidor."));
+    authService.login(formData).then((error) => {
+      console.log(error.length);
+
+      if (error.length !== 0) setLoginError(error);
+      else setIsAuthenticated(authService.isAuthenticated());
+    });
   };
 
   // Função para limpar os dados do formulário

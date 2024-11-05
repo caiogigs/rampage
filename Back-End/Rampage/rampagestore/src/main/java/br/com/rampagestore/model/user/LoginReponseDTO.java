@@ -1,5 +1,5 @@
 package br.com.rampagestore.model.user;
 
-public record LoginReponseDTO(String token) {
+public record LoginReponseDTO<T>(String token, T userRole) {
     
 }

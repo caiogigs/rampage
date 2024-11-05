@@ -1,0 +1,9 @@
+main {
+  border: solid;
+}
+
+.rating {
+  height: 40px;
+  font-size: 20px;
+  color: rgb(216, 184, 0);
+}

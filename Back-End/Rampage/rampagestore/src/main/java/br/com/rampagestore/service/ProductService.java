@@ -96,6 +96,16 @@ public class ProductService {
         return new ResponseEntity<>(prod, HttpStatus.OK);
     }
 
+    //Método para listar o produto pelo id
+    public ResponseEntity<?> listingProductById(Long id) {
+        ProductObj prod = productAction.findById(id).orElse(null);
+        if (prod == null)
+            return ResponseEntity.notFound().build();
+
+        List<byte[]> images = imageService.listAllImagesBase64(prod);
+        return new ResponseEntity<>(new ProductResponse(prod, images, ImageType.BASE64), HttpStatus.OK);
+    }
+
     //Método para cadastrar Produtos
     public ResponseEntity<?> registerNewProduct(ProductObj obj, List<MultipartFile> images) {
         ProductObj existingProduct = productAction.findByProductName(obj.getProductName());
