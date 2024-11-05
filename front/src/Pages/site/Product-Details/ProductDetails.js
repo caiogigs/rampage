@@ -1,10 +1,11 @@
 import { useEffect, useRef, useState } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import Carrosel from "../../../Components/Carousel/Carousel";
 import StarRating from "../../../Components/StarsRating/StarRating";
 import cartService from "../../../Services/CartService/CartService";
 import siteService from "../../../Services/SiteService/SiteService";
 import "./ProductDetails.css";
+import Barra from "../../../Components/Navbar/Navbar";
 
 const ProductDetails = () => {
   const location = useLocation();
@@ -19,8 +20,7 @@ const ProductDetails = () => {
     const value = Number(event.target.value);
     if (value <= product.amount) {
       setQuantityOrdered(value);
-    }
-    else {
+    } else {
       setQuantityOrdered(product.amount);
     }
   };
@@ -43,35 +43,41 @@ const ProductDetails = () => {
     }
   }, [productId]);
 
+  const navigate = new useNavigate();
+
   const saveOnCart = (productOrder) => {
     productOrder.quantityOrdered = quantityOrdered;
-    console.log(productOrder);
-    
+    productOrder.image64 = imageRef.current[0];
     cartService.addItem(productOrder);
+    navigate("/cart");
   };
+
 
   const tela = () => {
     return (
       <>
-        <main className="w-100 h-100 mt-4">
-          <div className="w-100">
+        <header>
+          <Barra />
+        </header>
+        <main className="w-100 h-100">
+          <div className="w-100 product">
             <div className="row">
               <div className="col-6">
                 <Carrosel imageBase64={imageRef.current} />
               </div>
 
               <div className="col-6">
+                <div className="rating">
+                  <StarRating avaliacao={product.avaliation} />
+                </div>
                 <div>
-                  <StarRating
-                    className="rating"
-                    avaliacao={product.avaliation}
-                  />
                   <p>Produto: {product.productName}</p>
                   <p>Detalhes: </p>
                   <textarea value={product.productDetai}></textarea>
                   <p>Preço: R$ {product.productPrice.toFixed(2)}</p>
                   <p>Quatidade Disponível: {product.amount}</p>
-                  <input className="w-25"
+                  <input
+                    className="w-25"
                     type="number"
                     id="numberInput"
                     value={quantityOrdered}

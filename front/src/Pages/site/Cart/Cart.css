@@ -5,3 +5,30 @@ main{
 .content {
     border: solid red;
 }
+
+.carrinho{
+    margin-top: 100px;
+}
+
+.product p, .price p, .adress-cep p{
+    margin: 0;
+}
+
+.price p{
+    text-align: end;
+}
+
+.imageCart{
+    width: 100%;
+    height: 100%;
+}
+
+.imageCart img{
+    max-height: 90px;
+    width: fit-content;
+}
+
+.adress-cep{
+    margin: auto;
+    border-bottom: #ddd 2px solid;
+}

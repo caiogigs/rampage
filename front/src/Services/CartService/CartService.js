@@ -29,6 +29,7 @@ class CartService {
     const item = this._products.find((p) => p.id === product.id);
     if (item) item.quantityOrdered += product.quantityOrdered;
     else this._products.push(product);
+    alert("Produto adicionado com sucesso.");
     this.saveCart();
   }
 
@@ -65,20 +66,18 @@ class CartService {
 
   getTotalPrice() {
     let total = this._products.reduce((total, product) => {
-      total += product.price * product.quantityOrdered;
+      total += product.productPrice * product.quantityOrdered;
       return total;
     }, 0);
 
-    if (this._freight) {
-      total += this._freight.price;
-
-      return total;
-    }
+    if (this._freight?.price) total += this._freight.price;
+    
+    return total;
   }
 
   getSubTotalPrice() {
     let total = this._products.reduce((total, product) => {
-      total += product.price * product.quantityOrdered;
+      total += product.productPrice * product.quantityOrdered;
       return total;
     }, 0);
 
@@ -92,7 +91,7 @@ class CartService {
 
   saveCart = async () => {
     await this._updateCartObj().then(() => {
-      localStorage.setItem("cart", JSON.stringify(this._objCart));
+      localStorage.setItem("cart", JSON.stringify(this._objCart));      
     });
   };
 
@@ -113,7 +112,7 @@ class Cart {
 
 class Freight {
   deliveryTime = "";
-  price = "";
+  price = 0;
 
   constructor(deliveryTime, price) {
     this.deliveryTime = deliveryTime;

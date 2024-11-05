@@ -1,34 +1,34 @@
-@import url('https://fonts.googleapis.com/css2?family=Itim&family=Poppins:ital,wght@0,300;0,400;0,500;1,400&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Itim&family=Poppins:ital,wght@0,300;0,400;0,500;1,400&display=swap");
 
-.barraNav{
+.barraNav {
   max-height: 55px;
   z-index: 2;
-background: #f1f1f1;
+  background: #f1f1f1;
 }
-.Pai_Nav{
+.Pai_Nav {
   position: fixed;
   width: 100vw;
   z-index: 3;
 }
 
-.contentNav{
+.contentNav {
   height: 100px;
   background: transparent;
   display: flex;
   flex-direction: row;
   padding-top: 15px;
 }
-.contentNavH{
+.contentNavH {
   height: 100px;
   background: transparent;
   display: flex;
   flex-direction: row;
 }
 
-.contentNav img{
+.contentNav img {
   background: transparent !important;
 }
-.LinksNav{
+.LinksNav {
   display: flex;
   flex-direction: row;
   gap: 15px;
@@ -38,23 +38,22 @@ background: #f1f1f1;
   margin-right: auto;
   margin-left: auto;
 }
-.link{
+.link {
   text-decoration: none;
   color: black;
-  font-family: 'Itim';
+  font-family: "Itim";
   font-size: 20px;
   background-color: none;
 }
-.link:hover, .iconLogin{
-  color: #F5620E;
+.link:hover,
+.iconLogin {
+  color: #f5620e;
 }
-#iconLogin{
-
+#iconLogin {
   font-size: 40px;
   color: #010101;
 }
-.iconLogin{
+.iconLogin {
   text-decoration: none;
   color: #010101;
 }
-
