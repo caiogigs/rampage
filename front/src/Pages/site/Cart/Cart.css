@@ -10,7 +10,7 @@ main{
     margin-top: 100px;
 }
 
-.product p, .price p, .adress-cep p{
+.product p, .price p, .address-cep p{
     margin: 0;
 }
 
@@ -28,7 +28,7 @@ main{
     width: fit-content;
 }
 
-.adress-cep{
+.address-cep{
     margin: auto;
     border-bottom: #ddd 2px solid;
 }

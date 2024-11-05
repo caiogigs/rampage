@@ -2,10 +2,9 @@ import { useEffect, useState } from "react";
 import Footer from "../../../Components/Footer/footer";
 import Barra from "../../../Components/Navbar/Navbar";
 import cartService from "../../../Services/CartService/CartService";
-import "./Cart.css";
-import CrudService from "../../../Services/CRUDService";
-import productService from "../../../Services/ProductService/ProductService";
 import siteService from "../../../Services/SiteService/SiteService";
+import "./Cart.css";
+import CheckoutService from "../../../Services/CheckoutService";
 
 const Cart = () => {
   const [products, setProducts] = useState([{}]);
@@ -68,10 +67,15 @@ const Cart = () => {
     });
   };
 
+  const { realizaCheckout } = CheckoutService(); 
+  const iniciaCheckout = () => {
+    realizaCheckout();
+  }
+
   const showAdress = () => {
     return (
-      <div className="row adress">
-        <div className="row adress-cep mt-3 pb-3 ps-4">
+      <div className="row address">
+        <div className="row address-cep mt-3 pb-3 ps-4">
           <p>Cep: {enderecoCep.cep}</p>
           <p>Logradouro: {enderecoCep.logradouro}</p>
           <p>Bairro: {enderecoCep.bairro}</p>
@@ -100,9 +104,9 @@ const Cart = () => {
     );
   };
 
-const mainPage = () => {
+  const mainPage = () => {
     return (
-        <main className="w-100 h-100">
+      <main className="w-100 h-100">
         <div className="content row carrinho p-2">
           <div className="infos col-8" style={{ border: "solid blue" }}>
             <div className="row titulo">
@@ -116,7 +120,10 @@ const mainPage = () => {
                       <p>Produto: {prod.productName}</p>
                       <p>Quantidade: {prod.quantityOrdered}</p>
                       <p>
-                        Valor unitário: R$ {prod?.productPrice ? precoFormatado(prod.productPrice) : "00,00"}
+                        Valor unitário: R${" "}
+                        {prod?.productPrice
+                          ? precoFormatado(prod.productPrice)
+                          : "00,00"}
                       </p>
                       <p>Detalhes: {prod.productDetai}</p>
                     </div>
@@ -168,12 +175,12 @@ const mainPage = () => {
           </div>
 
           <div className="row button w-100 mt-4 d-flex justify-content-center">
-            <button className="btn w-50 btn-primary">Finalizar Compra</button>
+            <button onClick={() => iniciaCheckout()} className="btn w-50 btn-primary">Finalizar Compra</button>
           </div>
         </div>
       </main>
     );
-}
+  };
 
   return (
     <>

@@ -28,6 +28,18 @@ class AuthService {
     return error;
   }
 
+  async loginConsumer(data) {
+    const error = await this._loginService.loginConsumer(data);
+    
+    if (error.length === 0) {
+      this.authenticated = true;
+    } else {
+      this.authenticated = false;
+    }
+
+    return error;
+  }
+
   async logout() {
     this.authenticated = false;
     await this._loginService.logout();
@@ -40,6 +52,10 @@ class AuthService {
 
   getRole() {
     return localStorage.getItem("userRole");
+  }
+
+  getIdUser() {
+    return localStorage.getItem("idUser");
   }
 
   isAuthenticated() {
