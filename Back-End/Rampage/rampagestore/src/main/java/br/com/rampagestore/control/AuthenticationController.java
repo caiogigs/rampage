@@ -79,15 +79,20 @@ public class AuthenticationController {
     public ResponseEntity<?> indicateStandardAddres(@RequestPart("addresId") String addresId, @RequestPart("userId") String userId) {
         long formatAddresId = Long.parseLong(addresId);
         long formatUserId = Long.parseLong(userId);
-        return userService.selectStandardAddres(formatAddresId, formatUserId);    
+        return userService.selectStandardAddres(formatAddresId, formatUserId);
+    }
+
+    //Indicar endereço padrão de entrega
+    @GetMapping("/indicate-all-delivery-address")
+    public ResponseEntity<?> indicateAllDeliveryAddress(@RequestParam(name = "id") Long userId){
+        return userService.selectAllDeliveryAdrress(userId);
     }
 
 
     //Registrar novo Endereço
-    @PostMapping("/register_Addres")
-    public ResponseEntity<?> registerAddres(@ModelAttribute UserAddress userAddress, @RequestPart("userId") String userId) {
-        long fomartId = Long.parseLong(userId);
-        return userService.registerNewAddres(userAddress, fomartId);
+    @PostMapping("/register-address")
+    public ResponseEntity<?> registerAddres(@RequestBody UserAddress userAddress) {
+        return userService.registerNewAddres(userAddress);
     }
 
     //Alteração da senha do cliente
@@ -133,7 +138,7 @@ public class AuthenticationController {
 
         UserRole role = data.role();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-        LocalDate userBirth = LocalDate.parse(data.birthDate(), formatter);
+        LocalDate userBirth = data.birthDate();
         String encryptedPassword = new BCryptPasswordEncoder().encode(data.password());
         User newUser = new User(data.name(), userBirth, data.cpf(), data.email(), encryptedPassword, data.gender(), role, true);
         this.userRepository.save(newUser);

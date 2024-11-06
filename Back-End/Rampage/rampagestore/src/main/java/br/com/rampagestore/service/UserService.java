@@ -66,22 +66,29 @@ public class UserService {
         return ResponseEntity.ok().build();
     }
 
+    //Método selecionar todos os endereços de entrega
+    public ResponseEntity<?> selectAllDeliveryAdrress(Long userId) {
+        List<UserAddress> addresses = addresRepository.findAllByIdUserAndDeliveryAddressTrueOrderByStandardDesc(userId);
+        return ResponseEntity.ok().body(addresses);
+    }
 
     //Método Adicionar novo endereço
-    public ResponseEntity<?> registerNewAddres(UserAddress userAddress, long userId){
-        List<UserAddress> addresses = addresRepository.findAllByIdUser(userId);
-        if (!addresses.isEmpty()) {
-            for (UserAddress usAd : addresses) {
-                usAd.setDeliveryAddress(false);
-                addresRepository.save(usAd);
-            }
-        }
-        userAddress.setIdUser(userId);
+    public ResponseEntity<?> registerNewAddres(UserAddress userAddress){
+        // Validar endereco repetido
+        // Validar se é o primeiro endereço, se sim -> standard = true
+        boolean add = addresRepository.existsByIdUser(userAddress.getIdUser());
+        if (!add)
+            userAddress.setStandard(true);
+        else
+            userAddress.setStandard(false);
+
+
         userAddress.setBillingAddress(false);
         userAddress.setDeliveryAddress(true);
         userAddress.setStatus(true);
-        addresRepository.save(userAddress);
-        return ResponseEntity.ok().build();
+
+        UserAddress address = addresRepository.save(userAddress);
+        return new ResponseEntity<>(address, HttpStatus.CREATED);
     }
 
 
@@ -102,7 +109,7 @@ public class UserService {
         if (existingUser!= null) {
            User unchangedData = (User) existingUser;
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-            LocalDate userBirth = LocalDate.parse(changedData.birthDate(), formatter);
+            LocalDate userBirth = changedData.birthDate();
             // Atualizando somente os campos editáveis
             unchangedData.setName(changedData.name());
             unchangedData.setBirthDate(userBirth);
@@ -122,7 +129,7 @@ public class UserService {
             return ResponseEntity.badRequest().build();
         }
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-        LocalDate userBirth = LocalDate.parse(data.birthDate(), formatter);
+        LocalDate userBirth = data.birthDate();
         String encryptedPassword = new BCryptPasswordEncoder().encode(data.password());
         User newUser = new User(data.name(), userBirth, data.cpf(), data.email(), encryptedPassword, data.gender(), UserRole.CONSUMER, true);
         this.userRepository.save(newUser);
@@ -131,6 +138,7 @@ public class UserService {
         userAddress.setBillingAddress(true);//Define como endereço de Cobrança
         userAddress.setDeliveryAddress(true);//Define como endereço de entrega até ser cadastrado novo endereço
         userAddress.setStatus(true);
+        userAddress.setStandard(true);
         addresRepository.save(userAddress);
 
         return ResponseEntity.ok().build();
@@ -138,6 +146,4 @@ public class UserService {
 
 
 
-
-    
 }

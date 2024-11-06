@@ -18,11 +18,9 @@ class LoginService {
       })
       .then((data) => {
         console.log(data);
-        
+
         if (data.token) {
-          sessionStorage.setItem("authToken", data.token);
-          sessionStorage.setItem("userRole", data.userRole);
-          sessionStorage.setItem("idUser", data.id);
+          this._setData(data);
         } else {
           error = "Falha no login. Verifique suas credenciais.";
         }
@@ -36,7 +34,7 @@ class LoginService {
     return error;
   }
 
-  async loginConsumer(formData){
+  async loginConsumer(formData) {
     let error = "";
 
     await fetch("http://localhost:8080/auth/login_consumer", {
@@ -55,11 +53,9 @@ class LoginService {
       })
       .then((data) => {
         console.log(data);
-        
+
         if (data.token) {
-          sessionStorage.setItem("authToken", data.token);
-          sessionStorage.setItem("userRole", "CLIENTE");
-          sessionStorage.setItem("idUser", data.id);
+          this._setData(data);
         } else {
           error = "Falha no login. Verifique suas credenciais.";
         }
@@ -73,11 +69,16 @@ class LoginService {
     return error;
   }
 
+  async _setData(data) {
+    localStorage.setItem("authToken", data.token);
+    localStorage.setItem("userRole", data.userRole);
+    localStorage.setItem("idUser", data.id);
+  }
 
   async logout() {
-    sessionStorage.removeItem("authToken");
-    sessionStorage.removeItem("userRole");
-    sessionStorage.removeItem("idUser");
+    localStorage.removeItem("authToken");
+    localStorage.removeItem("userRole");
+    localStorage.removeItem("idUser");
   }
 }
 

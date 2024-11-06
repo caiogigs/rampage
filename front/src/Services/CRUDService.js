@@ -63,7 +63,7 @@ class CrudService {
 
   async doGetById(urlEndpoint, id) {    
     return await fetch(
-      `${this._path}${urlEndpoint}?id=${encodeURIComponent(id)}`,
+      `${this._path}${urlEndpoint}?id=${id}`,
       {
         method: "GET",
         headers: this._headers,

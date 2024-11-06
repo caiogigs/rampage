@@ -19,10 +19,12 @@ class SiteService extends CrudService {
     return await fetch(this._path + urlEndpoint)
       .then((response) => response.json())
       .then((data) => data)
-      .catch((err) => alert("Erro ao buscar produtos."));
+      .catch((err) => alert("Erro ao buscar."));
   };
 
-
+  getViaCepApi = async (cep) => {
+    return await this.doGet(`/get-cep?cep=${cep}`);
+  };
 }
 
 const siteService = new SiteService();

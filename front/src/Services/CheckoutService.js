@@ -20,6 +20,7 @@ const useCheckoutService = () => {
   const redireciona = () => {
         console.log(2);
         const hasCheckoutEndereco = location.pathname === "/checkout/select-address";
+        const hasCheckoutAddEndereco = location.pathname === "/checkout/register-address";
     const hasCheckoutPagamento = location.pathname === "/checkout/payment";
 
     if (hasCheckoutEndereco) {
@@ -50,7 +51,11 @@ const useCheckoutService = () => {
     navigate("/checkout/login"); // Usando navigate para redirecionar
   };
 
-  return { realizaCheckout };
+  const cadastarEndereco = () => {
+    navigate("/checkout/register-address"); // Usando navigate para redirecionar
+  };
+
+  return { realizaCheckout, cadastarEndereco };
 };
 
 export default useCheckoutService;

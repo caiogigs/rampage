@@ -5,10 +5,12 @@ import cartService from "../../../Services/CartService/CartService";
 import siteService from "../../../Services/SiteService/SiteService";
 import "./Cart.css";
 import CheckoutService from "../../../Services/CheckoutService";
+import addressService from "../../../Services/Address/AddressService";
 
 const Cart = () => {
   const [products, setProducts] = useState([{}]);
   const [freight, setFreight] = useState({});
+  const [freightCart, setFreightCart] = useState({});
   const [subtotal, setSubTotal] = useState(0);
   const [total, setTotal] = useState(0);
   const [cep, setCep] = useState("");
@@ -32,7 +34,7 @@ const Cart = () => {
   useEffect(() => {
     const cart = cartService.getCart();
     setProducts(cart.products);
-    setFreight(cart.freight);
+    setFreightCart(cart.freight);
     setSubTotal(cartService.getSubTotalPrice());
     setTotal(cartService.getTotalPrice());
     console.log(cart);
@@ -47,7 +49,7 @@ const Cart = () => {
   }, [freight]);
 
   const handleBlur = async () => {
-    const data = await siteService.doGet(`/get-cep?cep=${cep}`);
+    const data = await addressService.getViaCepApi(cep);
     if (data) {
       setEnderecoCep(data);
     }
@@ -69,7 +71,17 @@ const Cart = () => {
 
   const { realizaCheckout } = CheckoutService(); 
   const iniciaCheckout = () => {
-    realizaCheckout();
+
+    if (freightCart.price) {
+      realizaCheckout();
+      return;
+    } 
+    if (freight.price) {
+      realizaCheckout();
+      return;
+    }
+
+    alert("Selecione um frete.");
   }
 
   const showAdress = () => {
@@ -144,7 +156,7 @@ const Cart = () => {
                 <p>Subtotal: R$ {precoFormatado(subtotal)}</p>
                 <p>
                   Frete: R${" "}
-                  {freight.price ? precoFormatado(freight.price) : "00,00"}
+                  {freight.price ? precoFormatado(freight.price) : (freightCart.price ? precoFormatado(freightCart.price) : "00.00")}
                 </p>
                 <p>Total: R$ {precoFormatado(total)}</p>
               </div>

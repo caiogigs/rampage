@@ -36,7 +36,7 @@ public class UserAddress {
     @NotBlank(message = "Informe a Cidade")
     private String city;
 
-    @NotBlank(message = "Informe o Bairo")
+    @NotBlank(message = "Informe o Bairro")
     private String neighborhood;
 
     @NotBlank(message = "Informe a Rua")
@@ -50,6 +50,9 @@ public class UserAddress {
     private boolean billingAddress;
     private boolean deliveryAddress;
     private boolean status;
+    private boolean standard;
+
+
 
 
 }
