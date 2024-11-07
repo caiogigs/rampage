@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import authService from "../../../../auth/AuthService";
-import CrudService from "../../../../Services/CRUDService";
 import "./SelectAddress.css";
 import Barra from "../../../../Components/Navbar/Navbar";
 import Footer from "../../../../Components/Footer/footer";
@@ -15,7 +14,7 @@ const SelectAddress = () => {
     const fetch = async () => {
       const idClient = authService.getIdUser();
 
-      const data = await new CrudService("/auth").doGetById(
+      const data = await addressService.doGetById(
         "/indicate-all-delivery-address",
         idClient
       );

@@ -6,6 +6,7 @@ import cartService from "../../../../Services/CartService/CartService";
 import useCheckoutService from "../../../../Services/CheckoutService";
 import addressService from "../../../../Services/Address/AddressService";
 import pedidoService from "../../../../Services/PedidoService";
+import { useNavigate } from "react-router-dom";
 
 const OrderSummary = () => {
   const [products, setProducts] = useState([]);
@@ -13,6 +14,7 @@ const OrderSummary = () => {
   const [paymentMethod, setPaymentMethod] = useState({});
 
   const { abrirPaginaPagamento, abrirPaginaEndereco } = useCheckoutService();
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetch = async () => {
@@ -52,25 +54,43 @@ const OrderSummary = () => {
     abrirPaginaPagamento();
   };
 
-  const finalizaPedido = () => {
-    const order = getOrder();
-    pedidoService.finalizarPedido(order);
+  const finalizaPedido = async () => {
+    const order = await getOrder();
+    console.log("order ", order);
 
-    
+    const data = pedidoService.finalizarPedido(order);
+    if (data) {
+      if (data.status === 403) {
+        alert("Erro ao cadastrar Pedido");
+        return;
+      }
 
+      alert("Pedido cadastrado com sucesso!");
+      navigate("/registered-product");
+    }
   };
 
-  const getOrder = () => {
+  const getOrder = async () => {
+    const orderItems = [];
+
+    products.forEach((prod) => {
+      orderItems.push({
+        productObj: { id: prod.id },
+        unitValue: prod.productPrice,
+        amountProducts: prod.quantityOrdered,
+      });
+    });
+
     return new Order(
-        authService.getIdUser(),
-        address.id,
-        paymentMethod.id,
-        cartService.getSubTotalPrice(),
-        cartService.getTotalPrice(),
-        cartService.getFreight().price,
-        products
+      authService.getIdUser(),
+      address.id,
+      paymentMethod.method,
+      cartService.getSubTotalPrice(),
+      cartService.getTotalPrice(),
+      cartService.getFreight().price,
+      orderItems
     );
-  }
+  };
 
   const getPayment = () => {
     return (
@@ -214,8 +234,8 @@ class Order {
   constructor(
     consumerId = 0,
     addressId = 0,
-    paymentMethods = '',
-    subTotal = 0,
+    paymentMethods = "",
+    subtotal = 0,
     total = 0,
     freight = 0,
     orderItems = []
@@ -223,7 +243,7 @@ class Order {
     this.consumerId = consumerId;
     this.addressId = addressId;
     this.paymentMethods = paymentMethods;
-    this.subTotal = subTotal;
+    this.subtotal = subtotal;
     this.total = total;
     this.freight = freight;
     this.orderItems = orderItems;

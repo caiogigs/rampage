@@ -34,9 +34,6 @@ public class SecurityConfig {
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers("/auth/**").permitAll()
                         .requestMatchers("/site/**").permitAll()
-                        .requestMatchers(HttpMethod.POST,"/register_Addres/{id}").permitAll()
-                        .requestMatchers(HttpMethod.PUT,"/indicate-standard-addres/{id}").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/rampage/pedido/novo_pedido").permitAll()
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class)
