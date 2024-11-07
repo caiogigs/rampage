@@ -89,10 +89,10 @@ const LandingPage = () => {
             {error && <p className="error-message">{error}</p>}
             <div className="product-list">
               {products.map((item) => (
-                <Link
+                <Link key={item.product.id}
                   to={`/product-detail?product=${encodeURIComponent(item.product.id)}`}
                 >
-                  <div key={item.product.id} className="product-card">
+                  <div className="product-card">
                     <h2>{item.product.productName}</h2>
                     <p>{item.product.productDetai}</p>
                     <p>Preço: {item.product.productPrice}</p>

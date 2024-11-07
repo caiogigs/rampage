@@ -84,7 +84,7 @@ const Cart = () => {
 
   const deleteItem = async (product) => {
     await cartService.removeItem(product);
-    setProducts(cartService.getItems());
+    setProducts(await cartService.getItems());
     attValuesPrice();
   };
 

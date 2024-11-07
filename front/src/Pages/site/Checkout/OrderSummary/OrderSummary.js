@@ -65,6 +65,7 @@ const OrderSummary = () => {
       }
 
       alert("Pedido cadastrado com sucesso!");
+      cartService.cleanCart();
       navigate("/registered-order", { state: { data } });
     }
   };
