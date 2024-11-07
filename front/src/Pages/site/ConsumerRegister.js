@@ -53,9 +53,20 @@ const RegisterConsumerForm = () => {
     };
 
     try {
+      console.log(addressData);
+      let newCep = addressData.cep.replace(/\D/g, "");
+
+      // Aplica a máscara XXXXX-XXX
+      if (newCep.length > 5) {
+        newCep = newCep.replace(/(\d{5})(\d)/, "$1-$2");
+      }
+
+      addressData.cep = newCep;
+
       const data = await new CrudService("/auth").doPost("/register_consumer", requestData);
+      
       if (data) {
-        if(data.status){
+        if(data.status === 403){
           alert("Erro ao cadastar.");
           return;
         }
@@ -73,10 +84,17 @@ const RegisterConsumerForm = () => {
     const data = await siteService.getViaCepApi(addressData.cep);
     if (data) {
       setAddressData({
-        city: data.localidade,
+        cep: addressData.cep,
         uf: data.uf,
+        city: data.localidade,
         neighborhood: data.bairro,
-        logradouro: data.logradouro
+        logradouro: data.logradouro,
+        number: addressData.number,
+        complement: addressData.complement,
+        billingAddress: false, // Valor predefinido
+        deliveryAddress: true, // Valor predefinido
+        status: true, // Valor predefinido
+        standard: false, // Valor predefinido
       });
     }
   }

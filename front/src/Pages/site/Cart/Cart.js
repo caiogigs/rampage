@@ -5,7 +5,6 @@ import cartService from "../../../Services/CartService/CartService";
 import siteService from "../../../Services/SiteService/SiteService";
 import "./Cart.css";
 import CheckoutService from "../../../Services/CheckoutService";
-import addressService from "../../../Services/Address/AddressService";
 
 const Cart = () => {
   const [products, setProducts] = useState([{}]);
@@ -42,14 +41,18 @@ const Cart = () => {
 
   useEffect(() => {
     // Recalcula o total sempre que o frete é alterado
-    const subtotalValue = cartService.getSubTotalPrice();
-    setSubTotal(subtotalValue);
-    setFreight(freight);
-    setTotal(cartService.getTotalPrice());
+    attValuesPrice();
   }, [freight]);
 
+  const attValuesPrice = () => {
+    const subtotalValue = cartService.getSubTotalPrice();
+    setSubTotal(subtotalValue);
+    setFreight(cartService.getFreight());
+    setTotal(cartService.getTotalPrice());
+  };
+
   const handleBlur = async () => {
-    const data = await addressService.getViaCepApi(cep);
+    const data = await siteService.getViaCepApi(cep);
     if (data) {
       setEnderecoCep(data);
     }
@@ -69,20 +72,21 @@ const Cart = () => {
     });
   };
 
-  const { realizaCheckout } = CheckoutService(); 
+  const { realizaCheckout } = CheckoutService();
   const iniciaCheckout = () => {
-
-    if (freightCart.price) {
-      realizaCheckout();
-      return;
-    } 
-    if (freight.price) {
+    if (freightCart.price || freight.price) {
       realizaCheckout();
       return;
     }
 
     alert("Selecione um frete.");
-  }
+  };
+
+  const deleteItem = async (product) => {
+    await cartService.removeItem(product);
+    setProducts(cartService.getItems());
+    attValuesPrice();
+  };
 
   const showAdress = () => {
     return (
@@ -119,15 +123,15 @@ const Cart = () => {
   const mainPage = () => {
     return (
       <main className="w-100 h-100">
-        <div className="content row carrinho p-2">
+        <div className="content main row carrinho p-2">
           <div className="infos col-8" style={{ border: "solid blue" }}>
             <div className="row titulo">
               <h2>Produtos</h2>
             </div>
             <div className="row products">
-              {products.map((prod) => {
+              {products.map((prod, index) => {
                 return (
-                  <div className="row product mb-3 mt-3 ms-2">
+                  <div key={index} className="row product mb-3 mt-3 ms-2">
                     <div className="col-7">
                       <p>Produto: {prod.productName}</p>
                       <p>Quantidade: {prod.quantityOrdered}</p>
@@ -135,16 +139,30 @@ const Cart = () => {
                         Valor unitário: R${" "}
                         {prod?.productPrice
                           ? precoFormatado(prod.productPrice)
-                          : "00,00"}
+                          : "0,00"}
                       </p>
                       <p>Detalhes: {prod.productDetai}</p>
                     </div>
-                    <div className="col-5">
+                    <div className="col-3">
                       <div className="imageCart">
-                        <img
-                          alt={`Imagem ${prod.productName}`}
-                          src={`data:image/jpeg;base64, ${prod.image64}`}
-                        />
+                        {prod.image64 ? (
+                          <img
+                            alt={`Imagem ${prod.productName}`}
+                            src={`data:image/jpeg;base64, ${prod.image64}`}
+                          />
+                        ) : (
+                          <p>Carregando imagens ...</p>
+                        )}
+                      </div>
+                    </div>
+                    <div className="col-2 d-flex justify-content-center align-items-center">
+                      <div className="button-delete">
+                        <button
+                          onClick={() => deleteItem(prod)}
+                          className="btn btn-danger w-100"
+                        >
+                          Excluir
+                        </button>
                       </div>
                     </div>
                   </div>
@@ -156,7 +174,11 @@ const Cart = () => {
                 <p>Subtotal: R$ {precoFormatado(subtotal)}</p>
                 <p>
                   Frete: R${" "}
-                  {freight.price ? precoFormatado(freight.price) : (freightCart.price ? precoFormatado(freightCart.price) : "00.00")}
+                  {freight.price
+                    ? precoFormatado(freight.price)
+                    : freightCart.price
+                    ? precoFormatado(freightCart.price)
+                    : "0,00"}
                 </p>
                 <p>Total: R$ {precoFormatado(total)}</p>
               </div>
@@ -187,7 +209,12 @@ const Cart = () => {
           </div>
 
           <div className="row button w-100 mt-4 d-flex justify-content-center">
-            <button onClick={() => iniciaCheckout()} className="btn w-50 btn-primary">Finalizar Compra</button>
+            <button
+              onClick={() => iniciaCheckout()}
+              className="btn w-50 btn-primary"
+            >
+              Finalizar Compra
+            </button>
           </div>
         </div>
       </main>
@@ -199,7 +226,7 @@ const Cart = () => {
       <header>
         <Barra />
       </header>
-      {products ? mainPage() : <p>Carregando...</p>}
+      {products ? mainPage() : <main><p className="main">Carregando...</p></main>}
       <Footer />
     </>
   );

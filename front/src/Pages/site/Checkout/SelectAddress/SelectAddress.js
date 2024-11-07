@@ -5,6 +5,7 @@ import "./SelectAddress.css";
 import Barra from "../../../../Components/Navbar/Navbar";
 import Footer from "../../../../Components/Footer/footer";
 import useCheckoutService from "../../../../Services/CheckoutService";
+import addressService from "../../../../Services/Address/AddressService";
 
 const SelectAddress = () => {
   const [addresses, setAddresses] = useState([]);
@@ -21,9 +22,9 @@ const SelectAddress = () => {
 
       if (data) {
         setAddresses(data);
-        data.map((address) => {
+        data.forEach((address) => {
           if(address.standard) {
-            selectAddress(address.id);
+            selectAddress(address);
             setSelectedAddress(address);
           }
         });
@@ -44,7 +45,7 @@ const SelectAddress = () => {
 
   const selectAddress = async (address) => {
     setSelectedAddress(address)    
-    localStorage.setItem('addressSelectedId', address.id);
+    addressService.setAddressSelected(address);
   }
 
   return (

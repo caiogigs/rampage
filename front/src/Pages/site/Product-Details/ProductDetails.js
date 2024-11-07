@@ -73,7 +73,7 @@ const ProductDetails = () => {
                 <div>
                   <p>Produto: {product.productName}</p>
                   <p>Detalhes: </p>
-                  <textarea value={product.productDetai}></textarea>
+                  <textarea value={product.productDetai} readOnly></textarea>
                   <p>Preço: R$ {product.productPrice.toFixed(2)}</p>
                   <p>Quatidade Disponível: {product.amount}</p>
                   <input

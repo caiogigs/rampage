@@ -1,11 +1,13 @@
 import { useEffect, useState } from "react";
 import Footer from "../../../../Components/Footer/footer";
 import Barra from "../../../../Components/Navbar/Navbar";
-import CrudService from "../../../../Services/CRUDService";
+import cartService from "../../../../Services/CartService/CartService";
+import useCheckoutService from "../../../../Services/CheckoutService";
+import "./Payment.css";
 
 const Payment = () => {
   const [paymentMethods, setPaymentMethods] = useState([]);
-  const [selectedMethods, setSelectedMethods] = useState([]);
+  const [selectedMethods, setSelectedMethods] = useState({});
 
   useEffect(() => {
     const fetch = async () => {
@@ -23,20 +25,28 @@ const Payment = () => {
       ];
 
       if (data) {
-        // await setPaymentMethods(data);
-        // setPaymentMethods(paymentMethods[0].id);
-        // setSelectedMethods(paymentMethods[0].method);
+        await setPaymentMethods(data);
+        setSelectedMethods(data[0]);
+        selectMethods(data[0]);
       }
     };
 
     fetch();
   }, []);
 
-  const addAdress = () => {};
+  const {realizaCheckout, abrirPaginaEndereco} = useCheckoutService();
+  const returnTo = () => {
+    abrirPaginaEndereco();
+  };
 
-  const retomarCheckout = () => {};
+  const retomarCheckout = () => {
+    realizaCheckout();
+  };
 
-  const selectMethods = (method) => {};
+  const selectMethods = async (method) => {
+    cartService.setPaymentMethod(method);
+    setSelectedMethods(method);
+  };
 
   const getMethods = () => {
     return (
@@ -44,7 +54,7 @@ const Payment = () => {
         <div>
           {paymentMethods.map((method, index) => {
             return (
-              <div key={index}>
+              <div key={index} className="row">
                 <div>
                   <input
                     className="col-1 m-auto"
@@ -89,10 +99,10 @@ const Payment = () => {
               <div className="row d-flex justify-content-center">
                 <div className="col-4 d-flex justify-content-center">
                   <button
-                    onClick={() => addAdress()}
+                    onClick={() => returnTo()}
                     className="btn btn-primary w-50"
                   >
-                    Adicionar Endereço
+                    Voltar
                   </button>
                 </div>
                 <div className="col-4  d-flex justify-content-center">

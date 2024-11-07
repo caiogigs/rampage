@@ -11,6 +11,14 @@ class AddressService extends CrudService {
     AddressService._instance = this;
   }
 
+  async getAddressSelected(){
+    return JSON.parse(localStorage.getItem('addressSelected'));
+
+  }
+
+  async setAddressSelected(add){
+    localStorage.setItem('addressSelected', JSON.stringify(add));
+  }
 
 }
 

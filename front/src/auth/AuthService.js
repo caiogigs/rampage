@@ -3,8 +3,6 @@ import LoginService from "./login";
 
 class AuthService {
   static instance = null;
-  _authenticated;
-  _loginService;
 
   constructor() {
     if (AuthService.instance) {
@@ -43,7 +41,7 @@ class AuthService {
   async logout() {
     this.authenticated = false;
     await this._loginService.logout();
-    <Navigate to="/dashboard" />
+    <Navigate to="/pagina-principal" />
   }
 
   getToken() {

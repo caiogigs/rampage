@@ -9,7 +9,7 @@ const Carrosel = React.memo(({ imageBase64 }) => {
   return (
     <Carousel data-bs-theme="dark">
       {imageBase64.map((image, index) => (
-        <Carousel.Item>
+        <Carousel.Item key={index}>
           <ImgCarrosel image64={image} />
           <Carousel.Caption></Carousel.Caption>
         </Carousel.Item>

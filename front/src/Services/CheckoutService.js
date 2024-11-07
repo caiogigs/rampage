@@ -7,10 +7,8 @@ const useCheckoutService = () => {
 
   const realizaCheckout = () => {
     console.log(authService.isAuthenticated());
-    
+
     if (authService.isAuthenticated()) {
-        console.log(1);
-        
       redireciona();
     } else {
       abrirLogin();
@@ -18,20 +16,16 @@ const useCheckoutService = () => {
   };
 
   const redireciona = () => {
-        console.log(2);
-        const hasCheckoutEndereco = location.pathname === "/checkout/select-address";
-        const hasCheckoutAddEndereco = location.pathname === "/checkout/register-address";
+    const hasCheckoutEndereco =
+      location.pathname === "/checkout/select-address";
     const hasCheckoutPagamento = location.pathname === "/checkout/payment";
 
     if (hasCheckoutEndereco) {
-        console.log(4);
-        abrirPaginaPagamento();
+      abrirPaginaPagamento();
     } else if (hasCheckoutPagamento) {
-        console.log(5);
-        finalizaCheckout();
+      finalizaCheckout();
     } else {
-        console.log(3);
-        abrirPaginaEndereco();
+      abrirPaginaEndereco();
     }
   };
 
@@ -55,7 +49,7 @@ const useCheckoutService = () => {
     navigate("/checkout/register-address"); // Usando navigate para redirecionar
   };
 
-  return { realizaCheckout, cadastarEndereco };
+  return { realizaCheckout, cadastarEndereco, abrirPaginaEndereco, abrirPaginaPagamento };
 };
 
 export default useCheckoutService;
