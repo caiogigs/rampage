@@ -5,10 +5,11 @@ const useCheckoutService = () => {
   const navigate = useNavigate(); // useNavigate substitui useHistory
   const location = useLocation();
 
-  const realizaCheckout = () => {
-    console.log(authService.isAuthenticated());
+  const realizaCheckout = async() => {
+    const logado = await authService.isAuthenticated(); 
+    console.log(logado);
 
-    if (authService.isAuthenticated()) {
+    if (logado) {
       redireciona();
     } else {
       abrirLogin();

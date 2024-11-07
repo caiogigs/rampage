@@ -24,7 +24,8 @@ const UserConsumerLogin = () => {
       console.log(error);
 
       if (!error) {
-        if (authService.isAuthenticated()) {
+        const logado =await authService.isAuthenticated();
+        if (logado) {
           const hasCheckout = location.pathname === "/checkout/login";
           if (hasCheckout) realizaCheckout();
           else navigate("/pagina-principal");
