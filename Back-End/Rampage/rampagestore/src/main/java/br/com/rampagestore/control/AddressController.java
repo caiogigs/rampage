@@ -41,9 +41,9 @@ public class AddressController {
     }
 
     //Registrar novo Endereço
-    @PostMapping("/register_Addres/{id}")//id co cliente
-    public ResponseEntity<?> registerAddres(@PathVariable Long id, @RequestBody @Valid UserAddress userAddress) {
-        return addressService.registerNewAddres(userAddress, id);
+    @PostMapping("/register-address")
+    public ResponseEntity<?> registerAddres(@RequestBody UserAddress userAddress) {
+        return addressService.registerNewAddres(userAddress);
     }
 
     //Indicar todos endereço de entrega

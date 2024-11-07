@@ -68,9 +68,9 @@ public class AddressService {
 
 
     //Método Adicionar novo endereço
-     public ResponseEntity<?> registerNewAddres(UserAddress userAddress, long userId){
-        List<UserAddress> addresses = addresRepository.findAllByIdUser(userId);
-         userAddress.setIdUser(userId);
+     public ResponseEntity<?> registerNewAddres(UserAddress userAddress){
+        List<UserAddress> addresses = addresRepository.findAllByIdUser(userAddress.getIdUser());
+
         try {
             if (!addresses.isEmpty()) {
                 userAddress.setBillingAddress(false);
@@ -84,8 +84,8 @@ public class AddressService {
                 userAddress.setStatus(true);
             }
 
-            addresRepository.save(userAddress);
-            return ResponseEntity.ok().build();
+            UserAddress retorno = addresRepository.save(userAddress);
+            return new ResponseEntity<>(retorno, HttpStatus.CREATED);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                                 .body("Erro ao salvar endereço: " + e.getMessage());

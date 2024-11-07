@@ -72,7 +72,8 @@ public class UserService {
         User newUser = new User(data.name(), userBirth, userCPF, data.email(), encryptedPassword, data.gender(), UserRole.CONSUMER, true);
         this.userRepository.save(newUser);
         long userId = newUser.getId();
-        addressService.registerNewAddres(userAddress, userId);
+        userAddress.setIdUser(userId);
+        addressService.registerNewAddres(userAddress);
         return ResponseEntity.ok().build();
     }
 

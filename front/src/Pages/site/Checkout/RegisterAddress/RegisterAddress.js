@@ -5,6 +5,7 @@ import CrudService from "../../../../Services/CRUDService";
 import siteService from "../../../../Services/SiteService/SiteService";
 import authService from "../../../../auth/AuthService";
 import useCheckoutService from "../../../../Services/CheckoutService";
+import addressService from "../../../../Services/Address/AddressService";
 
 const RegisterAddress = () => {
   const [addressData, setAddressData] = useState({
@@ -39,7 +40,7 @@ const RegisterAddress = () => {
 
       addressData.cep = newCep;
 
-      const data = await new CrudService("/auth").doPost(
+      const data = await addressService.doPost(
         "/register-address",
         addressData
       );
