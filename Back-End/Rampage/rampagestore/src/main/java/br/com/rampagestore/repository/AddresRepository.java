@@ -1,7 +1,7 @@
 package br.com.rampagestore.repository;
 
 import java.util.List;
-import java.util.Optional;
+
 
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
@@ -16,6 +16,8 @@ public interface AddresRepository  extends CrudRepository<UserAddress, Long> {
     UserAddress findById(long id);
 
     List<UserAddress> findAllByIdUserAndDeliveryAddressTrueOrderByStandardDesc(Long userId);
+
+    UserAddress findByIdUserAndBillingAddressTrue(Long userId);
 
     boolean existsByIdUser(long idUser);
 }
