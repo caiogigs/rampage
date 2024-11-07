@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import useCheckoutService from "../../Services/CheckoutService";
 import authService from "../../auth/AuthService";
 
@@ -48,50 +48,59 @@ const UserConsumerLogin = () => {
   };
 
   return (
-    <form
-      onSubmit={(e) => {
-        e.preventDefault();
-        handleLogin();
-      }}
-    >
+    <div style={{textAlign: "center"}}>
+      <form
+        onSubmit={(e) => {
+          e.preventDefault();
+          handleLogin();
+        }}
+      >
+        <div>
+          <input
+            type="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            name="email"
+            placeholder="Email"
+            className="form-control"
+            required
+          />
+        </div>
+        <div>
+          <input
+            type="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            name="password"
+            placeholder="Senha"
+            className="form-control"
+            required
+          />
+        </div>
+        {loginError && <div className="error">{loginError}</div>}
+        <div>
+          <input
+            type="submit"
+            value={loading ? "Carregando..." : "Login"}
+            className="btn btn-primary"
+            disabled={loading} // Desabilita o botão enquanto está carregando
+          />
+          <input
+            type="button"
+            value="Cancelar"
+            onClick={handleCancel}
+            className="btn btn-secondary"
+          />
+        </div>
+      </form>
       <div>
-        <input
-          type="email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          name="email"
-          placeholder="Email"
-          className="form-control"
-          required
-        />
+        <Link to={"/user-cadastrar"}>
+          <button className="btn">
+            Não tem conta? Cadastre-se aqui
+          </button>
+        </Link>
       </div>
-      <div>
-        <input
-          type="password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          name="password"
-          placeholder="Senha"
-          className="form-control"
-          required
-        />
-      </div>
-      {loginError && <div className="error">{loginError}</div>}
-      <div>
-        <input
-          type="submit"
-          value={loading ? "Carregando..." : "Login"}
-          className="btn btn-primary"
-          disabled={loading} // Desabilita o botão enquanto está carregando
-        />
-        <input
-          type="button"
-          value="Cancelar"
-          onClick={handleCancel}
-          className="btn btn-secondary"
-        />
-      </div>
-    </form>
+    </div>
   );
 };
 
