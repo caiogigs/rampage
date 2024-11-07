@@ -1,8 +1,12 @@
+import authService from "./AuthService";
+
 class LoginService {
+  _url = "http://localhost:8080/auth";
+
   async login(data) {
     let error = "";
 
-    await fetch("http://localhost:8080/auth/login", {
+    await fetch(`${this._url}/login`, {
       method: "POST",
       body: JSON.stringify(data),
       headers: {
@@ -37,7 +41,7 @@ class LoginService {
   async loginConsumer(formData) {
     let error = "";
 
-    await fetch("http://localhost:8080/auth/login_consumer", {
+    await fetch(`${this._url}/login_consumer`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -80,6 +84,33 @@ class LoginService {
     localStorage.removeItem("userRole");
     localStorage.removeItem("idUser");
   }
+
+  // async validateToken(token) {
+  //   let error = "";
+
+  //   await fetch(`${this._url}/validate-token?token=${token}`, {
+  //     method: "GET",
+  //     headers: {
+  //       Accept: "application/json",
+  //     },
+  //   })
+  //     .then((response) => response.json())
+  //     .then((data) => {
+  //       if (data?.message) {
+  //         console.log(data.message);
+  //         return data.message.valid;
+  //       }
+  //       alert("Sessão expirada. Por favor, faça login novamente.");
+  //       authService.logout();
+  //     })
+  //     .catch((err) => {
+  //       error = err.message || "Erro ao conectar com o servidor.";
+  //     });
+
+  //   console.log(error);
+
+  //   return error;
+  // }
 }
 
 export default LoginService;

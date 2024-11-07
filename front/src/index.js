@@ -19,6 +19,8 @@ import ProductDetails from './Pages/site/Product-Details/ProductDetails';
 import UserConsumerLogin from './Pages/site/UserConsumerLogin';
 import RegisterAddress from './Pages/site/Checkout/RegisterAddress/RegisterAddress';
 import RegisteredOrder from './Pages/site/Checkout/RegisteredOrder/RegisteredOrder';
+import OrderList from './Pages/site/OrderList/OrderList';
+import MyAccount from './Pages/site/MyAccount/MyAccount';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
@@ -40,7 +42,9 @@ root.render(
             <Route path="/order-summary"              element={<OrderSummary        />} />
             <Route path="/checkout/login"             element={<UserConsumerLogin   />} />
             <Route path="/registered-order"   	      element={<RegisteredOrder     />} />
-          </Routes>
+            <Route path="/my-orders"   	              element={<OrderList           />} />
+            <Route path="/my-account"   	            element={<MyAccount           />} />
+            </Routes>
       </Router>
   </React.StrictMode>
 );

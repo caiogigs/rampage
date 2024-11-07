@@ -4,6 +4,7 @@ import java.io.UnsupportedEncodingException;
 
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -47,6 +48,15 @@ public class AuthenticationController {
 
     @Autowired
     private UserService userService;
+
+    @GetMapping("/validate-token")
+    public ResponseEntity<?> validateTokenUser(@RequestParam(name = "token")String token) throws UnsupportedEncodingException {
+        String retorno = tokenService.validateToken(token);
+        boolean valid = !retorno.isEmpty();
+        Message message = new Message(valid);
+        System.out.println(message);
+        return new ResponseEntity<>(message, HttpStatus.OK);
+    }
 
     @PostMapping("/login_consumer")
     public ResponseEntity<?> loginConsumer(@RequestBody @Valid AuthenticationDTO data) throws IllegalArgumentException, UnsupportedEncodingException{
@@ -130,4 +140,36 @@ public class AuthenticationController {
     }
 
 
+}
+class Message{
+    private String message;
+    private boolean valid;
+
+    public Message(boolean valid){
+        this.valid = valid;
+    }
+
+    public String getMessage() {
+        return message;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
+    }
+
+    public boolean isValid() {
+        return valid;
+    }
+
+    public void setValid(boolean valid) {
+        this.valid = valid;
+    }
+
+    @Override
+    public String toString() {
+        return "Message{" +
+                "message='" + message + '\'' +
+                ", valid=" + valid +
+                '}';
+    }
 }

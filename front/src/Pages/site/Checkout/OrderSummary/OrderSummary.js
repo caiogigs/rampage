@@ -6,7 +6,7 @@ import Barra from "../../../../Components/Navbar/Navbar";
 import addressService from "../../../../Services/Address/AddressService";
 import cartService from "../../../../Services/CartService/CartService";
 import useCheckoutService from "../../../../Services/CheckoutService";
-import pedidoService from "../../../../Services/PedidoService";
+import orderService from "../../../../Services/OrderService";
 
 const OrderSummary = () => {
   const [products, setProducts] = useState([]);
@@ -57,7 +57,7 @@ const OrderSummary = () => {
     const order = await getOrder();
     console.log("order ", order);
 
-    const data = await pedidoService.finalizarPedido(order);
+    const data = await orderService.finalizarPedido(order);
     if (data) {
       if (data.status === 403) {
         alert("Erro ao cadastrar Pedido");

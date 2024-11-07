@@ -40,6 +40,7 @@ public class SecurityFilter extends OncePerRequestFilter {
         var token = this.recoverToken(request);
         if (token != null) {
             var email = tokenService.validateToken(token);
+            System.out.println("token valido? " + (!email.isEmpty() ? "vdd" : "né nao"));
             UserDetails user = userRepository.findByEmail(email);
             var authentication = new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities());
             SecurityContextHolder.getContext().setAuthentication(authentication);

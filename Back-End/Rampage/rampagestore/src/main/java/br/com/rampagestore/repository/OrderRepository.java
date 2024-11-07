@@ -5,7 +5,10 @@ import org.springframework.stereotype.Repository;
 
 import br.com.rampagestore.model.Order.Order;
 
+import java.util.List;
+
 @Repository
 public interface OrderRepository extends CrudRepository<Order, Long>{
-    
+
+    List<Order> findAllByConsumerId(Long userId);
 }

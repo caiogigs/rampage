@@ -3,6 +3,7 @@ package br.com.rampagestore.model.Order;
 import java.math.BigDecimal;
 
 import br.com.rampagestore.model.ProductObj;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;

@@ -14,6 +14,18 @@ class AuthService {
     this._loginService = new LoginService();
   }
 
+  // async validateToken(){
+  //   const token = this.getToken();
+  //   if (token) {
+  //     const data = await this._loginService.validateToken(token);
+  //     if (data){
+  //       return true;
+  //     }
+  //   }
+
+  //   return false;
+  // }
+
   async login(data) {
     const error = await this._loginService.login(data);
     
@@ -41,7 +53,7 @@ class AuthService {
   async logout() {
     this.authenticated = false;
     await this._loginService.logout();
-    <Navigate to="/pagina-principal" />
+    document.location = "/pagina-principal";
   }
 
   getToken() {
@@ -56,7 +68,9 @@ class AuthService {
     return localStorage.getItem("idUser");
   }
 
-  isAuthenticated() {
+  async isAuthenticated() {
+    // const validToken = await authService.validateToken();
+    // console.log(validToken);
     return this.authenticated;
   }
 }

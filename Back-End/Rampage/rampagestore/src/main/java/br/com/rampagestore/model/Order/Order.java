@@ -1,11 +1,13 @@
 package br.com.rampagestore.model.Order;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
 import br.com.rampagestore.model.enums.OrderStatus;
 import br.com.rampagestore.model.enums.PaymentMethods;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 
 @Entity
@@ -25,9 +27,8 @@ public class Order {
     private BigDecimal subtotal;
     private BigDecimal total;
     private BigDecimal freight; //frete
+    private LocalDate dateOrdered;
 
-    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<OrderItem> orderItems = new ArrayList<>();
 
     public Order() {
     }
@@ -88,14 +89,6 @@ public class Order {
         this.freight = freight;
     }
 
-    public List<OrderItem> getOrderItems() {
-        return orderItems;
-    }
-
-    public void setOrderItems(List<OrderItem> orderItems) {
-        this.orderItems = orderItems;
-    }; //items do Pedido
-
 
     public OrderStatus getOrderStatus() {
         return orderStatus;
@@ -103,5 +96,13 @@ public class Order {
 
     public void setOrderStatus(OrderStatus orderStatus) {
         this.orderStatus = orderStatus;
+    }
+
+    public LocalDate getDateOrdered() {
+        return dateOrdered;
+    }
+
+    public void setDateOrdered(LocalDate dateOrdered) {
+        this.dateOrdered = dateOrdered;
     }
 }
