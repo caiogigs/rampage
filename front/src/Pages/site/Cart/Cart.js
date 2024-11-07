@@ -209,9 +209,15 @@ const Cart = () => {
           </div>
 
           <div className="row button w-100 mt-4 d-flex justify-content-center">
+          <button
+              onClick={() => window.location.href = 'http://localhost:3000/pagina-principal'}
+              className="btn w-50 btn-primary"
+          >
+            Continuar Comprando
+          </button>
             <button
               onClick={() => iniciaCheckout()}
-              className="btn w-50 btn-primary"
+              className="btn w-50 btn-success"
             >
               Finalizar Compra
             </button>

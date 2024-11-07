@@ -38,7 +38,7 @@ const Barra = () => {
           </li>
           <li className="nav-item">
             <Link to={"/cart"}>
-              <button className="nav-link"> <BiCart></BiCart>CARRINHO</button>
+              <button className="nav-link"> <BiCart></BiCart> CARRINHO</button>
             </Link>
           </li>
         </ul>

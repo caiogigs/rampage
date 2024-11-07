@@ -85,7 +85,7 @@ const LandingPage = () => {
         {/*Product section*/}
         <section className="about-section">
           <div>
-            <h1>Produtos</h1>
+            <h1 className="name">Recém adicionados</h1>
             {error && <p className="error-message">{error}</p>}
             <div className="product-list">
               {products.map((item) => (
@@ -93,22 +93,25 @@ const LandingPage = () => {
                   to={`/product-detail?product=${encodeURIComponent(item.product.id)}`}
                 >
                   <div className="product-card">
-                    <h2>{item.product.productName}</h2>
-                    <p>{item.product.productDetai}</p>
-                    <p>Preço: {item.product.productPrice}</p>
-                    <div className="rating">
-                      <StarRating
-                        className="rating"
-                        avaliacao={item.product.avaliation}
-                      />
-                    </div>
-                    {item.imageBase64 && item.imageBase64.length > 0 && (
+                  {item.imageBase64 && item.imageBase64.length > 0 && (
                       <img
                         src={`data:image/jpeg;base64,${item.imageBase64}`}
                         alt={item.product.productName}
                         className="image"
                       />
                     )}
+                    <h2 className="product-name">{item.product.productName}</h2>
+                    <p className="detail">{item.product.productDetai}</p>
+                    <p className="detail-price">
+                         Preço: {new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(item.product.productPrice)}
+                    </p>
+                    <div className="rating">
+                      <StarRating
+                        className="rating"
+                        avaliacao={item.product.avaliation}
+                      />
+                    </div>
+                    
                   </div>
                 </Link>
               ))}
@@ -281,10 +284,10 @@ const LandingPage = () => {
             </form>
           </div>
         </section>
-        {/* footer section*/}
+        
         <Footer />
       </main>
-      {/*Link custom script */}
+      
     </div>
   );
 };
