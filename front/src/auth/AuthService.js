@@ -14,17 +14,15 @@ class AuthService {
     this._loginService = new LoginService();
   }
 
-  // async validateToken(){
-  //   const token = this.getToken();
-  //   if (token) {
-  //     const data = await this._loginService.validateToken(token);
-  //     if (data){
-  //       return true;
-  //     }
-  //   }
+  async validateToken(){
+    const token = this.getToken();
+    if (token) {
+      const data = await this._loginService.validateToken(token);
+      return data;
+    }
 
-  //   return false;
-  // }
+    return false;
+  }
 
   async login(data) {
     const error = await this._loginService.login(data);
@@ -69,8 +67,9 @@ class AuthService {
   }
 
   async isAuthenticated() {
-    // const validToken = await authService.validateToken();
-    // console.log(validToken);
+    const validToken = await authService.validateToken();
+    this.authenticated = validToken;
+    
     return this.authenticated;
   }
 }

@@ -85,32 +85,25 @@ class LoginService {
     localStorage.removeItem("idUser");
   }
 
-  // async validateToken(token) {
-  //   let error = "";
-
-  //   await fetch(`${this._url}/validate-token?token=${token}`, {
-  //     method: "GET",
-  //     headers: {
-  //       Accept: "application/json",
-  //     },
-  //   })
-  //     .then((response) => response.json())
-  //     .then((data) => {
-  //       if (data?.message) {
-  //         console.log(data.message);
-  //         return data.message.valid;
-  //       }
-  //       alert("Sessão expirada. Por favor, faça login novamente.");
-  //       authService.logout();
-  //     })
-  //     .catch((err) => {
-  //       error = err.message || "Erro ao conectar com o servidor.";
-  //     });
-
-  //   console.log(error);
-
-  //   return error;
-  // }
+  async validateToken(token) {
+    return await fetch(`${this._url}/validate-token?token=${token}`, {
+      method: "GET",
+      headers: {
+        Accept: "application/json",
+      },
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        if (data) {
+          return data.valid;
+        }
+        alert("Sessão expirada. Por favor, faça login novamente.");
+        authService.logout();
+      })
+      .catch((err) => {
+        alert("Erro ao conectar com o servidor.");
+      });
+  }
 }
 
 export default LoginService;
