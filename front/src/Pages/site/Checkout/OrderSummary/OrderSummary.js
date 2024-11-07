@@ -1,12 +1,12 @@
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import authService from "../../../../auth/AuthService";
 import Footer from "../../../../Components/Footer/footer";
 import Barra from "../../../../Components/Navbar/Navbar";
-import authService from "../../../../auth/AuthService";
+import addressService from "../../../../Services/Address/AddressService";
 import cartService from "../../../../Services/CartService/CartService";
 import useCheckoutService from "../../../../Services/CheckoutService";
-import addressService from "../../../../Services/Address/AddressService";
 import pedidoService from "../../../../Services/PedidoService";
-import { useNavigate } from "react-router-dom";
 
 const OrderSummary = () => {
   const [products, setProducts] = useState([]);
@@ -18,7 +18,6 @@ const OrderSummary = () => {
 
   useEffect(() => {
     const fetch = async () => {
-      const idUser = authService.getIdUser();
       setProducts(await cartService.getItems());
 
       const methodPayment = await cartService.getPaymentMethod();
@@ -58,7 +57,7 @@ const OrderSummary = () => {
     const order = await getOrder();
     console.log("order ", order);
 
-    const data = pedidoService.finalizarPedido(order);
+    const data = await pedidoService.finalizarPedido(order);
     if (data) {
       if (data.status === 403) {
         alert("Erro ao cadastrar Pedido");
@@ -66,7 +65,7 @@ const OrderSummary = () => {
       }
 
       alert("Pedido cadastrado com sucesso!");
-      navigate("/registered-product");
+      navigate("/registered-order", { state: { data } });
     }
   };
 

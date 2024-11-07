@@ -18,6 +18,7 @@ import LandingPage from './Pages/site/LandingPage';
 import ProductDetails from './Pages/site/Product-Details/ProductDetails';
 import UserConsumerLogin from './Pages/site/UserConsumerLogin';
 import RegisterAddress from './Pages/site/Checkout/RegisterAddress/RegisterAddress';
+import RegisteredOrder from './Pages/site/Checkout/RegisteredOrder/RegisteredOrder';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
@@ -38,6 +39,7 @@ root.render(
             <Route path="/checkout/payment"           element={<Payment             />} />
             <Route path="/order-summary"              element={<OrderSummary        />} />
             <Route path="/checkout/login"             element={<UserConsumerLogin   />} />
+            <Route path="/registered-order"   	      element={<RegisteredOrder     />} />
           </Routes>
       </Router>
   </React.StrictMode>

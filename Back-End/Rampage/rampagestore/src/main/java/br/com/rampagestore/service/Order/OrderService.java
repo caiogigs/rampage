@@ -1,5 +1,6 @@
 package br.com.rampagestore.service.Order;
 
+import br.com.rampagestore.model.enums.OrderStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,7 +16,8 @@ public class OrderService {
     private OrderRepository orderRepository;
 
     public ResponseEntity<?> createOrder(Order order){
-        orderRepository.save(order);
-        return new ResponseEntity<>(HttpStatus.OK);
+       order.setOrderStatus(OrderStatus.AGUARDANDO_PAGAMENTO);
+        Order objReturn = orderRepository.save(order);
+        return new ResponseEntity<>(objReturn, HttpStatus.CREATED);
     }
 }

@@ -4,14 +4,9 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
+import br.com.rampagestore.model.enums.OrderStatus;
 import br.com.rampagestore.model.enums.PaymentMethods;
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 
 @Entity
 @Table(name = "orders") //pedidos
@@ -23,7 +18,10 @@ public class Order {
 
     private long consumerId; //id do cliente
     private long addressId;
+    @Enumerated(EnumType.STRING)
     private PaymentMethods paymentMethods; //metodo de pagamento;
+    @Enumerated(EnumType.STRING)
+    private OrderStatus orderStatus;
     private BigDecimal subtotal;
     private BigDecimal total;
     private BigDecimal freight; //frete
@@ -98,4 +96,12 @@ public class Order {
         this.orderItems = orderItems;
     }; //items do Pedido
 
+
+    public OrderStatus getOrderStatus() {
+        return orderStatus;
+    }
+
+    public void setOrderStatus(OrderStatus orderStatus) {
+        this.orderStatus = orderStatus;
+    }
 }
