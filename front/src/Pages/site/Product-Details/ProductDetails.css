@@ -5,6 +5,11 @@
 
 .rating {
   height: 40px;
-  font-size: 20px;
+  font-size: 25px;
   color: rgb(216, 184, 0);
+}
+
+.product-info .rating{
+  padding: 25px;
+  
 }
