@@ -21,6 +21,7 @@ import RegisterAddress from './Pages/site/Checkout/RegisterAddress/RegisterAddre
 import RegisteredOrder from './Pages/site/Checkout/RegisteredOrder/RegisteredOrder';
 import OrderList from './Pages/site/OrderList/OrderList';
 import MyAccount from './Pages/site/MyAccount/MyAccount';
+import EditProduct from './Pages/backoffice/EditProduct';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
@@ -31,6 +32,7 @@ root.render(
             <Route path="/back-home"                  element={<HomeBackOffice      />} />
             <Route path="/back-users-list"            element={<UsersList           />} />
             <Route path="/back-product-list"          element={<ProductTable        />} />
+            <Route path="/back-product-edit"          element={<EditProduct         />} />
             <Route path="/user-cadastrar"             element={<ConsumerRegister    />} />
             <Route path="/login_consumer"             element={<UserConsumerLogin   />} />
             <Route path="/pagina-principal"           element={<LandingPage         />} />

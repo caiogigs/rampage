@@ -1,20 +1,41 @@
+import React from "react";
 import Carousel from "react-bootstrap/Carousel";
 import ImgCarrosel from "../ImgCarrossel/ImgCarrosel";
-import React from "react";
+import { FaTrashAlt } from 'react-icons/fa'; // Importando ícone de lixeira
 
-const Carrosel = React.memo(({ imageBase64 }) => {
-  if (!Array.isArray(imageBase64)) {
+const Carrosel = React.memo(({ imagens, onRemoveImage, showIcon=false, onDefaultImage }) => {
+  console.log(imagens);
+  
+  if (!Array.isArray(imagens)) {
     return <p>Sem imagens disponíveis.</p>;
   }
+
   return (
-    <Carousel data-bs-theme="dark">
-      {imageBase64.map((image, index) => (
-        <Carousel.Item key={index}>
-          <ImgCarrosel image64={image} />
-          <Carousel.Caption></Carousel.Caption>
-        </Carousel.Item>
-      ))}
-    </Carousel>
+    <div className="carrossel">
+      <Carousel data-bs-theme="dark">
+        {imagens.map((imagem, index) => (
+          <Carousel.Item key={index} onClick={() => onDefaultImage(imagem)}>
+            <ImgCarrosel image64={imagem.imageBase64} />
+            <Carousel.Caption>
+              {showIcon ?
+              <div className="acoes">
+              <div className="itens">
+                {/* Ícone de lixeira */}
+                <i
+                  onClick={() => onRemoveImage(imagem)} // Chama a função passada via props com o objeto da imagem
+                  className="icon-trash"
+                >
+                  <FaTrashAlt />
+                </i>
+              </div>
+            </div>
+            : ""}
+              
+            </Carousel.Caption>
+          </Carousel.Item>
+        ))}
+      </Carousel>
+    </div>
   );
 });
 

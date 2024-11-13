@@ -1,12 +1,16 @@
 import React, { useEffect, useState } from "react";
 import RegisterProduct from "./RegisterProduct";
 import productService from "../../Services/ProductService/ProductService";
+import { useNavigate } from "react-router-dom";
+import EditProduct from "./EditProduct";
 
 function ProductTable() {
   const [products, setProducts] = useState([]); // Estado para armazenar produtos
   const [loading, setLoading] = useState(true); // Estado para controlar o carregamento
   const [error, setError] = useState(null); // Estado para armazenar erros, se houver
   const [showRegisterProductForm, setShowRegisterProductForm] = useState(false);
+  const [showEditProductForm, setShowEditProductForm] = useState(false);
+  const [productEdit, setProductEdit] = useState({});
   const [searchTerm, setSearchTerm] = useState(""); // Estado para armazenar o termo de pesquisa
 
   const searchProductByName = async (term = "") => {
@@ -56,12 +60,32 @@ function ProductTable() {
     }
   };
 
+  const handleEditProd = async (formData) => {
+    try {
+      const data = await productService.doPutMultiPartFile("/edit-product", formData);
+      if (data) {
+        fetchProducts(); // Recarrega a lista de produtos após o registro
+        setShowRegisterProductForm(false); // Oculta o formulário após o registro
+        return data.message;
+      } else {
+        const errorMessage =
+          data?.message || "Erro desconhecido. Tente novamente.";
+        alert(errorMessage);
+        console.error("Erro ao registrar produto:", errorMessage);
+      }
+    } catch (error) {
+      console.error("Erro ao enviar o formulário:", error);
+      alert("Erro ao registrar produto. Por favor, tente novamente.");
+    }
+  };
+
   const handleAddProductClick = () => {
     setShowRegisterProductForm(true); // Mostra o formulário de registro
   };
 
   const handleCancel = () => {
     setShowRegisterProductForm(false); // Corrigido aqui
+    setShowEditProductForm(false);
     fetchProducts(); // Recarrega a lista de produtos após o cancelamento
   };
 
@@ -77,8 +101,11 @@ function ProductTable() {
     }
   }, [searchTerm]);
 
-  const handleEdit = (id) => {
-    console.log(`Editando produto com ID: ${id}`);
+  const handleEdit = (product) => {
+    setProductEdit(product);
+    setShowEditProductForm(true);
+    
+    console.log(`Editando produto com ID: ${product.id}`);
     // Você pode redirecionar para um formulário de edição ou abrir um modal
   };
 
@@ -105,6 +132,16 @@ function ProductTable() {
       <RegisterProduct
         handleRegisterProd={handleRegisterProd}
         handleCancel={handleCancel}
+      />
+    );
+  }
+
+  if (showEditProductForm) {
+    return (
+      <EditProduct
+        handleEditProd={handleEditProd}
+        handleCancel={handleCancel}
+        productEdit = {productEdit}
       />
     );
   }
@@ -150,7 +187,7 @@ function ProductTable() {
                 <td>
                   <button
                     className="btn btn-warning"
-                    onClick={() => handleEdit(product.id)}
+                    onClick={() => handleEdit(product)}
                   >
                     Alterar
                   </button>

@@ -14,7 +14,7 @@ class ProductService extends CrudService {
     return await fetch(
       `${this._path}/produtos_contem_palavra?term=${encodeURIComponent(term)}`,
       {
-        headers: {Authorization: `Bearer ${this._token}`}
+        headers: { Authorization: `Bearer ${this._token}` },
       }
     )
       .then((response) => response.json())
@@ -23,20 +23,37 @@ class ProductService extends CrudService {
   };
 
   doPostMultiPartFile = async (urlEndpoint, data) => {
-    return await fetch(
-        `${this._path}${urlEndpoint}`, 
-        {
-            method: "POST",
-            body: data,
-            headers: {
-                Authorization: `Bearer ${this._token}`
-            }
-        }
-      )
-        .then((response) => response.json())
-        .then((data) => data)
-        .catch((err) => alert("Erro ao fazer requisição."));
-  }
+    return await fetch(`${this._path}${urlEndpoint}`, {
+      method: "POST",
+      body: data,
+      headers: {
+        Authorization: `Bearer ${this._token}`,
+      },
+    })
+      .then((response) => response.json())
+      .then((data) => data)
+      .catch((err) => alert("Erro ao fazer requisição."));
+  };
+
+  doPutMultiPartFile = async (urlEndpoint, data) => {
+    return await fetch(`${this._path}${urlEndpoint}`, {
+      method: "PUT",
+      body: data,
+      headers: {
+        Authorization: `Bearer ${this._token}`,
+      },
+    })
+      .then((response) => response.json())
+      .then((data) => data)
+      .catch((err) => alert("Erro ao fazer requisição."));
+  };
+
+  editProductWithImages = async (data) => {
+    return await this.doPut("/edit-product", data)
+      .then((response) => response.json())
+      .then((data) => data)
+      .catch((err) => alert("Erro ao fazer requisição."));
+  };
 }
 
 const productService = new ProductService();

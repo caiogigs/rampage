@@ -35,7 +35,9 @@ const ProductDetails = () => {
 
         if (data?.product) setProduct(data.product);
 
-        if (data?.imageBase64) imageRef.current = data.imageBase64;
+        if (data?.images) imageRef.current = data.images;
+        console.log("data", imageRef.current);
+        
       } catch (error) {
         console.error("Error fetching product data:", error);
       }
@@ -66,7 +68,7 @@ const ProductDetails = () => {
           <div className="w-100 product">
             <div className="row">
               <div className="col-6">
-                <Carrosel imageBase64={imageRef.current} />
+                <Carrosel imagens={imageRef.current} />
               </div>
 
               <div className="col-6">

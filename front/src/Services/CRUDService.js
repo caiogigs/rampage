@@ -62,11 +62,58 @@ class CrudService {
       });
   }
 
+  async doPut(urlEndpoint, data) {
+    return await fetch(this._path + urlEndpoint, {
+      method: "PUT",
+      body: JSON.stringify(data),
+      headers: this._headers,
+    })
+      .then((response) => {
+        if (response.status === 403) {
+          throw new Error("Falha no requisição.");
+        }
+        return response.json();
+      })
+      .then((data) => {
+        console.log("Fetched data:", data);
+        return data;
+      })
+      .catch((err) => {
+        console.error("Error fetching data:", err);
+        return null;
+      });
+  }
+
   async doGetById(urlEndpoint, id) {    
     return await fetch(
       `${this._path}${urlEndpoint}?id=${id}`,
       {
         method: "GET",
+        headers: this._headers,
+      }
+    )
+      .then((response) => {
+        if (response.status === 403) {
+          throw new Error("Falha no requisição.");
+        }
+        return response.json();
+      })
+      .then((data) => {
+        console.log("Fetched data:", data);
+        return data;
+      })
+      .catch((err) => {
+        console.error("Error fetching data:", err);
+        return null;
+      });
+  }
+
+  
+  async doDelete(urlEndpoint, id) {    
+    return await fetch(
+      `${this._path}${urlEndpoint}?id=${id}`,
+      {
+        method: "DELETE",
         headers: this._headers,
       }
     )

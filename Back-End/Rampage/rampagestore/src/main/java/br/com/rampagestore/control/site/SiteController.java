@@ -7,6 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
+
 @RestController
 @RequestMapping("/site")
 @CrossOrigin(origins = "*", allowedHeaders = "*")
@@ -25,7 +27,7 @@ public class SiteController {
     }
 
     @GetMapping("/product-by-id")
-    public ResponseEntity<?> listingProductById(@RequestParam(name = "id") Long id) {
+    public ResponseEntity<?> listingProductById(@RequestParam(name = "id") Long id) throws IOException {
         return productService.listingProductById(id);
     }
 

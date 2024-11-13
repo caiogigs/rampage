@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import br.com.rampagestore.model.*;
 import br.com.rampagestore.model.enums.ImageType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -13,10 +14,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import br.com.rampagestore.model.ImageModel;
-import br.com.rampagestore.model.ModelMessage;
-import br.com.rampagestore.model.ProductObj;
-import br.com.rampagestore.model.ProductResponse;
 import br.com.rampagestore.repository.ImageRepository;
 import br.com.rampagestore.repository.ProductRepository;
 
@@ -98,13 +95,13 @@ public class ProductService {
     }
 
     //Método para listar o produto pelo id
-    public ResponseEntity<?> listingProductById(Long id) {
+    public ResponseEntity<?> listingProductById(Long id) throws IOException {
         ProductObj prod = productAction.findById(id).orElse(null);
         if (prod == null)
             return ResponseEntity.notFound().build();
 
-        List<byte[]> images = imageService.listAllImagesBase64(prod);
-        return new ResponseEntity<>(new ProductResponse(prod, images, ImageType.BASE64), HttpStatus.OK);
+        List<ImageModel> images = imageService.getImagesByProdutoId(prod.getId());
+        return new ResponseEntity<>(new ProductEditDTO(prod, images), HttpStatus.OK);
     }
 
     //Método para cadastrar Produtos

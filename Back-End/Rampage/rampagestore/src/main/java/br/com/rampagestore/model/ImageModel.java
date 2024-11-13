@@ -1,6 +1,9 @@
 package br.com.rampagestore.model;
 
 import jakarta.persistence.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.util.List;
 
 @Entity
 @Table(name = "images")
@@ -16,6 +19,8 @@ public class ImageModel {
     private boolean mainImage;
     private boolean status;
 
+    @Transient
+    private MultipartFile imageFile;
     @Transient
     private byte[] imageBase64;
     
@@ -75,5 +80,13 @@ public class ImageModel {
 
     public void setImageBase64(byte[] imageBase64) {
         this.imageBase64 = imageBase64;
+    }
+
+    public MultipartFile getImageFile() {
+        return imageFile;
+    }
+
+    public void setImageFile(MultipartFile imageFile) {
+        this.imageFile = imageFile;
     }
 }

@@ -1,12 +1,12 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useLocation } from "react-router-dom";
-import Barra from "../../../../Components/Navbar/Navbar";
 import Footer from "../../../../Components/Footer/footer";
+import Barra from "../../../../Components/Navbar/Navbar";
 
 const RegisteredOrder = () => {
-    const location = useLocation();
-    const orderCreated = location.state.data; // Acesse o state passado
-  console.log(location.state);
+  const location = useLocation();
+  const orderCreated = location.state.data; // Acesse o state passado
+console.log(location.state);
   
     useEffect(() => {
       if (orderCreated) {

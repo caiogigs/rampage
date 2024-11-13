@@ -1,5 +1,15 @@
 package br.com.rampagestore.service;
 
+import br.com.rampagestore.model.ImageModel;
+import br.com.rampagestore.model.ProductObj;
+import br.com.rampagestore.repository.ImageRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ByteArrayResource;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
+
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -11,15 +21,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
-
-import br.com.rampagestore.model.ImageModel;
-import br.com.rampagestore.model.ProductObj;
-import br.com.rampagestore.repository.ImageRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 
 @Service
 public class ImageService {
@@ -84,28 +85,29 @@ public class ImageService {
     }
 
     // LISTAR IMAGENS
-    public List<byte[]> listAllImagesBase64(ProductObj product) {
-        List<ImageModel> images = imageRepository.findByIdProdutoOrderByMainImageDesc(product.getId());
-        List<byte[]> images64 = new ArrayList<>();
+    public List<ImageModel> getImagesByProdutoId(Long idProduct) throws IOException {
 
-        for (ImageModel imagem : images) {
-            String imagePath = imagem.getDirection();
-
-            try {
-
-                images64.add(getImageContent(imagePath));
-
-            } catch (IOException e) {
-                e.printStackTrace();
-                return null;
-            }
+        List<ImageModel> images = imageRepository.findByIdProdutoOrderByMainImageDesc(idProduct);
+        for (ImageModel img : images) {
+            img.setImageBase64(this.getImageContent(img.getDirection()));
         }
 
-        return images64;
+        return images;
+
     }
 
     private byte[] getImageContent(String imagePath) throws IOException {
         Path caminho = Paths.get(imagePath);
         return Files.readAllBytes(caminho);
+    }
+
+    public ResponseEntity<?> removeImage(Long idImageModel) {
+        ImageModel image = imageRepository.findById(idImageModel).orElse(null);
+        if (image != null) {
+            imageRepository.delete(image);
+            return new ResponseEntity<>(HttpStatus.OK);
+        }
+
+        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 }

@@ -1,6 +1,8 @@
 package br.com.rampagestore.control;
 import java.util.List;
 
+import br.com.rampagestore.model.ImageModel;
+import br.com.rampagestore.model.ProductEditDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -42,11 +44,10 @@ public class ProductControl {
     }
 
     //EndPoint de atualizar Produtos
-    @PutMapping("/atualizar_produto")
-    public ResponseEntity<?> updateExistProduct(@ModelAttribute ProductObj obj, @RequestPart("img") List<MultipartFile>img){
-        obj.setId(Long.valueOf(obj.getId()));
-        System.out.println(obj.getId());
-        return productService.updateProduct(obj, img);
+    @PutMapping("/edit-product")
+    public ResponseEntity<?> updateExistProduct(@ModelAttribute ProductObj productObj, @RequestPart("img") List<MultipartFile>img){
+
+        return productService.updateProduct(productObj, img);
     }
 
     //EndPoint para listar todos os Produtos no BackOffice
