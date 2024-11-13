@@ -44,6 +44,19 @@ const Cart = () => {
     attValuesPrice();
   }, [freight]);
 
+  const attQuantity = async (product, event) => {
+    const qtd = Number(event.target.value);
+
+    if (qtd >= 0) {
+      cartService.attQuantity(product, qtd);
+      setTotal(cartService.getTotalPrice());
+      setSubTotal(cartService.getSubTotalPrice());
+    } else {
+      deleteItem(product);
+    }
+    setProducts(await cartService.getItems());
+  };
+
   const attValuesPrice = () => {
     const subtotalValue = cartService.getSubTotalPrice();
     setSubTotal(subtotalValue);
@@ -135,6 +148,7 @@ const Cart = () => {
                     <div className="col-7">
                       <p>Produto: {prod.productName}</p>
                       <p>Quantidade: {prod.quantityOrdered}</p>
+                      <p>Estoque: {prod.amount}</p>
                       <p>
                         Valor unitário: R${" "}
                         {prod?.productPrice
@@ -155,8 +169,20 @@ const Cart = () => {
                         )}
                       </div>
                     </div>
-                    <div className="col-2 d-flex justify-content-center align-items-center">
-                      <div className="button-delete">
+                    <div className="col-2 d-flex flex-column justify-content-center align-items-center">
+                      <div className="mb-3">
+                        <label htmlFor="quantity">Quantidade: </label>
+                        <input
+                          max={prod.amount} // Máximo definido como o estoque disponível
+                          value={prod.quantityOrdered}
+                          id="quantity"
+                          name="quantity"
+                          type="number"
+                          placeholder="Quantity"
+                          onInput={(event) => attQuantity(prod, event)} // Função chamada ao alterar o valor
+                        />
+                      </div>
+                      <div className="button-delete col-12">
                         <button
                           onClick={() => deleteItem(prod)}
                           className="btn btn-danger w-100"
@@ -209,12 +235,15 @@ const Cart = () => {
           </div>
 
           <div className="row button w-100 mt-4 d-flex justify-content-center">
-          <button
-              onClick={() => window.location.href = 'http://localhost:3000/pagina-principal'}
+            <button
+              onClick={() =>
+                (window.location.href =
+                  "http://localhost:3000/pagina-principal")
+              }
               className="btn w-50 btn-primary"
-          >
-            Continuar Comprando
-          </button>
+            >
+              Continuar Comprando
+            </button>
             <button
               onClick={() => iniciaCheckout()}
               className="btn w-50 btn-success"
@@ -232,7 +261,13 @@ const Cart = () => {
       <header>
         <Barra />
       </header>
-      {products ? mainPage() : <main><p className="main">Carregando...</p></main>}
+      {products ? (
+        mainPage()
+      ) : (
+        <main>
+          <p className="main">Carregando...</p>
+        </main>
+      )}
       <Footer />
     </>
   );

@@ -75,6 +75,17 @@ class CartService {
     }
   }
 
+  attQuantity(product, qtd) {
+    const item = this._products.find((p) => p.id === product.id);
+    if (item) {
+      item.quantityOrdered = qtd;
+      if (qtd === 0) {
+        this.removeItem(item);
+      }
+      this.saveCart();
+    }
+  }
+
   getTotalPrice() {
     let total = this._products.reduce((total, product) => {
       return total + product.productPrice * product.quantityOrdered;
