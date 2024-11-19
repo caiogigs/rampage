@@ -26,7 +26,7 @@ public class OrderService {
     }
 
     public ResponseEntity<?> selectOrdersByIdClient(Long userId) {
-        List<Order> orders = orderRepository.findAllByConsumerId(userId);
+        List<Order> orders = orderRepository.findAllByConsumerIdOrderByIdDesc(userId);
         return ResponseEntity.ok(orders);
     }
 }

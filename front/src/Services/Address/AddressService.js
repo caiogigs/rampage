@@ -11,6 +11,10 @@ class AddressService extends CrudService {
     AddressService._instance = this;
   }
 
+  async getAddressByIdUser(id){
+    return await this.doGetById("/selecionar-todos-enderecos", id);
+  }
+
   async getAddressSelected(){
     return JSON.parse(localStorage.getItem('addressSelected'));
 

@@ -42,7 +42,8 @@ class LoginService {
 
   async loginConsumer(formData) {
     let error = "";
-
+    await this.logout();
+    
     await fetch(`${this._url}/login_consumer`, {
       method: "POST",
       headers: {
@@ -76,9 +77,9 @@ class LoginService {
   }
 
   async _setData(data) {
-    localStorage.setItem("authToken", data.token);
-    localStorage.setItem("userRole", data.userRole);
-    localStorage.setItem("idUser", data.id);
+    await localStorage.setItem("authToken", data.token);
+    await localStorage.setItem("userRole", data.userRole);
+    await localStorage.setItem("idUser", data.id);
   }
 
   async logout() {

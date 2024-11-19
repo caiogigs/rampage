@@ -92,4 +92,8 @@ public class AddressService {
         }
     }
 
+    public ResponseEntity<?> selectAllAdrress(Long id) {
+        List<UserAddress> addresses = addresRepository.findAllByIdUserOrderByBillingAddressDescStandardDesc(id);
+        return ResponseEntity.ok(addresses);
+    }
 }

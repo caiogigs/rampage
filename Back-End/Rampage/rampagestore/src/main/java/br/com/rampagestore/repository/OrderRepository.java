@@ -10,5 +10,5 @@ import java.util.List;
 @Repository
 public interface OrderRepository extends CrudRepository<Order, Long>{
 
-    List<Order> findAllByConsumerId(Long userId);
+    List<Order> findAllByConsumerIdOrderByIdDesc(Long userId);
 }

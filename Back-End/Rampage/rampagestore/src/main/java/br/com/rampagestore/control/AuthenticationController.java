@@ -101,11 +101,22 @@ public class AuthenticationController {
         System.out.println(role);
         return ResponseEntity.ok(new LoginReponseDTO(token, role, id));
     }
-    
+
     @GetMapping("/listarUsuarios")
     public Iterable<User> listingUsers(){
         return userRepository.findAll();
     }
+
+    @GetMapping("/get-user")
+    public ResponseEntity<?> getUserById(@RequestParam(name = "id") Long id){
+        return userService.getUserById(id);
+    }
+
+    @PutMapping("/edit-user-site")
+    public ResponseEntity<?> editUserSite(@RequestBody User user){
+        return userService.editUserSite(user);
+    }
+
 
     @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/nomeContem")

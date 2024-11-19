@@ -28,6 +28,11 @@ public class AddressController {
         return addressService.selectAllDeliveryAdrress(id);
     }
 
+    @GetMapping("/selecionar-todos-enderecos")//id do cliente
+    public ResponseEntity<?> selectAllAddressByIdUser(@RequestParam(name = "id") Long id){
+        return addressService.selectAllAdrress(id);
+    }
+
 
     @GetMapping("/indicate_billing_address/{id}")//id do endereço q sera alterado
     public ResponseEntity<?> indicateBillingAddress(@PathVariable Long id){

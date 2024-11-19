@@ -138,4 +138,31 @@ public class UserService {
         return ResponseEntity.status(HttpStatus.OK).body(Collections.singletonMap("message", "Cadastro realizado com sucesso!"));
     }
 
+    public ResponseEntity<?> getUserById(Long id) {
+
+          User user = userRepository.findById(id).orElse(null);
+          if (user == null)
+              return ResponseEntity.notFound().build();
+
+          return ResponseEntity.ok(user);
+
+    }
+
+    public ResponseEntity<?> editUserSite(User user) {
+          User obj = userRepository.findById(user.getId()).orElse(null);
+          if (obj == null){
+              return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+          }
+
+        obj.setName(user.getName());
+        obj.setBirthDate(user.getBirthDate());
+        obj.setGender(user.getGender());
+
+        if (!user.getPassword().isBlank())
+            obj.setPassword(passwordEncoder.encode(user.getPassword()));
+
+        userRepository.save(obj);
+
+        return ResponseEntity.ok().build();
+    }
 }
