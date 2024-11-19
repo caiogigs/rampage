@@ -72,8 +72,8 @@ public class ProductControl {
 
     //EndPoint para alterar o status do produto
     @PutMapping("/mudar_status_produto")
-    public ResponseEntity<?> changeProductStatus(@RequestBody ProductObj obj){
-        return productService.changeStatus(obj);
+    public ResponseEntity<?> changeProductStatus(@RequestParam(name = "id") Long id){
+        return productService.changeStatus(id);
     }
 
     //EndPoint para aumentar quantidade de produtos 

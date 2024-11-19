@@ -35,8 +35,7 @@ public class ProductService {
 
     //Método usado para colocar produtos no landingPage
     public ResponseEntity<?> selectAllProductsAndImgs(){
-        System.out.println("BATEU AQUI");
-        List<ProductObj> productObjs = productAction.findAll();
+        List<ProductObj> productObjs = productAction.findAllByStatusTrue();
         List<ProductResponse> productResponses = new ArrayList<>(); 
         for(ProductObj product : productObjs){
             ImageModel image = imageService.listMainImageBase64(product);
@@ -234,8 +233,12 @@ public class ProductService {
     }
 
     // Método para mudar o status do produto
-    public ResponseEntity<?> changeStatus(ProductObj obj) {
-        ProductObj changeProductObj = productAction.findById(obj.getId());
+    public ResponseEntity<?> changeStatus(Long id) {
+        ProductObj changeProductObj = productAction.findById(id).orElse(null);
+
+        if (changeProductObj == null)
+            return ResponseEntity.notFound().build();
+
         changeProductObj.setStatus(!changeProductObj.isStatus());
         productAction.save(changeProductObj);
         return new ResponseEntity<>(HttpStatus.OK);

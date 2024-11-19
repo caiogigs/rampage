@@ -19,5 +19,6 @@ public interface ProductRepository extends CrudRepository<ProductObj, Long>{
     ProductObj findById(long id);
 
     List<ProductObj> findByProductNameContainingIgnoreCase(String kayword);
-    
+
+    List<ProductObj> findAllByStatusTrue();
 }

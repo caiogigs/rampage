@@ -14,7 +14,7 @@ const Carrosel = React.memo(({ imagens, onRemoveImage, showIcon=false, onDefault
     <div className="carrossel">
       <Carousel data-bs-theme="dark">
         {imagens.map((imagem, index) => (
-          <Carousel.Item key={index} onClick={() => onDefaultImage(imagem)}>
+          <Carousel.Item key={index} onClick={() => showIcon ? onDefaultImage(imagem) : ''}>
             <ImgCarrosel image64={imagem.imageBase64} />
             <Carousel.Caption>
               {showIcon ?

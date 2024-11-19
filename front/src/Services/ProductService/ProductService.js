@@ -54,6 +54,11 @@ class ProductService extends CrudService {
       .then((data) => data)
       .catch((err) => alert("Erro ao fazer requisição."));
   };
+
+  changeStatusProduct = async (id) => {
+    return await this.doPut("/mudar_status_produto?id="+id, '')
+    .catch((err) => alert("Erro ao fazer requisição.", err));
+  };
 }
 
 const productService = new ProductService();

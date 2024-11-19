@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import RegisterProduct from "./RegisterProduct";
 import productService from "../../Services/ProductService/ProductService";
 import EditProduct from "./EditProduct";
+import ProductModal from "../../Components/Modal/ProductModal";
 
 function ProductTable() {
   const [products, setProducts] = useState([]); // Estado para armazenar produtos
@@ -9,14 +10,15 @@ function ProductTable() {
   const [error, setError] = useState(null); // Estado para armazenar erros, se houver
   const [showRegisterProductForm, setShowRegisterProductForm] = useState(false);
   const [showEditProductForm, setShowEditProductForm] = useState(false);
+  const [showProduct, setShowProduct] = useState(false);
   const [productEdit, setProductEdit] = useState({});
+  const [productView, setProductView] = useState();
   const [searchTerm, setSearchTerm] = useState(""); // Estado para armazenar o termo de pesquisa
 
   const searchProductByName = async (term = "") => {
     try {
       const data = await productService.getProductByTerm(term);
       setProducts(data); // Atualiza a lista de produtos com os resultados da pesquisa
-      
     } catch (error) {
       console.error("Erro ao buscar produtos:", error);
     }
@@ -42,7 +44,10 @@ function ProductTable() {
 
   const handleRegisterProd = async (formData) => {
     try {
-      const data = await productService.doPostMultiPartFile("/register_Product", formData);
+      const data = await productService.doPostMultiPartFile(
+        "/register_Product",
+        formData
+      );
       if (data) {
         fetchProducts(); // Recarrega a lista de produtos após o registro
         setShowRegisterProductForm(false); // Oculta o formulário após o registro
@@ -61,7 +66,10 @@ function ProductTable() {
 
   const handleEditProd = async (formData) => {
     try {
-      const data = await productService.doPutMultiPartFile("/edit-product", formData);
+      const data = await productService.doPutMultiPartFile(
+        "/edit-product",
+        formData
+      );
       if (data) {
         fetchProducts(); // Recarrega a lista de produtos após o registro
         setShowRegisterProductForm(false); // Oculta o formulário após o registro
@@ -85,6 +93,7 @@ function ProductTable() {
   const handleCancel = () => {
     setShowRegisterProductForm(false); // Corrigido aqui
     setShowEditProductForm(false);
+    setShowProduct(false);
     fetchProducts(); // Recarrega a lista de produtos após o cancelamento
   };
 
@@ -103,19 +112,35 @@ function ProductTable() {
   const handleEdit = (product) => {
     setProductEdit(product);
     setShowEditProductForm(true);
-    
+
     console.log(`Editando produto com ID: ${product.id}`);
     // Você pode redirecionar para um formulário de edição ou abrir um modal
   };
 
-  const handleDeactivate = (id) => {
+  const handleDeactivate = async (id) => {
     // Lógica para inativar o produto
+    const userConfirmed = window.confirm(
+      "Você tem certeza que deseja desativar este produto?"
+    );
+    if (userConfirmed) {
+      // Ação a ser realizada ao confirmar
+      await productService.changeStatusProduct(id);
+      fetchProducts();
+    }
     console.log(`Inativando produto com ID: ${id}`);
     // Você pode chamar uma API para inativar o produto e atualizar a lista
   };
 
-  const handleReactivate = (id) => {
+  const handleReactivate = async (id) => {
     // Lógica para reativar o produto
+    const userConfirmed = window.confirm(
+      "Você tem certeza que deseja ativar este produto?"
+    );
+    if (userConfirmed) {
+      // Ação a ser realizada ao confirmar
+      await productService.changeStatusProduct(id);
+      fetchProducts();
+    }
     console.log(`Reativando produto com ID: ${id}`);
     // Você pode chamar uma API para reativar o produto e atualizar a lista
   };
@@ -123,6 +148,8 @@ function ProductTable() {
   const handleView = (id) => {
     // Lógica para visualizar detalhes do produto
     console.log(`Visualizando produto com ID: ${id}`);
+    setProductView(id);
+    setShowProduct(true);
     // Você pode redirecionar para uma página de detalhes do produto
   };
 
@@ -140,9 +167,13 @@ function ProductTable() {
       <EditProduct
         handleEditProd={handleEditProd}
         handleCancel={handleCancel}
-        productEdit = {productEdit}
+        productEdit={productEdit}
       />
     );
+  }
+
+  if (showProduct) {
+    return <ProductModal productId={productView} handleCancel={handleCancel} />;
   }
 
   return (
