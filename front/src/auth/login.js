@@ -6,6 +6,8 @@ class LoginService {
   async login(data) {
     let error = "";
 
+    await this.logout();
+
     await fetch(`${this._url}/login`, {
       method: "POST",
       body: JSON.stringify(data),

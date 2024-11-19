@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { useLocation } from "react-router-dom";
-import imageService from "../../Services/ImageService";
 import Carrosel from "../../Components/Carousel/Carousel";
+import imageService from "../../Services/ImageService";
 
 function EditProduct({ handleEditProd, handleCancel, productEdit }) {
   const [product, setProduct] = useState({

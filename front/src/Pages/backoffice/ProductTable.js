@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import RegisterProduct from "./RegisterProduct";
 import productService from "../../Services/ProductService/ProductService";
-import { useNavigate } from "react-router-dom";
 import EditProduct from "./EditProduct";
 
 function ProductTable() {
