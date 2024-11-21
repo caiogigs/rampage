@@ -17,16 +17,24 @@ public class OrderService {
 
     @Autowired
     private OrderRepository orderRepository;
+    @Autowired
+    private OrderItemService orderItemService;
 
     public ResponseEntity<?> createOrder(Order order) {
         order.setOrderStatus(OrderStatus.AGUARDANDO_PAGAMENTO);
         order.setDateOrdered(LocalDate.now());
         Order objReturn = orderRepository.save(order);
+        orderItemService.save(objReturn);
         return new ResponseEntity<>(objReturn, HttpStatus.CREATED);
     }
 
     public ResponseEntity<?> selectOrdersByIdClient(Long userId) {
         List<Order> orders = orderRepository.findAllByConsumerIdOrderByIdDesc(userId);
         return ResponseEntity.ok(orders);
+    }
+
+    public ResponseEntity<?> selectOrderById(Long id) {
+        Order order = orderRepository.findById(id).orElse(null);
+        return ResponseEntity.ok(order);
     }
 }

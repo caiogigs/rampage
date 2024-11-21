@@ -29,6 +29,8 @@ public class Order {
     private BigDecimal freight; //frete
     private LocalDate dateOrdered;
 
+    @Transient
+    private List<OrderItem> orderItems;
 
     public Order() {
     }
@@ -104,5 +106,13 @@ public class Order {
 
     public void setDateOrdered(LocalDate dateOrdered) {
         this.dateOrdered = dateOrdered;
+    }
+
+    public List<OrderItem> getOrderItems() {
+        return orderItems;
+    }
+
+    public void setOrderItems(List<OrderItem> orderItems) {
+        this.orderItems = orderItems;
     }
 }

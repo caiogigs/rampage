@@ -61,4 +61,9 @@ public class AddressController {
     public ResponseEntity<?> changeStandard(@RequestBody UserAddress userAddress) {
         return addressService.changeStandard(userAddress.getId(), userAddress.getIdUser());
     }
+
+    @GetMapping("/get-address")
+    public ResponseEntity<?> getAdressById(@RequestParam(name = "id") Long id) {
+        return addressService.getAdressById(id);
+    }
 }

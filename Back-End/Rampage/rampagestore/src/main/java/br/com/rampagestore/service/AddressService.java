@@ -115,4 +115,9 @@ public class AddressService {
 
         return ResponseEntity.ok().build();
     }
+
+    public ResponseEntity<?> getAdressById(Long id) {
+        UserAddress address = addresRepository.findById(id).orElse(null);
+        return ResponseEntity.ok(address);
+    }
 }

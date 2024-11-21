@@ -3,6 +3,7 @@ import Footer from "../../../Components/Footer/footer"
 import { useEffect, useState } from "react";
 import orderService from "../../../Services/OrderService";
 import authService from "../../../auth/AuthService";
+import { useNavigate } from "react-router-dom";
 
 const OrderList = () => {
 
@@ -27,6 +28,8 @@ const OrderList = () => {
         fetch();
     }, []);
 
+    const navigate = new useNavigate();
+
     const precoFormatado = (price) => {
         return price.toLocaleString("pt-BR", {
           style: "currency",
@@ -47,7 +50,7 @@ const OrderList = () => {
                             <p>Método de pagamento: {order.paymentMethods}</p>
                             <p>Total da compra: {precoFormatado(order.total)}</p>
                             <p>Data da compra: {order.dateOrdered}</p>
-                            <button className="btn btn-primary mt-1">Mais detalhes</button>
+                            <button className="btn btn-primary mt-1" onClick={() => navigate(`/order-details?order=${order.id}`)}>Mais detalhes</button>
                         </div>
                     ))
                 ) : (

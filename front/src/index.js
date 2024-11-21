@@ -23,6 +23,7 @@ import OrderList from './Pages/site/OrderList/OrderList';
 import MyAccount from './Pages/site/MyAccount/MyAccount';
 import EditProduct from './Pages/backoffice/EditProduct';
 import ProtectedRoute from './Infra/ProtectedRoute';
+import OrderDetails from './Pages/site/OrderDetails/OrderDetails';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
@@ -46,6 +47,7 @@ root.render(
             <Route path="/checkout/login"             element={<UserConsumerLogin   />} />
             <Route path="/registered-order"   	      element={<ProtectedRoute      allowedRoles={["CONSUMER"]}><RegisteredOrder/>  </ProtectedRoute>} />
             <Route path="/my-orders"   	              element={<ProtectedRoute      allowedRoles={["CONSUMER"]}><OrderList/>        </ProtectedRoute>} />
+            <Route path="/order-details"   	          element={<ProtectedRoute      allowedRoles={["CONSUMER"]}><OrderDetails/>     </ProtectedRoute>} />
             <Route path="/my-account"   	            element={<ProtectedRoute      allowedRoles={["CONSUMER"]}><MyAccount/>        </ProtectedRoute>} />
             </Routes>
       </Router>

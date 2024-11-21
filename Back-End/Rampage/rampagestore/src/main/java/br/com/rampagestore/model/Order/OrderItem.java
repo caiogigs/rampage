@@ -27,9 +27,9 @@ public class OrderItem {
     private BigDecimal unitValue; //valor unidade
     private Integer amountProducts; //quantidade do produto
 
-    @ManyToOne
-    @JoinColumn(name = "order_id")
-    private Order order;
+//    @ManyToOne
+//    @JoinColumn(name = "order_id")
+    private Long orderId;
 
     public OrderItem() {
     }
@@ -66,12 +66,11 @@ public class OrderItem {
         this.amountProducts = amountProducts;
     }
 
-    public Order getOrder() {
-        return order;
+    public Long getOrderId() {
+        return orderId;
     }
 
-    public void setOrder(Order order) {
-        this.order = order;
+    public void setOrderId(Long orderId) {
+        this.orderId = orderId;
     }
-
 }

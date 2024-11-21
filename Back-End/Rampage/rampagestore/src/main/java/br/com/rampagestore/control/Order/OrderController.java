@@ -1,5 +1,7 @@
 package br.com.rampagestore.control.Order;
 
+import br.com.rampagestore.model.ProductObj;
+import br.com.rampagestore.service.Order.OrderItemService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -14,6 +16,9 @@ public class OrderController {
     @Autowired
     private OrderService orderService;
 
+    @Autowired
+    private OrderItemService orderItemService;
+
     @PostMapping("/novo_pedido")
     public ResponseEntity<?> newOrder(@RequestBody Order order){
             return orderService.createOrder(order);
@@ -22,5 +27,15 @@ public class OrderController {
     @GetMapping("/get-my-orders")
     public ResponseEntity<?> selectOrdersByIdClient(@RequestParam(name = "id") Long userId){
         return orderService.selectOrdersByIdClient(userId);
+    }
+
+    @GetMapping("/order-details")
+    public ResponseEntity<?> selectOrderById(@RequestParam(name = "id") Long id){
+        return orderService.selectOrderById(id);
+    }
+
+    @GetMapping("/get-products-by-order-id")
+    public ResponseEntity<?> getProductsByIdOrder(@RequestParam(name = "id") Long idOrder){
+        return orderItemService.getProductsByIdOrder(idOrder);
     }
 }
