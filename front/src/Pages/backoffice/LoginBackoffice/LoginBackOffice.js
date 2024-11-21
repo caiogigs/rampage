@@ -16,11 +16,18 @@ function App() {
 
   // Função para realizar o login
   const handleLogin = () => {
-    authService.login(formData).then((error) => {
+    authService.login(formData).then(async(error) => {
       console.log(error.length);
 
       if (error.length !== 0) setLoginError(error);
-      else setIsAuthenticated(authService.isAuthenticated());
+      else {
+        const consumer = await authService.validaLoginConsumer();
+        if (consumer){
+          await authService.notAllowedLogin();
+          return;
+        }
+        setIsAuthenticated(authService.isAuthenticated());
+      }
     });
   };
 

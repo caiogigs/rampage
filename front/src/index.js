@@ -42,10 +42,10 @@ root.render(
             <Route path="/pagina-principal"           element={<LandingPage         />} />
             <Route path="/product-detail"             element={<ProductDetails      />} />
             <Route path="/cart"       	              element={<Cart                />} />
-            <Route path="/checkout/select-address"    element={<ProtectedRoute      allowedRoles={["CONSUMER"]}><SelectAddress/>    </ProtectedRoute>} />
-            <Route path="/checkout/register-address"  element={<ProtectedRoute      allowedRoles={["CONSUMER"]}><RegisterAddress/>  </ProtectedRoute>} />
-            <Route path="/checkout/payment"           element={<ProtectedRoute      allowedRoles={["CONSUMER"]}><Payment/>          </ProtectedRoute>} />
-            <Route path="/order-summary"              element={<ProtectedRoute      allowedRoles={["CONSUMER"]}><OrderSummary/>     </ProtectedRoute>} />
+            <Route path="/checkout/select-address"    element={<ProtectedRoute      allowedRoles={["CONSUMER"]} checkout={true}><SelectAddress/>    </ProtectedRoute>} />
+            <Route path="/checkout/register-address"  element={<ProtectedRoute      allowedRoles={["CONSUMER"]} checkout={true}><RegisterAddress/>  </ProtectedRoute>} />
+            <Route path="/checkout/payment"           element={<ProtectedRoute      allowedRoles={["CONSUMER"]} checkout={true}><Payment/>          </ProtectedRoute>} />
+            <Route path="/order-summary"              element={<ProtectedRoute      allowedRoles={["CONSUMER"]} checkout={true}><OrderSummary/>     </ProtectedRoute>} />
             <Route path="/checkout/login"             element={<UserConsumerLogin   />} />
             <Route path="/registered-order"   	      element={<ProtectedRoute      allowedRoles={["CONSUMER"]}><RegisteredOrder/>  </ProtectedRoute>} />
             <Route path="/my-orders"   	              element={<ProtectedRoute      allowedRoles={["CONSUMER"]}><OrderList/>        </ProtectedRoute>} />
