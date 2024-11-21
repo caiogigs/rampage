@@ -24,6 +24,7 @@ import MyAccount from './Pages/site/MyAccount/MyAccount';
 import EditProduct from './Pages/backoffice/EditProduct';
 import ProtectedRoute from './Infra/ProtectedRoute';
 import OrderDetails from './Pages/site/OrderDetails/OrderDetails';
+import BackOfficeOrderList from './Pages/backoffice/BackOfficeOrderList';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
@@ -31,10 +32,11 @@ root.render(
       <Router>
           <Routes>
             <Route path="/"                           element={<LoginBackOffice     />} />
-            <Route path="/back-home"                  element={<ProtectedRoute      allowedRoles={["ADMIN", "STOKIST"]}><HomeBackOffice/> </ProtectedRoute>} />
-            <Route path="/back-users-list"            element={<ProtectedRoute      allowedRoles={["ADMIN", "STOKIST"]}><UsersList/>      </ProtectedRoute>} />
-            <Route path="/back-product-list"          element={<ProtectedRoute      allowedRoles={["ADMIN", "STOKIST"]}><ProductTable/>   </ProtectedRoute>} />
-            <Route path="/back-product-edit"          element={<ProtectedRoute      allowedRoles={["ADMIN", "STOKIST"]}><EditProduct/>    </ProtectedRoute>} />
+            <Route path="/back-home"                  element={<ProtectedRoute      allowedRoles={["ADMIN", "STOKIST"]}><HomeBackOffice/>         </ProtectedRoute>} />
+            <Route path="/back-users-list"            element={<ProtectedRoute      allowedRoles={["ADMIN", "STOKIST"]}><UsersList/>              </ProtectedRoute>} />
+            <Route path="/back-order-list"            element={<ProtectedRoute      allowedRoles={["ADMIN", "STOKIST"]}><BackOfficeOrderList/>    </ProtectedRoute>} />
+            <Route path="/back-product-list"          element={<ProtectedRoute      allowedRoles={["ADMIN", "STOKIST"]}><ProductTable/>           </ProtectedRoute>} />
+            <Route path="/back-product-edit"          element={<ProtectedRoute      allowedRoles={["ADMIN", "STOKIST"]}><EditProduct/>            </ProtectedRoute>} />
             <Route path="/user-cadastrar"             element={<ConsumerRegister    />} />
             <Route path="/login_consumer"             element={<UserConsumerLogin   />} />
             <Route path="/pagina-principal"           element={<LandingPage         />} />

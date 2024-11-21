@@ -1,17 +1,14 @@
 package br.com.rampagestore.control;
-import java.util.List;
-
-import br.com.rampagestore.model.ImageModel;
-import br.com.rampagestore.model.ProductEditDTO;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
 import br.com.rampagestore.model.ProductObj;
 import br.com.rampagestore.repository.ProductRepository;
 import br.com.rampagestore.service.ProductService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.util.List;
 
 
 @RestController
@@ -45,7 +42,7 @@ public class ProductControl {
 
     //EndPoint de atualizar Produtos
     @PutMapping("/edit-product")
-    public ResponseEntity<?> updateExistProduct(@ModelAttribute ProductObj productObj, @RequestPart("img") List<MultipartFile>img){
+    public ResponseEntity<?> updateExistProduct(@ModelAttribute ProductObj productObj, @RequestPart(value = "img", required = false) List<MultipartFile>img){
 
         return productService.updateProduct(productObj, img);
     }

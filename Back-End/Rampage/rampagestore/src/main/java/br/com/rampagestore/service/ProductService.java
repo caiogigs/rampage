@@ -182,7 +182,7 @@ public class ProductService {
             productAction.save(updatedProduct);
 
             // Se houver imagens, deleta as antigas e salva as novas
-            if (!images.isEmpty()) {
+            if (images != null && !images.isEmpty()) {
                 Long productId = obj.getId();
                 imageRepository.deleteByIdProduto(productId);
                 try {

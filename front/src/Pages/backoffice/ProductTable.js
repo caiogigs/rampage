@@ -3,6 +3,7 @@ import RegisterProduct from "./RegisterProduct";
 import productService from "../../Services/ProductService/ProductService";
 import EditProduct from "./EditProduct";
 import ProductModal from "../../Components/Modal/ProductModal";
+import authService from "../../auth/AuthService";
 
 function ProductTable() {
   const [products, setProducts] = useState([]); // Estado para armazenar produtos
@@ -176,6 +177,34 @@ function ProductTable() {
     return <ProductModal productId={productView} handleCancel={handleCancel} />;
   }
 
+  const getAcoes = (product) => {
+    return (
+      <>
+        {product.status ? (
+          <button
+            className="btn btn-secondary"
+            onClick={() => handleDeactivate(product.id)}
+          >
+            Inativar
+          </button>
+        ) : (
+          <button
+            className="btn btn-success"
+            onClick={() => handleReactivate(product.id)}
+          >
+            Reativar
+          </button>
+        )}
+        <button
+          className="btn btn-primary"
+          onClick={() => handleView(product.id)}
+        >
+          Visualizar
+        </button>
+      </>
+    );
+  };
+
   return (
     <div>
       <h2>Lista de Produtos</h2>
@@ -221,27 +250,7 @@ function ProductTable() {
                   >
                     Alterar
                   </button>
-                  {product.status ? (
-                    <button
-                      className="btn btn-secondary"
-                      onClick={() => handleDeactivate(product.id)}
-                    >
-                      Inativar
-                    </button>
-                  ) : (
-                    <button
-                      className="btn btn-success"
-                      onClick={() => handleReactivate(product.id)}
-                    >
-                      Reativar
-                    </button>
-                  )}
-                  <button
-                    className="btn btn-primary"
-                    onClick={() => handleView(product.id)}
-                  >
-                    Visualizar
-                  </button>
+                  {authService.isAdmin() ? getAcoes(product) : ""}
                 </td>
               </tr>
             ))}

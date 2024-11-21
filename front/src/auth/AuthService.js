@@ -81,6 +81,11 @@ class AuthService {
     return this.authenticated;
   }
 
+  isAdmin() {
+    const role = localStorage.getItem('userRole');
+    return role === "ADMIN"; 
+  }
+
   async validaLoginConsumer(){
     const role = localStorage.getItem('userRole');
     return role === "CONSUMER"; 

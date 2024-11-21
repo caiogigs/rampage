@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import Carrosel from "../../Components/Carousel/Carousel";
 import imageService from "../../Services/ImageService";
+import authService from "../../auth/AuthService";
 
 function EditProduct({ handleEditProd, handleCancel, productEdit }) {
   const [product, setProduct] = useState({
@@ -170,6 +171,7 @@ function EditProduct({ handleEditProd, handleCancel, productEdit }) {
               name="productName"
               value={product.productName}
               onChange={handleChange}
+              disabled={!authService.isAdmin()}
               required
             />
           </div>
@@ -186,6 +188,7 @@ function EditProduct({ handleEditProd, handleCancel, productEdit }) {
               name="productDetai"
               value={product.productDetai}
               onChange={handleChange}
+              disabled={!authService.isAdmin()}
               required
             />
           </div>
@@ -219,6 +222,7 @@ function EditProduct({ handleEditProd, handleCancel, productEdit }) {
               name="productPrice"
               value={product.productPrice}
               onChange={handleChange}
+              disabled={!authService.isAdmin()}
               required
             />
           </div>
@@ -234,6 +238,7 @@ function EditProduct({ handleEditProd, handleCancel, productEdit }) {
               name="avaliation"
               value={product.avaliation}
               onChange={handleChange}
+              disabled={!authService.isAdmin()}
               required
             >
               <option value="">Selecione uma avaliação</option>
@@ -260,6 +265,7 @@ function EditProduct({ handleEditProd, handleCancel, productEdit }) {
               id="imgs"
               onChange={(e) => loadImages([...e.target.files])} // Armazena múltiplos arquivos de imagem selecionados
               multiple // Permite seleção de múltiplos arquivos
+              disabled={!authService.isAdmin()}
             />
           </div>
         </div>
@@ -273,7 +279,7 @@ function EditProduct({ handleEditProd, handleCancel, productEdit }) {
                 imagens={imgs}
                 onRemoveImage={removeImage}
                 onDefaultImage={handleSetDefaultImg}
-                showIcon={true}
+                showIcon={authService.isAdmin()}
               />
             </div>
           </div>

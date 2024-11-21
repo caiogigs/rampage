@@ -38,4 +38,14 @@ public class OrderController {
     public ResponseEntity<?> getProductsByIdOrder(@RequestParam(name = "id") Long idOrder){
         return orderItemService.getProductsByIdOrder(idOrder);
     }
+
+    @GetMapping("/get-all-orders")
+    public ResponseEntity<?> getAll(){
+        return orderService.getAll();
+    }
+
+    @PutMapping("/change-status")
+    public ResponseEntity<?> changeStatus(@RequestBody Order order){
+        return orderService.changeStatus(order);
+    }
 }

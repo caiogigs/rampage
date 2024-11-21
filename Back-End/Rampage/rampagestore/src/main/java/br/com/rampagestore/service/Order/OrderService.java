@@ -37,4 +37,12 @@ public class OrderService {
         Order order = orderRepository.findById(id).orElse(null);
         return ResponseEntity.ok(order);
     }
+
+    public ResponseEntity<?> getAll() {
+        return ResponseEntity.ok(orderRepository.findAll());
+    }
+
+    public ResponseEntity<?> changeStatus(Order order) {
+        return ResponseEntity.ok(orderRepository.save(order));
+    }
 }
