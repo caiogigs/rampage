@@ -8,11 +8,15 @@ import "./Payment.css";
 const Payment = () => {
   const [paymentMethods, setPaymentMethods] = useState([]);
   const [selectedMethods, setSelectedMethods] = useState({});
+  const [cartData, setCartData] = useState({
+    numero: '',
+    codVerificador: '',
+    nome: '',  // Nome do titular
+    vencimento: ''
+  });
 
   useEffect(() => {
     const fetch = async () => {
-      // const data = await new CrudService("/auth").doGet("/payments-methods");
-
       const data = [
         {
           id: 1,
@@ -22,30 +26,110 @@ const Payment = () => {
           id: 2,
           method: "PIX",
         },
+        {
+          id: 3,
+          method: "CARTAO",
+        },
       ];
 
       if (data) {
         await setPaymentMethods(data);
-        setSelectedMethods(data[0]);
-        selectMethods(data[0]);
+        setSelectedMethods(data[2]);
+        selectMethods(data[2]);
       }
     };
 
     fetch();
   }, []);
 
-  const {realizaCheckout, abrirPaginaEndereco} = useCheckoutService();
+  const handleAddressChange = (e) => {
+    const { name, value } = e.target;
+    setCartData({
+      ...cartData,
+      [name]: value,
+    });
+  };
+
+  const { realizaCheckout, abrirPaginaEndereco } = useCheckoutService();
   const returnTo = () => {
     abrirPaginaEndereco();
   };
 
   const retomarCheckout = () => {
+    if (selectedMethods.id === 3) {
+      const isFormComplete = Object.values(cartData).every((field) => field.trim() !== "");
+
+      if (!isFormComplete) {
+        alert("Por favor, preencha todos os campos antes de avançar.");
+        return;
+      }
+    }
+
     realizaCheckout();
   };
 
   const selectMethods = async (method) => {
     cartService.setPaymentMethod(method);
     setSelectedMethods(method);
+  };
+
+  const getFormCartao = () => {
+    return (
+      <>
+        <div className="container d-flex justify-content-center">
+          <div className="row w-50">
+            <form>
+              <h4>Dados do Cartão</h4>
+              <div className="row">
+                <input
+                  className="form-control"
+                  type="text"
+                  name="numero"
+                  value={cartData.numero}
+                  onChange={handleAddressChange}
+                  placeholder="Número do Cartão"
+                  maxLength="16"
+                  required
+                />
+              </div>
+              <div className="row">
+                <input
+                  className="form-control"
+                  type="text"
+                  name="codVerificador"
+                  value={cartData.codVerificador}
+                  onChange={handleAddressChange}
+                  placeholder="Código Verificador"
+                  maxLength="3"
+                  required
+                />
+              </div>
+              <div className="row">
+                <input
+                  className="form-control"
+                  type="text"
+                  name="nome"  // Certifique-se de que o nome está correto aqui
+                  value={cartData.nome}  // O valor do campo está sendo controlado por cartData.nome
+                  onChange={handleAddressChange}
+                  placeholder="Nome do Titular"
+                  required
+                />
+              </div>
+              <div className="row">
+                <input
+                  className="form-control"
+                  name="vencimento"
+                  value={cartData.vencimento}
+                  onChange={handleAddressChange}
+                  type="month"
+                  required
+                />
+              </div>
+            </form>
+          </div>
+        </div>
+      </>
+    );
   };
 
   const getMethods = () => {
@@ -57,17 +141,17 @@ const Payment = () => {
               <div key={index} className="row">
                 <div>
                   <input
-                    className="col-1 m-auto"
+                    className="col-1 m-auto met"
                     type="radio"
                     name="methods"
-                    id={`method-${index}`}
-                    value={index}
+                    id={`method-${method.id}`}
+                    value={method.id}
                     onChange={() => selectMethods(method)}
-                    checked={method === selectedMethods}
+                    checked={method.id === selectedMethods.id}
                   />
                   <label
-                    className="col-10 mb-4 ps-3 border-left"
-                    htmlFor={`method-${index}`}
+                    className="col-10 mb-4 ps-3 border-left met"
+                    htmlFor={`method-${method.id}`}
                   >
                     <h4>{method.method}</h4>
                   </label>
@@ -95,6 +179,7 @@ const Payment = () => {
             ) : (
               getMethods()
             )}
+            {selectedMethods.id === 3 ? getFormCartao() : ""}
             <div className="row mb-5">
               <div className="row d-flex justify-content-center">
                 <div className="col-4 d-flex justify-content-center">

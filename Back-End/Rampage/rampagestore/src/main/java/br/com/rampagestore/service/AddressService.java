@@ -96,4 +96,23 @@ public class AddressService {
         List<UserAddress> addresses = addresRepository.findAllByIdUserOrderByBillingAddressDescStandardDesc(id);
         return ResponseEntity.ok(addresses);
     }
+
+    public ResponseEntity<?> changeStandard(Long id, Long idUser) {
+        UserAddress add = addresRepository.findByIdUserAndStandardTrue(idUser);
+        if (add != null){
+            add.setStandard(false);
+            addresRepository.save(add);
+        }
+
+        UserAddress addStandard = addresRepository.findById(id).orElse(null);
+        if (addStandard != null){
+            addStandard.setStandard(true);
+            addresRepository.save(addStandard);
+        }
+        else {
+            return ResponseEntity.notFound().build();
+        }
+
+        return ResponseEntity.ok().build();
+    }
 }

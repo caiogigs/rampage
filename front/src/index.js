@@ -22,6 +22,7 @@ import RegisteredOrder from './Pages/site/Checkout/RegisteredOrder/RegisteredOrd
 import OrderList from './Pages/site/OrderList/OrderList';
 import MyAccount from './Pages/site/MyAccount/MyAccount';
 import EditProduct from './Pages/backoffice/EditProduct';
+import ProtectedRoute from './Infra/ProtectedRoute';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
@@ -29,23 +30,23 @@ root.render(
       <Router>
           <Routes>
             <Route path="/"                           element={<LoginBackOffice     />} />
-            <Route path="/back-home"                  element={<HomeBackOffice      />} />
-            <Route path="/back-users-list"            element={<UsersList           />} />
-            <Route path="/back-product-list"          element={<ProductTable        />} />
-            <Route path="/back-product-edit"          element={<EditProduct         />} />
+            <Route path="/back-home"                  element={<ProtectedRoute      allowedRoles={["ADMIN", "STOKIST"]}><HomeBackOffice/> </ProtectedRoute>} />
+            <Route path="/back-users-list"            element={<ProtectedRoute      allowedRoles={["ADMIN", "STOKIST"]}><UsersList/>      </ProtectedRoute>} />
+            <Route path="/back-product-list"          element={<ProtectedRoute      allowedRoles={["ADMIN", "STOKIST"]}><ProductTable/>   </ProtectedRoute>} />
+            <Route path="/back-product-edit"          element={<ProtectedRoute      allowedRoles={["ADMIN", "STOKIST"]}><EditProduct/>    </ProtectedRoute>} />
             <Route path="/user-cadastrar"             element={<ConsumerRegister    />} />
             <Route path="/login_consumer"             element={<UserConsumerLogin   />} />
             <Route path="/pagina-principal"           element={<LandingPage         />} />
             <Route path="/product-detail"             element={<ProductDetails      />} />
             <Route path="/cart"       	              element={<Cart                />} />
-            <Route path="/checkout/select-address"    element={<SelectAddress       />} />
-            <Route path="/checkout/register-address"  element={<RegisterAddress     />} />
-            <Route path="/checkout/payment"           element={<Payment             />} />
-            <Route path="/order-summary"              element={<OrderSummary        />} />
+            <Route path="/checkout/select-address"    element={<ProtectedRoute      allowedRoles={["CONSUMER"]}><SelectAddress/>    </ProtectedRoute>} />
+            <Route path="/checkout/register-address"  element={<ProtectedRoute      allowedRoles={["CONSUMER"]}><RegisterAddress/>  </ProtectedRoute>} />
+            <Route path="/checkout/payment"           element={<ProtectedRoute      allowedRoles={["CONSUMER"]}><Payment/>          </ProtectedRoute>} />
+            <Route path="/order-summary"              element={<ProtectedRoute      allowedRoles={["CONSUMER"]}><OrderSummary/>     </ProtectedRoute>} />
             <Route path="/checkout/login"             element={<UserConsumerLogin   />} />
-            <Route path="/registered-order"   	      element={<RegisteredOrder     />} />
-            <Route path="/my-orders"   	              element={<OrderList           />} />
-            <Route path="/my-account"   	            element={<MyAccount           />} />
+            <Route path="/registered-order"   	      element={<ProtectedRoute      allowedRoles={["CONSUMER"]}><RegisteredOrder/>  </ProtectedRoute>} />
+            <Route path="/my-orders"   	              element={<ProtectedRoute      allowedRoles={["CONSUMER"]}><OrderList/>        </ProtectedRoute>} />
+            <Route path="/my-account"   	            element={<ProtectedRoute      allowedRoles={["CONSUMER"]}><MyAccount/>        </ProtectedRoute>} />
             </Routes>
       </Router>
   </React.StrictMode>

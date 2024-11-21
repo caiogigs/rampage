@@ -50,7 +50,7 @@ public class AuthenticationController {
     private UserService userService;
 
     @GetMapping("/validate-token")
-    public ResponseEntity<?> validateTokenUser(@RequestParam(name = "token")String token) throws UnsupportedEncodingException {
+    public ResponseEntity<?> validateTokenUser(@RequestParam(name = "token") String token) throws UnsupportedEncodingException {
         String retorno = tokenService.validateToken(token);
         boolean valid = !retorno.isEmpty();
         Message message = new Message(valid);
@@ -59,7 +59,7 @@ public class AuthenticationController {
     }
 
     @PostMapping("/login_consumer")
-    public ResponseEntity<?> loginConsumer(@RequestBody @Valid AuthenticationDTO data) throws IllegalArgumentException, UnsupportedEncodingException{
+    public ResponseEntity<?> loginConsumer(@RequestBody @Valid AuthenticationDTO data) throws IllegalArgumentException, UnsupportedEncodingException {
         var usernamePassword = new UsernamePasswordAuthenticationToken(data.email(), data.password());
         var auth = this.authenticationManager.authenticate(usernamePassword);
         var token = tokenService.generateToken((User) auth.getPrincipal());
@@ -73,26 +73,26 @@ public class AuthenticationController {
     //Alteração de dados do cliente
     @PutMapping("/update_consumer/{id}")
     public ResponseEntity<?> updateConsumer(@PathVariable Long id, @RequestBody @Valid RegisterDTO data) {
-        return userService.editConsumer(id,data);
+        return userService.editConsumer(id, data);
     }
-    
-     //Registro de cliente
-     @PostMapping("/register_consumer")
-     public ResponseEntity<?> registerConsumer(@RequestBody @Valid RegisterConsumerRequest request){
-         RegisterDTO data = request.getRegisterDTO();
-         UserAddress userAddress = request.getUserAddress();
-         return userService.registerNewConsumer(data, userAddress);
-     }
+
+    //Registro de cliente
+    @PostMapping("/register_consumer")
+    public ResponseEntity<?> registerConsumer(@RequestBody @Valid RegisterConsumerRequest request) {
+        RegisterDTO data = request.getRegisterDTO();
+        UserAddress userAddress = request.getUserAddress();
+        return userService.registerNewConsumer(data, userAddress);
+    }
 
 
     //###############################                       ###############################
     //############################### METODOS DO BACKOFFICE ###############################
     //###############################                       ###############################
-    
-    
+
+
     //Login do BackOffice
     @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody @Valid AuthenticationDTO data) throws IllegalArgumentException, UnsupportedEncodingException{
+    public ResponseEntity<?> login(@RequestBody @Valid AuthenticationDTO data) throws IllegalArgumentException, UnsupportedEncodingException {
         var usernamePassword = new UsernamePasswordAuthenticationToken(data.email(), data.password());
         var auth = this.authenticationManager.authenticate(usernamePassword);
         var token = tokenService.generateToken((User) auth.getPrincipal());
@@ -103,17 +103,17 @@ public class AuthenticationController {
     }
 
     @GetMapping("/listarUsuarios")
-    public Iterable<User> listingUsers(){
+    public Iterable<User> listingUsers() {
         return userRepository.findAll();
     }
 
     @GetMapping("/get-user")
-    public ResponseEntity<?> getUserById(@RequestParam(name = "id") Long id){
+    public ResponseEntity<?> getUserById(@RequestParam(name = "id") Long id) {
         return userService.getUserById(id);
     }
 
     @PutMapping("/edit-user-site")
-    public ResponseEntity<?> editUserSite(@RequestBody User user){
+    public ResponseEntity<?> editUserSite(@RequestBody User user) {
         return userService.editUserSite(user);
     }
 
@@ -129,34 +129,35 @@ public class AuthenticationController {
     public ResponseEntity<?> changeStatus(@RequestBody User user) {
         User changeUser = (User) userRepository.findByEmail(user.getEmail());
         if (changeUser == null) {
-            return ResponseEntity.notFound().build(); 
+            return ResponseEntity.notFound().build();
         }
         changeUser.setStatus(!changeUser.isStatus());
-        userRepository.save(changeUser); 
-        return ResponseEntity.ok().build(); 
+        userRepository.save(changeUser);
+        return ResponseEntity.ok().build();
     }
-    
+
     //Atualizar usuário do BackOffice
     @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("/updateUser/{id}")
-    public ResponseEntity<?> updateUser(@PathVariable Long id, @RequestBody @Valid RegisterDTO data){
-        return userService.updateUsersBackOffice(id, data);        
-    }    
+    public ResponseEntity<?> updateUser(@PathVariable Long id, @RequestBody @Valid RegisterDTO data) {
+        return userService.updateUsersBackOffice(id, data);
+    }
 
     @PreAuthorize("hasRole('ADMIN')")
     //Registro de Funcionarios
     @PostMapping("/register")
-    public ResponseEntity<?> register(@RequestBody @Valid RegisterDTO data){
+    public ResponseEntity<?> register(@RequestBody @Valid RegisterDTO data) {
         return userService.registerUserBackOffice(data);
     }
 
 
 }
-class Message{
+
+class Message {
     private String message;
     private boolean valid;
 
-    public Message(boolean valid){
+    public Message(boolean valid) {
         this.valid = valid;
     }
 

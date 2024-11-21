@@ -24,6 +24,11 @@ const UserConsumerLogin = () => {
       console.log(error);
 
       if (!error) {
+        const consumer = await authService.validaLoginConsumer();
+        if (!consumer){
+          await authService.notAllowedLogin();
+          return
+        }
         const logado =await authService.isAuthenticated();
         if (logado) {
           const hasCheckout = location.pathname === "/checkout/login";

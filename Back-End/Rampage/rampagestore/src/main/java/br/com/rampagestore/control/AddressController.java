@@ -13,29 +13,29 @@ import jakarta.validation.Valid;
 @CrossOrigin(origins = "*", allowedHeaders = "*")
 public class AddressController {
 
-    
+
     @Autowired
     private AddressService addressService;
 
     @GetMapping("selecionar_endereço_faturamento/{id}")//id do cliente
-    public ResponseEntity<?> selectBillingAddress(@PathVariable Long id){
+    public ResponseEntity<?> selectBillingAddress(@PathVariable Long id) {
         return addressService.selectBillingdAddres(id);
     }
 
     //Seleciona todos os endereços de entrega
     @GetMapping("selecionar_endereços/{id}")//id do cliente
-    public ResponseEntity<?> selectAllAddress(@PathVariable Long id){
+    public ResponseEntity<?> selectAllAddress(@PathVariable Long id) {
         return addressService.selectAllDeliveryAdrress(id);
     }
 
     @GetMapping("/selecionar-todos-enderecos")//id do cliente
-    public ResponseEntity<?> selectAllAddressByIdUser(@RequestParam(name = "id") Long id){
+    public ResponseEntity<?> selectAllAddressByIdUser(@RequestParam(name = "id") Long id) {
         return addressService.selectAllAdrress(id);
     }
 
 
     @GetMapping("/indicate_billing_address/{id}")//id do endereço q sera alterado
-    public ResponseEntity<?> indicateBillingAddress(@PathVariable Long id){
+    public ResponseEntity<?> indicateBillingAddress(@PathVariable Long id) {
         return addressService.selectBillingdAddres(id);
     }
 
@@ -53,8 +53,12 @@ public class AddressController {
 
     //Indicar todos endereço de entrega
     @GetMapping("/indicate-all-delivery-address")
-    public ResponseEntity<?> indicateAllDeliveryAddress(@RequestParam(name = "id") Long userId){
+    public ResponseEntity<?> indicateAllDeliveryAddress(@RequestParam(name = "id") Long userId) {
         return addressService.selectAllDeliveryAdrress(userId);
     }
 
+    @PutMapping("/change-standard")
+    public ResponseEntity<?> changeStandard(@RequestBody UserAddress userAddress) {
+        return addressService.changeStandard(userAddress.getId(), userAddress.getIdUser());
+    }
 }

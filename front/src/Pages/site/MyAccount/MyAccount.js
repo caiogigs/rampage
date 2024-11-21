@@ -15,18 +15,29 @@ const MyAccount = () => {
 
   useEffect(() => {
     const fetch = async () => {
-      const userGet = await userService.getUserById(authService.getIdUser());
-      if (userGet) setUser(userGet);
-      else alert("Erro ao pegar dados do usuario.");
-
-      const addressGet = await addressService.getAddressByIdUser(
-        authService.getIdUser()
-      );
-      if (addressGet) setAddress(addressGet);
-      else alert("Erro ao pegar endereços do usuario.");
+      await attPage();
     };
     fetch();
   }, []);
+
+  const attPage = async () => {
+    await attUser();
+    await attAddress();
+  };
+
+  const attUser = async () => {
+    const userGet = await userService.getUserById(authService.getIdUser());
+    if (userGet) setUser(userGet);
+    else alert("Erro ao pegar dados do usuario.");
+  };
+
+  const attAddress = async () => {
+    const addressGet = await addressService.getAddressByIdUser(
+      authService.getIdUser()
+    );
+    if (addressGet) setAddress(addressGet);
+    else alert("Erro ao pegar endereços do usuario.");
+  };
 
   const handleCancel = () => {
     setShowUpdateForm(false);
@@ -40,6 +51,7 @@ const MyAccount = () => {
       if (!data) {
         setShowUpdateForm(false);
         alert("Dados alterados com sucesso!");
+        attPage();
       } else {
         throw new Error(data.message);
       }
@@ -51,6 +63,7 @@ const MyAccount = () => {
 
   const handleNewAddress = () => {
     setAddAddress(false);
+    attPage();
   };
 
   if (showUpdateForm) {
@@ -72,6 +85,12 @@ const MyAccount = () => {
     );
   }
 
+  const handleDefinirPadrao = async (address) => {
+    await addressService.definirPadrao(address);
+    alert("Endereço padrão redefinido com sucesso!");
+    attPage();
+  };
+
   const getAddresses = () => {
     return (
       <>
@@ -79,16 +98,28 @@ const MyAccount = () => {
           return (
             <div key={add.id} className="row mb-4 border-left">
               <div className="d-flex">
-                <p className="col-10">
+                <p className="col-9">
                   {add.logradouro}, {add.number}, {add.complement}
                 </p>
-                <span className="col-1">{add.standard ? "(PADRÃO)" : ""}</span>
+                <span className="col-3">
+                  {add.standard ? (
+                    "(PADRÃO)"
+                  ) : (
+                    <a
+                      href="#"
+                      onClick={() => handleDefinirPadrao(add)}
+                      className=""
+                    >
+                      definir padrão
+                    </a>
+                  )}
+                </span>
               </div>
               <div className="d-flex">
-                <p className="col-10">
+                <p className="col-9">
                   {add.neighborhood}, {add.uf}, {add.city}
                 </p>
-                <span className="col-1">
+                <span className="col-3">
                   {add.billingAddress ? "(FATURAMENTO)" : ""}
                 </span>
               </div>

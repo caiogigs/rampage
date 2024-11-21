@@ -1,3 +1,7 @@
 .methods{
     cursor: pointer;
 }
+
+.met:hover{
+    cursor: pointer;
+}

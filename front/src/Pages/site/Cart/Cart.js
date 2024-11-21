@@ -37,6 +37,7 @@ const Cart = () => {
     setSubTotal(cartService.getSubTotalPrice());
     setTotal(cartService.getTotalPrice());
     console.log(cart);
+    console.log("prods ", products[0]);
   }, []);
 
   useEffect(() => {
@@ -135,121 +136,124 @@ const Cart = () => {
 
   const mainPage = () => {
     return (
-      <main className="w-100 h-100">
-        <div className="content main row carrinho p-2">
-          <div className="infos col-8" style={{ border: "solid blue" }}>
-            <div className="row titulo">
-              <h2>Produtos</h2>
-            </div>
-            <div className="row products">
-              {products.map((prod, index) => {
-                return (
-                  <div key={index} className="row product mb-3 mt-3 ms-2">
-                    <div className="col-7">
-                      <p>Produto: {prod.productName}</p>
-                      <p>Quantidade: {prod.quantityOrdered}</p>
-                      <p>Estoque: {prod.amount}</p>
-                      <p>
-                        Valor unitário: R${" "}
-                        {prod?.productPrice
-                          ? precoFormatado(prod.productPrice)
-                          : "0,00"}
-                      </p>
-                      <p>Detalhes: {prod.productDetai}</p>
-                    </div>
-                    <div className="col-3">
-                      <div className="imageCart">
-                        {prod.image64 ? (
-                          <img
-                            alt={`Imagem ${prod.productName}`}
-                            src={`data:image/jpeg;base64, ${prod.image64}`}
+      <main>
+        <div className="main">
+          <div className="content row carrinho p-2">
+            <div className="col-8" style={{ border: "solid blue" }}>
+              <div className="row titulo">
+                <h2>Produtos</h2>
+              </div>
+              <div className="row products">
+                {products.map((prod, index) => {
+                  return (
+                    <div key={index} className="row product mb-3 mt-3 ms-2">
+                      <div className="col-7">
+                        <p>Produto: {prod.productName}</p>
+                        <p>Quantidade: {prod.quantityOrdered}</p>
+                        <p>Estoque: {prod.amount}</p>
+                        <p>
+                          Valor unitário: R${" "}
+                          {prod?.productPrice
+                            ? precoFormatado(prod.productPrice)
+                            : "0,00"}
+                        </p>
+                        <p>Detalhes: {prod.productDetai}</p>
+                      </div>
+                      <div className="col-3">
+                        <div className="imageCart">
+                          {prod.image64 ? (
+                            <img
+                              alt={`Imagem ${prod.productName}`}
+                              src={`data:image/jpeg;base64, ${prod.image64.imageBase64}`}
+                            />
+                          ) : (
+                            <p>Carregando imagens ...</p>
+                          )}
+                        </div>
+                      </div>
+                      <div className="col-2 d-flex flex-column justify-content-center align-items-center">
+                        <div className="mb-3">
+                          <label htmlFor="quantity">Quantidade: </label>
+                          <input
+                            max={prod.amount} // Máximo definido como o estoque disponível
+                            value={prod.quantityOrdered || ""}
+                            id="quantity"
+                            name="quantity"
+                            type="number"
+                            placeholder="Quantity"
+                            onInput={(event) => attQuantity(prod, event)} // Função chamada ao alterar o valor
                           />
-                        ) : (
-                          <p>Carregando imagens ...</p>
-                        )}
+                        </div>
+                        <div className="button-delete col-12">
+                          <button
+                            onClick={() => deleteItem(prod)}
+                            className="btn btn-danger w-100"
+                          >
+                            Excluir
+                          </button>
+                        </div>
                       </div>
                     </div>
-                    <div className="col-2 d-flex flex-column justify-content-center align-items-center">
-                      <div className="mb-3">
-                        <label htmlFor="quantity">Quantidade: </label>
-                        <input
-                          max={prod.amount} // Máximo definido como o estoque disponível
-                          value={prod.quantityOrdered}
-                          id="quantity"
-                          name="quantity"
-                          type="number"
-                          placeholder="Quantity"
-                          onInput={(event) => attQuantity(prod, event)} // Função chamada ao alterar o valor
-                        />
-                      </div>
-                      <div className="button-delete col-12">
-                        <button
-                          onClick={() => deleteItem(prod)}
-                          className="btn btn-danger w-100"
-                        >
-                          Excluir
-                        </button>
-                      </div>
-                    </div>
+                  );
+                })}
+              </div>
+              <div className="row w-100 price mt-5">
+                <div className="row w-100">
+                  <p>Subtotal: R$ {precoFormatado(subtotal)}</p>
+                  <p>
+                    Frete: R${" "}
+                    {freight.price
+                      ? precoFormatado(freight.price)
+                      : freightCart.price
+                      ? precoFormatado(freightCart.price)
+                      : "0,00"}
+                  </p>
+                  <p>Total: R$ {precoFormatado(total)}</p>
+                </div>
+              </div>
+            </div>
+
+            <div className="col-4" style={{ border: "solid orange" }}>
+              <div className="row titulo">
+                <h2>Frete</h2>
+                <div className="row w-100 h-25 p-2">
+                  <div className="row ms-2">
+                    <label id="cep">Cep</label>
                   </div>
-                );
-              })}
-            </div>
-            <div className="row w-100 price mt-5">
-              <div className="row w-100">
-                <p>Subtotal: R$ {precoFormatado(subtotal)}</p>
-                <p>
-                  Frete: R${" "}
-                  {freight.price
-                    ? precoFormatado(freight.price)
-                    : freightCart.price
-                    ? precoFormatado(freightCart.price)
-                    : "0,00"}
-                </p>
-                <p>Total: R$ {precoFormatado(total)}</p>
+                  <div className="row ms-auto">
+                    <input
+                      className="form-control"
+                      id="cep"
+                      type="text"
+                      maxLength={8}
+                      placeholder="_____-___"
+                      onBlur={handleBlur}
+                      onChange={(e) => setCep(e.target.value)}
+                    ></input>
+                  </div>
+                  {enderecoCep ? showAdress() : ""}
+                </div>
               </div>
             </div>
-          </div>
 
-          <div className="infos col-4" style={{ border: "solid orange" }}>
-            <div className="row titulo">
-              <h2>Frete</h2>
-              <div className="row w-100 h-25 p-2">
-                <div className="row ms-2">
-                  <label id="cep">Cep</label>
-                </div>
-                <div className="row ms-auto">
-                  <input
-                    className="form-control"
-                    id="cep"
-                    type="text"
-                    maxLength={8}
-                    placeholder="_____-___"
-                    onBlur={handleBlur}
-                    onChange={(e) => setCep(e.target.value)}
-                  ></input>
-                </div>
-                {enderecoCep ? showAdress() : ""}
-              </div>
+            <div className="row button w-100 mt-4 d-flex justify-content-center">
+              <button
+                onClick={() =>
+                  (window.location.href =
+                    "http://localhost:3000/pagina-principal")
+                }
+                className="btn w-50 btn-primary"
+              >
+                Continuar Comprando
+              </button>
+              <button
+                onClick={() => iniciaCheckout()}
+                className="btn w-50 btn-success"
+                disabled={products.length === 0}
+              >
+                Finalizar Compra
+              </button>
             </div>
-          </div>
-
-          <div className="row button w-100 mt-4 d-flex justify-content-center">
-            <button
-              onClick={() =>
-                (window.location.href =
-                  "http://localhost:3000/pagina-principal")
-              }
-              className="btn w-50 btn-primary"
-            >
-              Continuar Comprando
-            </button>
-            <button
-              onClick={() => iniciaCheckout()}
-              className="btn w-50 btn-success"
-            >
-              Finalizar Compra
-            </button>
           </div>
         </div>
       </main>
@@ -268,7 +272,9 @@ const Cart = () => {
           <p className="main">Carregando...</p>
         </main>
       )}
-      <Footer />
+      <footer>
+        <Footer />
+      </footer>
     </>
   );
 };

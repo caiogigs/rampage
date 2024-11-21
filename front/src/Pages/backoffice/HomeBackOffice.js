@@ -1,4 +1,5 @@
 import { useNavigate } from 'react-router-dom';
+import authService from '../../auth/AuthService';
 
 function HomeBackOffice() {
     // Função chamada ao clicar no botão "Listar Usuários"
@@ -9,6 +10,10 @@ function HomeBackOffice() {
     // Função chamada ao clicar no botão "Listar Produtos"
     const handleListProducts = () => {
         navigate('/back-product-list')
+    };
+
+    const handleLogout = () => {
+        authService.logoutBackoffice();
     };
 
     // Navegação entre páginas
@@ -32,6 +37,13 @@ function HomeBackOffice() {
                     onClick={handleListUsers} // Chama a função para listar usuários
                 >
                     Listar Usuários
+                </button>
+                <button 
+                    type="button" 
+                    className="btn btn-danger"
+                    onClick={handleLogout} // Chama a função para listar usuários
+                >
+                    Logout
                 </button>
             </div>
         </div>

@@ -148,7 +148,7 @@ const OrderSummary = () => {
                   {prod.image64 ? (
                     <img
                       alt={`Imagem ${prod.productName}`}
-                      src={`data:image/jpeg;base64, ${prod.image64}`}
+                      src={`data:image/jpeg;base64, ${prod.image64.imageBase64}`}
                     />
                   ) : (
                     <p>Carregando imagens ...</p>

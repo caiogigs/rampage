@@ -1,4 +1,3 @@
-import { Navigate } from "react-router-dom";
 import LoginService from "./login";
 
 class AuthService {
@@ -49,9 +48,18 @@ class AuthService {
   }
 
   async logout() {
+    await this._logoutFunc();
+    document.location = "/pagina-principal";
+  }
+
+  async logoutBackoffice() {
+    await this._logoutFunc();
+    document.location = "/";
+  }
+
+  async _logoutFunc() {
     this.authenticated = false;
     await this._loginService.logout();
-    document.location = "/pagina-principal";
   }
 
   getToken() {
@@ -71,6 +79,16 @@ class AuthService {
     this.authenticated = validToken;
     
     return this.authenticated;
+  }
+
+  async validaLoginConsumer(){
+    const role = localStorage.getItem('userRole');
+    return role === "CONSUMER"; 
+  }
+
+  async notAllowedLogin(){
+    alert("Login não permitido.");
+    await this._logoutFunc();
   }
 }
 

@@ -22,4 +22,6 @@ public interface AddresRepository  extends CrudRepository<UserAddress, Long> {
     boolean existsByIdUser(long idUser);
 
     List<UserAddress> findAllByIdUserOrderByBillingAddressDescStandardDesc(Long id);
+
+    UserAddress findByIdUserAndStandardTrue(Long idUser);
 }

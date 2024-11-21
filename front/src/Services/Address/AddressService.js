@@ -1,3 +1,4 @@
+import authService from "../../auth/AuthService";
 import CrudService from "../CRUDService";
 
 class AddressService extends CrudService {
@@ -22,6 +23,14 @@ class AddressService extends CrudService {
 
   async setAddressSelected(add){
     localStorage.setItem('addressSelected', JSON.stringify(add));
+  }
+
+  async definirPadrao(add){
+    const data = {
+      id: add.id,
+      idUser: authService.getIdUser()
+    }
+    return await this.doPut("/change-standard", data);
   }
 
 }
