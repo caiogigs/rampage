@@ -115,7 +115,9 @@ header .navbar {
 .navbar :where(#menu-close-button, #menu-open-button) {
   display: none;
 }
-
+.btn-detail{
+  color: #f3961c;
+}
 
 
 
@@ -181,6 +183,23 @@ header .navbar {
 .hero-section .hero-image-wrapper {
   max-width: 500px;
   margin-right: 30px;
+}
+
+.btn-details{
+  background-color: #f3961c; 
+  color: white; 
+  border: none; 
+  padding: 10px 20px; 
+  font-size: 1rem; 
+  border-radius: 4px; 
+  cursor: pointer; 
+  transition: all 0.3s ease; 
+}
+
+/* Efeito de hover */
+.btn-details:hover {
+  background-color: #FF8C00;
+  color: black; 
 }
 
 .menu-section {

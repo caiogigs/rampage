@@ -5,7 +5,7 @@ import siteService from "../../../../Services/SiteService/SiteService";
 import authService from "../../../../auth/AuthService";
 import useCheckoutService from "../../../../Services/CheckoutService";
 import addressService from "../../../../Services/Address/AddressService";
-
+import './RegisterAddres.css';
 const RegisterAddress = () => {
   const [addressData, setAddressData] = useState({
     idUser: "",
@@ -155,7 +155,7 @@ const RegisterAddress = () => {
               placeholder="Complemento"
             />
 
-            <button type="submit">Registrar</button>
+            <button type="submit" className="btn btn-register">Registrar</button>
           </form>
         </div>
       </main>

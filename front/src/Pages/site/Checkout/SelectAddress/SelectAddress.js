@@ -100,7 +100,7 @@ const SelectAddress = () => {
               <div className="col-4 d-flex justify-content-center">
                 <button
                   onClick={() => addAdress()}
-                  className="btn btn-primary w-50"
+                  className="btn btn-address w-50"
                 >
                   Adicionar Endereço
                 </button>
@@ -108,7 +108,7 @@ const SelectAddress = () => {
               <div className="col-4  d-flex justify-content-center">
                 <button
                   onClick={() => retomarCheckout()}
-                  className="btn btn-primary w-50"
+                  className="btn btn-address w-50"
                 >
                   Avançar
                 </button>

@@ -1,15 +1,4 @@
-p{
-    margin: 0;
-}
-
-.border-left{
-    border-left: #ddd 1px solid;
-}
-
-.main{
-    margin-top: 100px;
-}
-.btn-address {
+.btn-summary {
     width: 100%;
     padding: 10px;
     background-color: #f3961c;  /* Cor de fundo azul */
@@ -18,14 +7,16 @@ p{
     border-radius: 4px;
     font-size: 1rem;
     cursor: pointer;
+    border-radius: 25px;
   }
-  .btn-address:hover{
+  .btn-summary:hover{
       width: 100%;
       padding: 10px;
       background-color: #FF8C00;  /* Cor de fundo azul */
       color: #333;                /* Cor da fonte branca */
-      border: none;
-      border-radius: 4px;
+      border: #333;
+      
       font-size: 1rem;
       cursor: pointer;
+      border-radius: 25px;
     }

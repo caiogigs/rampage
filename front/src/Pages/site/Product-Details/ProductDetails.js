@@ -101,13 +101,13 @@ const ProductDetails = () => {
 
 
               <button
-                className="w-25 mt-4 mb-4 btn btn-primary"
+                className="w-25 mt-4 mb-4 btn btn-product-off"
                 onClick={() => window.location.href = 'http://localhost:3000/pagina-principal'}>
                 <BiArrowBack> </BiArrowBack> Voltar
               </button>
               
               <button
-                className="w-25 mt-4 mb-4 btn btn-primary"
+                className="w-25 mt-4 mb-4 btn btn-product"
                 onClick={() => saveOnCart(product)}
               >
                <BiCart></BiCart> Adicionar no carrinho

@@ -1,7 +1,11 @@
 import React, { useState } from 'react';
+import {Link, useNavigate } from 'react-router-dom';
 import siteService from '../../Services/SiteService/SiteService';
 import authService from '../../auth/AuthService';
 import CrudService from '../../Services/CRUDService';
+import './consumerRegister.css';
+
+
 
 const RegisterConsumerForm = () => {
   const [userData, setUserData] = useState({
@@ -28,6 +32,8 @@ const RegisterConsumerForm = () => {
     status: true, // Valor predefinido
     standard: true, // Valor predefinido
   });
+
+  const navigate = useNavigate();
 
   const handleUserChange = (e) => {
     const { name, value } = e.target;
@@ -70,9 +76,12 @@ const RegisterConsumerForm = () => {
           alert("Erro ao cadastar.");
           return;
         }
+        alert("Usuário cadastrado com sucesso!");
 
-        console.log('Response:', data);
-        alert("Usuário cadastrado com sucesso.");
+        // Redireciona para a página de login
+        navigate("/login"); 
+
+        
       }
 
     } catch (error) {
@@ -102,7 +111,9 @@ const RegisterConsumerForm = () => {
   const today = new Date().toISOString().split("T")[0];
 
   return (
-    <form onSubmit={handleSubmit}>
+    
+    <form className='form-container' onSubmit={handleSubmit}>
+    
       <h2>Dados do Cliente</h2>
       <input type="text" name="name" value={userData.name} onChange={handleUserChange} placeholder="Nome" required />
       <input type="date" name="birthDate" max={today} value={userData.birthDate} onChange={handleUserChange} required />
@@ -121,7 +132,13 @@ const RegisterConsumerForm = () => {
       <input type="text" name="complement" value={addressData.complement} onChange={handleAddressChange} placeholder="Complemento" />
 
       <button type="submit">Registrar</button>
+      <p>
+      Já tem uma conta?{' '}
+      <Link to="/login_consumer" className="login-link">Faça login aqui</Link>
+    </p>
     </form>
+    
+    
   );
 };
 

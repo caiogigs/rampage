@@ -44,7 +44,7 @@ const LandingPage = () => {
         setError(error.toString());
       });
   }, []);
-
+  
   return (
     <div>
       <header>
@@ -110,7 +110,11 @@ const LandingPage = () => {
                         className="rating"
                         avaliacao={item.product.avaliation}
                       />
+                      
                     </div>
+                    <button type="button" className="btn btn-details" >
+        Clique Aqui
+      </button>
                     
                   </div>
                 </Link>

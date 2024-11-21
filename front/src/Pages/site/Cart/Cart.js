@@ -242,13 +242,13 @@ const Cart = () => {
                   (window.location.href =
                     "http://localhost:3000/pagina-principal")
                 }
-                className="btn w-50 btn-primary"
+                className="btn w-50 btn-cart-off"
               >
                 Continuar Comprando
               </button>
               <button
                 onClick={() => iniciaCheckout()}
-                className="btn w-50 btn-success"
+                className="btn w-50 btn-compra"
                 disabled={products.length === 0}
               >
                 Finalizar Compra

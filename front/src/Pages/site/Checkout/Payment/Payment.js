@@ -81,6 +81,7 @@ const Payment = () => {
             <form>
               <h4>Dados do Cartão</h4>
               <div className="row">
+              <h5>Número do Cartão</h5>
                 <input
                   className="form-control"
                   type="text"
@@ -93,6 +94,7 @@ const Payment = () => {
                 />
               </div>
               <div className="row">
+              <h5>Codigo de Segurança</h5>
                 <input
                   className="form-control"
                   type="text"
@@ -105,6 +107,7 @@ const Payment = () => {
                 />
               </div>
               <div className="row">
+              <h5>Nome do Titular</h5>
                 <input
                   className="form-control"
                   type="text"
@@ -116,6 +119,7 @@ const Payment = () => {
                 />
               </div>
               <div className="row">
+              <h5>Vencimento</h5>
                 <input
                   className="form-control"
                   name="vencimento"
@@ -185,7 +189,7 @@ const Payment = () => {
                 <div className="col-4 d-flex justify-content-center">
                   <button
                     onClick={() => returnTo()}
-                    className="btn btn-primary w-50"
+                    className="btn btn-payment w-50"
                   >
                     Voltar
                   </button>
@@ -193,7 +197,7 @@ const Payment = () => {
                 <div className="col-4  d-flex justify-content-center">
                   <button
                     onClick={() => retomarCheckout()}
-                    className="btn btn-primary w-50"
+                    className="btn btn-payment w-50"
                   >
                     Avançar
                   </button>

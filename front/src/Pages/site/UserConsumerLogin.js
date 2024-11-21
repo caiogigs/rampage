@@ -51,7 +51,9 @@ const UserConsumerLogin = () => {
   const handleCancel = () => {
     setEmail("");
     setPassword("");
+    navigate('/pagina-principal');
   };
+ 
 
   return (
     <div style={{textAlign: "center"}}>

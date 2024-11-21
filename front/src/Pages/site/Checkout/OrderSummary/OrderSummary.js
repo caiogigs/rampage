@@ -7,7 +7,7 @@ import addressService from "../../../../Services/Address/AddressService";
 import cartService from "../../../../Services/CartService/CartService";
 import useCheckoutService from "../../../../Services/CheckoutService";
 import orderService from "../../../../Services/OrderService";
-
+import './OrderSummary.css';
 const OrderSummary = () => {
   const [products, setProducts] = useState([]);
   const [address, setAddress] = useState({});
@@ -207,7 +207,7 @@ const OrderSummary = () => {
                 <div className="col-4 d-flex justify-content-center">
                   <button
                     onClick={() => returnTo()}
-                    className="btn btn-primary w-50"
+                    className="btn btn-summary w-50"
                   >
                     Voltar
                   </button>
@@ -215,7 +215,7 @@ const OrderSummary = () => {
                 <div className="col-4  d-flex justify-content-center">
                   <button
                     onClick={() => finalizaPedido()}
-                    className="btn btn-primary w-50"
+                    className="btn btn-summary w-50"
                   >
                     Avançar
                   </button>
