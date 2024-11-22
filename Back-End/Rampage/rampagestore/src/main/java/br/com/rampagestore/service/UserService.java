@@ -74,7 +74,7 @@ public class UserService {
         long userId = newUser.getId();
         userAddress.setIdUser(userId);
         addressService.registerNewAddres(userAddress);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok("OK");
     }
 
 

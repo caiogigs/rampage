@@ -71,18 +71,21 @@ const RegisterConsumerForm = () => {
 
       const data = await new CrudService("/auth").doPost("/register_consumer", requestData);
       
-      if (data) {
-        if(data.status === 403){
-          alert("Erro ao cadastar.");
-          return;
-        }
-        alert("Usuário cadastrado com sucesso!");
+      // if (data) {
+      //   if(data.status === 403){
+      //     alert("Erro ao cadastar.");
+      //     return;
+      //   }
+      //   alert("Usuário cadastrado com sucesso!");
 
-        // Redireciona para a página de login
-        navigate("/login"); 
+      //   // Redireciona para a página de login
+      //   navigate("/login"); 
 
         
-      }
+      // }
+
+      alert("Usuário cadastrado com sucesso!");
+
 
     } catch (error) {
       console.error('Error:', error);
